@@ -143,14 +143,16 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.vb">
+    <Compile Include="Panels\Form1.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.vb">
+    <Compile Include="Panels\Form1.Designer.vb">
       <DependentUpon>Form1.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="IndexFläche.vb" />
+    <Compile Include="Klassen\IndexFläche.vb" />
+    <Compile Include="Klassen\TCPCommunication.vb" />
+    <Compile Include="Klassen\TCPVariables.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -166,13 +168,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="MyObekt.vb" />
-    <Compile Include="MyPoint.vb" />
-    <Compile Include="SearchObj.vb" />
-    <Compile Include="UmwandlungClass.vb" />
+    <Compile Include="Klassen\MyObekt.vb" />
+    <Compile Include="Klassen\MyPoint.vb" />
+    <Compile Include="Klassen\SearchObj.vb" />
+    <Compile Include="Klassen\UmwandlungClass.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Form1.resx">
+    <EmbeddedResource Include="Panels\Form1.resx">
       <DependentUpon>Form1.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">

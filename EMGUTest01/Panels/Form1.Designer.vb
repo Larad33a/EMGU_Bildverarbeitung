@@ -134,6 +134,25 @@ Partial Class Form_Main
         Me.cb_Auswertung_Color = New System.Windows.Forms.CheckBox()
         Me.cb_Auswertung_Depth = New System.Windows.Forms.CheckBox()
         Me.P5_Conection = New System.Windows.Forms.TabPage()
+        Me.dgv_TCPVariableViewer = New System.Windows.Forms.DataGridView()
+        Me.GroupBox17 = New System.Windows.Forms.GroupBox()
+        Me.btn_TCPVariable_Del = New System.Windows.Forms.Button()
+        Me.btn_TCPVariable_Set = New System.Windows.Forms.Button()
+        Me.btn_TCPVariable_New = New System.Windows.Forms.Button()
+        Me.num_TCPVariable_Wert = New System.Windows.Forms.NumericUpDown()
+        Me.tb_TCPVarible_Name = New System.Windows.Forms.TextBox()
+        Me.Label34 = New System.Windows.Forms.Label()
+        Me.Label35 = New System.Windows.Forms.Label()
+        Me.GroupBox16 = New System.Windows.Forms.GroupBox()
+        Me.lbl_TCP_Status = New System.Windows.Forms.Label()
+        Me.Label30 = New System.Windows.Forms.Label()
+        Me.btn_TCP_Connect = New System.Windows.Forms.Button()
+        Me.num_TCP_Port = New System.Windows.Forms.NumericUpDown()
+        Me.tb_TCP_HOST = New System.Windows.Forms.TextBox()
+        Me.Label29 = New System.Windows.Forms.Label()
+        Me.Label27 = New System.Windows.Forms.Label()
+        Me.P6_test = New System.Windows.Forms.TabPage()
+        Me.btn_TestVerschieben = New System.Windows.Forms.Button()
         Me.LB_obj = New System.Windows.Forms.ListBox()
         Me.GroupBox11 = New System.Windows.Forms.GroupBox()
         Me.GroupBox8 = New System.Windows.Forms.GroupBox()
@@ -143,8 +162,6 @@ Partial Class Form_Main
         Me.cb_refdTaken = New System.Windows.Forms.CheckBox()
         Me.cb_depthtaken = New System.Windows.Forms.CheckBox()
         Me.cb_refcTaken = New System.Windows.Forms.CheckBox()
-        Me.P6_test = New System.Windows.Forms.TabPage()
-        Me.btn_TestVerschieben = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
         Me.TC2_Bilder.SuspendLayout()
         Me.P1_NewImg.SuspendLayout()
@@ -189,9 +206,15 @@ Partial Class Form_Main
         Me.GroupBox5.SuspendLayout()
         CType(Me.num_ThreshTief, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.num_ThreshHoch, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.P5_Conection.SuspendLayout()
+        CType(Me.dgv_TCPVariableViewer, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox17.SuspendLayout()
+        CType(Me.num_TCPVariable_Wert, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox16.SuspendLayout()
+        CType(Me.num_TCP_Port, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.P6_test.SuspendLayout()
         Me.GroupBox11.SuspendLayout()
         Me.GroupBox8.SuspendLayout()
-        Me.P6_test.SuspendLayout()
         Me.SuspendLayout()
         '
         'GroupBox1
@@ -1340,12 +1363,198 @@ Partial Class Form_Main
         '
         'P5_Conection
         '
+        Me.P5_Conection.Controls.Add(Me.GroupBox17)
+        Me.P5_Conection.Controls.Add(Me.GroupBox16)
         Me.P5_Conection.Location = New System.Drawing.Point(4, 25)
         Me.P5_Conection.Name = "P5_Conection"
         Me.P5_Conection.Size = New System.Drawing.Size(1668, 156)
         Me.P5_Conection.TabIndex = 3
-        Me.P5_Conection.Text = "TCP/IP"
+        Me.P5_Conection.Text = "TCP Variablen"
         Me.P5_Conection.UseVisualStyleBackColor = True
+        '
+        'dgv_TCPVariableViewer
+        '
+        Me.dgv_TCPVariableViewer.BackgroundColor = System.Drawing.SystemColors.Window
+        Me.dgv_TCPVariableViewer.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.dgv_TCPVariableViewer.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgv_TCPVariableViewer.Location = New System.Drawing.Point(350, 10)
+        Me.dgv_TCPVariableViewer.Name = "dgv_TCPVariableViewer"
+        Me.dgv_TCPVariableViewer.RowTemplate.Height = 24
+        Me.dgv_TCPVariableViewer.Size = New System.Drawing.Size(250, 140)
+        Me.dgv_TCPVariableViewer.TabIndex = 9
+        '
+        'GroupBox17
+        '
+        Me.GroupBox17.Controls.Add(Me.dgv_TCPVariableViewer)
+        Me.GroupBox17.Controls.Add(Me.btn_TCPVariable_Del)
+        Me.GroupBox17.Controls.Add(Me.btn_TCPVariable_Set)
+        Me.GroupBox17.Controls.Add(Me.btn_TCPVariable_New)
+        Me.GroupBox17.Controls.Add(Me.num_TCPVariable_Wert)
+        Me.GroupBox17.Controls.Add(Me.tb_TCPVarible_Name)
+        Me.GroupBox17.Controls.Add(Me.Label34)
+        Me.GroupBox17.Controls.Add(Me.Label35)
+        Me.GroupBox17.Location = New System.Drawing.Point(359, 3)
+        Me.GroupBox17.Name = "GroupBox17"
+        Me.GroupBox17.Size = New System.Drawing.Size(615, 150)
+        Me.GroupBox17.TabIndex = 8
+        Me.GroupBox17.TabStop = False
+        Me.GroupBox17.Text = "Variablen"
+        '
+        'btn_TCPVariable_Del
+        '
+        Me.btn_TCPVariable_Del.Location = New System.Drawing.Point(242, 114)
+        Me.btn_TCPVariable_Del.Name = "btn_TCPVariable_Del"
+        Me.btn_TCPVariable_Del.Size = New System.Drawing.Size(92, 30)
+        Me.btn_TCPVariable_Del.TabIndex = 7
+        Me.btn_TCPVariable_Del.Text = "Löschen"
+        Me.btn_TCPVariable_Del.UseVisualStyleBackColor = True
+        '
+        'btn_TCPVariable_Set
+        '
+        Me.btn_TCPVariable_Set.Location = New System.Drawing.Point(107, 114)
+        Me.btn_TCPVariable_Set.Name = "btn_TCPVariable_Set"
+        Me.btn_TCPVariable_Set.Size = New System.Drawing.Size(116, 30)
+        Me.btn_TCPVariable_Set.TabIndex = 6
+        Me.btn_TCPVariable_Set.Text = "Wert zuweisen"
+        Me.btn_TCPVariable_Set.UseVisualStyleBackColor = True
+        '
+        'btn_TCPVariable_New
+        '
+        Me.btn_TCPVariable_New.Location = New System.Drawing.Point(9, 114)
+        Me.btn_TCPVariable_New.Name = "btn_TCPVariable_New"
+        Me.btn_TCPVariable_New.Size = New System.Drawing.Size(92, 30)
+        Me.btn_TCPVariable_New.TabIndex = 5
+        Me.btn_TCPVariable_New.Text = "Anlegen"
+        Me.btn_TCPVariable_New.UseVisualStyleBackColor = True
+        '
+        'num_TCPVariable_Wert
+        '
+        Me.num_TCPVariable_Wert.Location = New System.Drawing.Point(53, 68)
+        Me.num_TCPVariable_Wert.Name = "num_TCPVariable_Wert"
+        Me.num_TCPVariable_Wert.Size = New System.Drawing.Size(116, 22)
+        Me.num_TCPVariable_Wert.TabIndex = 4
+        '
+        'tb_TCPVarible_Name
+        '
+        Me.tb_TCPVarible_Name.Location = New System.Drawing.Point(53, 31)
+        Me.tb_TCPVarible_Name.Name = "tb_TCPVarible_Name"
+        Me.tb_TCPVarible_Name.Size = New System.Drawing.Size(271, 22)
+        Me.tb_TCPVarible_Name.TabIndex = 3
+        '
+        'Label34
+        '
+        Me.Label34.AutoSize = True
+        Me.Label34.Location = New System.Drawing.Point(6, 68)
+        Me.Label34.Name = "Label34"
+        Me.Label34.Size = New System.Drawing.Size(42, 17)
+        Me.Label34.TabIndex = 2
+        Me.Label34.Text = "Wert:"
+        '
+        'Label35
+        '
+        Me.Label35.AutoSize = True
+        Me.Label35.Location = New System.Drawing.Point(6, 34)
+        Me.Label35.Name = "Label35"
+        Me.Label35.Size = New System.Drawing.Size(49, 17)
+        Me.Label35.TabIndex = 0
+        Me.Label35.Text = "Name:"
+        '
+        'GroupBox16
+        '
+        Me.GroupBox16.Controls.Add(Me.lbl_TCP_Status)
+        Me.GroupBox16.Controls.Add(Me.Label30)
+        Me.GroupBox16.Controls.Add(Me.btn_TCP_Connect)
+        Me.GroupBox16.Controls.Add(Me.num_TCP_Port)
+        Me.GroupBox16.Controls.Add(Me.tb_TCP_HOST)
+        Me.GroupBox16.Controls.Add(Me.Label29)
+        Me.GroupBox16.Controls.Add(Me.Label27)
+        Me.GroupBox16.Location = New System.Drawing.Point(3, 3)
+        Me.GroupBox16.Name = "GroupBox16"
+        Me.GroupBox16.Size = New System.Drawing.Size(350, 150)
+        Me.GroupBox16.TabIndex = 1
+        Me.GroupBox16.TabStop = False
+        Me.GroupBox16.Text = "Verbindung"
+        '
+        'lbl_TCP_Status
+        '
+        Me.lbl_TCP_Status.AutoSize = True
+        Me.lbl_TCP_Status.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_TCP_Status.Location = New System.Drawing.Point(238, 114)
+        Me.lbl_TCP_Status.Name = "lbl_TCP_Status"
+        Me.lbl_TCP_Status.Size = New System.Drawing.Size(19, 25)
+        Me.lbl_TCP_Status.TabIndex = 7
+        Me.lbl_TCP_Status.Text = "-"
+        '
+        'Label30
+        '
+        Me.Label30.AutoSize = True
+        Me.Label30.Location = New System.Drawing.Point(176, 121)
+        Me.Label30.Name = "Label30"
+        Me.Label30.Size = New System.Drawing.Size(56, 17)
+        Me.Label30.TabIndex = 6
+        Me.Label30.Text = "Status: "
+        '
+        'btn_TCP_Connect
+        '
+        Me.btn_TCP_Connect.Location = New System.Drawing.Point(9, 114)
+        Me.btn_TCP_Connect.Name = "btn_TCP_Connect"
+        Me.btn_TCP_Connect.Size = New System.Drawing.Size(161, 30)
+        Me.btn_TCP_Connect.TabIndex = 5
+        Me.btn_TCP_Connect.Text = "Verbinden"
+        Me.btn_TCP_Connect.UseVisualStyleBackColor = True
+        '
+        'num_TCP_Port
+        '
+        Me.num_TCP_Port.Location = New System.Drawing.Point(53, 60)
+        Me.num_TCP_Port.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
+        Me.num_TCP_Port.Name = "num_TCP_Port"
+        Me.num_TCP_Port.Size = New System.Drawing.Size(116, 22)
+        Me.num_TCP_Port.TabIndex = 4
+        '
+        'tb_TCP_HOST
+        '
+        Me.tb_TCP_HOST.Location = New System.Drawing.Point(53, 34)
+        Me.tb_TCP_HOST.Name = "tb_TCP_HOST"
+        Me.tb_TCP_HOST.Size = New System.Drawing.Size(271, 22)
+        Me.tb_TCP_HOST.TabIndex = 3
+        Me.tb_TCP_HOST.Text = "bauernet.ddns.net"
+        '
+        'Label29
+        '
+        Me.Label29.AutoSize = True
+        Me.Label29.Location = New System.Drawing.Point(6, 65)
+        Me.Label29.Name = "Label29"
+        Me.Label29.Size = New System.Drawing.Size(38, 17)
+        Me.Label29.TabIndex = 2
+        Me.Label29.Text = "Port:"
+        '
+        'Label27
+        '
+        Me.Label27.AutoSize = True
+        Me.Label27.Location = New System.Drawing.Point(6, 37)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(41, 17)
+        Me.Label27.TabIndex = 0
+        Me.Label27.Text = "Host:"
+        '
+        'P6_test
+        '
+        Me.P6_test.Controls.Add(Me.btn_TestVerschieben)
+        Me.P6_test.Location = New System.Drawing.Point(4, 25)
+        Me.P6_test.Name = "P6_test"
+        Me.P6_test.Size = New System.Drawing.Size(1668, 156)
+        Me.P6_test.TabIndex = 4
+        Me.P6_test.Text = "Test"
+        Me.P6_test.UseVisualStyleBackColor = True
+        '
+        'btn_TestVerschieben
+        '
+        Me.btn_TestVerschieben.Location = New System.Drawing.Point(47, 40)
+        Me.btn_TestVerschieben.Name = "btn_TestVerschieben"
+        Me.btn_TestVerschieben.Size = New System.Drawing.Size(75, 23)
+        Me.btn_TestVerschieben.TabIndex = 0
+        Me.btn_TestVerschieben.Text = "TestVeschieben"
+        Me.btn_TestVerschieben.UseVisualStyleBackColor = True
         '
         'LB_obj
         '
@@ -1448,25 +1657,6 @@ Partial Class Form_Main
         Me.cb_refcTaken.Text = "Ref_C"
         Me.cb_refcTaken.UseVisualStyleBackColor = True
         '
-        'P6_test
-        '
-        Me.P6_test.Controls.Add(Me.btn_TestVerschieben)
-        Me.P6_test.Location = New System.Drawing.Point(4, 25)
-        Me.P6_test.Name = "P6_test"
-        Me.P6_test.Size = New System.Drawing.Size(1668, 156)
-        Me.P6_test.TabIndex = 4
-        Me.P6_test.Text = "Test"
-        Me.P6_test.UseVisualStyleBackColor = True
-        '
-        'btn_TestVerschieben
-        '
-        Me.btn_TestVerschieben.Location = New System.Drawing.Point(47, 40)
-        Me.btn_TestVerschieben.Name = "btn_TestVerschieben"
-        Me.btn_TestVerschieben.Size = New System.Drawing.Size(75, 23)
-        Me.btn_TestVerschieben.TabIndex = 0
-        Me.btn_TestVerschieben.Text = "TestVeschieben"
-        Me.btn_TestVerschieben.UseVisualStyleBackColor = True
-        '
         'Form_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
@@ -1533,10 +1723,18 @@ Partial Class Form_Main
         Me.GroupBox5.PerformLayout()
         CType(Me.num_ThreshTief, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.num_ThreshHoch, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.P5_Conection.ResumeLayout(False)
+        CType(Me.dgv_TCPVariableViewer, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox17.ResumeLayout(False)
+        Me.GroupBox17.PerformLayout()
+        CType(Me.num_TCPVariable_Wert, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox16.ResumeLayout(False)
+        Me.GroupBox16.PerformLayout()
+        CType(Me.num_TCP_Port, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.P6_test.ResumeLayout(False)
         Me.GroupBox11.ResumeLayout(False)
         Me.GroupBox8.ResumeLayout(False)
         Me.GroupBox8.PerformLayout()
-        Me.P6_test.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -1662,4 +1860,21 @@ Partial Class Form_Main
     Friend WithEvents Label23 As Label
     Friend WithEvents P6_test As TabPage
     Friend WithEvents btn_TestVerschieben As Button
+    Friend WithEvents GroupBox16 As GroupBox
+    Friend WithEvents lbl_TCP_Status As Label
+    Friend WithEvents Label30 As Label
+    Friend WithEvents btn_TCP_Connect As Button
+    Friend WithEvents num_TCP_Port As NumericUpDown
+    Friend WithEvents tb_TCP_HOST As TextBox
+    Friend WithEvents Label29 As Label
+    Friend WithEvents Label27 As Label
+    Friend WithEvents GroupBox17 As GroupBox
+    Friend WithEvents btn_TCPVariable_New As Button
+    Friend WithEvents num_TCPVariable_Wert As NumericUpDown
+    Friend WithEvents tb_TCPVarible_Name As TextBox
+    Friend WithEvents Label34 As Label
+    Friend WithEvents Label35 As Label
+    Friend WithEvents btn_TCPVariable_Del As Button
+    Friend WithEvents btn_TCPVariable_Set As Button
+    Friend WithEvents dgv_TCPVariableViewer As DataGridView
 End Class

@@ -42,6 +42,10 @@ Public Class Form_Main
     Private _MyCFG As New Config()
     Private _MyColorMap As New Colorizer()
 
+    'TCPVariablen
+    Private WithEvents _TcpVariablen As New TCPVariables
+
+
     'Konfigurations Variablen
     Private Konf_FPS_Color As Int32
     Private Konf_FPS_Depth As Int32
@@ -229,6 +233,33 @@ Public Class Form_Main
         Next
     End Sub
 
+    'TCP_Variablen
+    Private Sub btn_TCP_Connect_Click(sender As Object, e As EventArgs) Handles btn_TCP_Connect.Click
+        _TcpVariablen.Connect(tb_TCP_HOST.Text, CInt(num_TCP_Port.Value))
+    End Sub
+    Private Sub btn_TCPVariable_New_Click(sender As Object, e As EventArgs) Handles btn_TCPVariable_New.Click
+        If tb_TCPVarible_Name.Text <> "" Then
+            _TcpVariablen.AddVariable(tb_TCPVarible_Name.Text)
+            _TcpVariablen.SetVariable(tb_TCPVarible_Name.Text, CInt(num_TCPVariable_Wert.Value))
+            _refreshDataGridView()
+        End If
+    End Sub
+    Private Sub btn_TCPVariable_Set_Click(sender As Object, e As EventArgs) Handles btn_TCPVariable_Set.Click
+        If _TcpVariablen.Exists(tb_TCPVarible_Name.Text) Then
+            _TcpVariablen.SetVariable(tb_TCPVarible_Name.Text, CInt(num_TCPVariable_Wert.Value))
+        Else
+            lb_Info.Items.Insert(0, $"Variablenfehler: Die Variable:{tb_TCPVarible_Name.Text}  Existiert nicht")
+        End If
+        _refreshDataGridView()
+    End Sub
+    Private Sub btn_TCPVariable_Del_Click(sender As Object, e As EventArgs) Handles btn_TCPVariable_Del.Click
+        If _TcpVariablen.Exists(tb_TCPVarible_Name.Text) Then
+            _TcpVariablen.RemoveVariable(tb_TCPVarible_Name.Text)
+        Else
+            lb_Info.Items.Insert(0, $"Variablenfehler: Die Variable:{tb_TCPVarible_Name.Text}  Existiert nicht")
+        End If
+        _refreshDataGridView()
+    End Sub
 
     'Konfig
     Private Sub btn_tiefe_Click(sender As Object, e As EventArgs) Handles btn_tiefe.Click
@@ -370,6 +401,27 @@ Public Class Form_Main
         '    CvInvoke.Resize(_DisRefD, _DisRefD, New Size(640, 480))
         '    ib_Depth.Image = _DisRefD.ToImage(Of Bgr, Byte)
         'End If
+    End Sub
+
+    '-----------------------------------------------------------------------------------------------------------------------
+    'Events
+    '-----------------------------------------------------------------------------------------------------------------------
+    'TCP_Variablen
+    Private Sub _TcpVariablen_Connected() Handles _TcpVariablen.Connected
+        lbl_TCP_Status.ForeColor = Color.Green
+        lbl_TCP_Status.Text = "Verbunden"
+    End Sub
+    Private Sub _TcpVariablen_ConnectError() Handles _TcpVariablen.ConnectError
+        lbl_TCP_Status.ForeColor = Color.Red
+        lbl_TCP_Status.Text = "Fehler"
+    End Sub
+    Private Sub _TcpVariablen_Disconnected() Handles _TcpVariablen.Disconnected
+        lbl_TCP_Status.ForeColor = Color.Yellow
+        lbl_TCP_Status.Text = "Getrennt"
+    End Sub
+
+    Private Sub _TcpVariablen_VariableChanged(name As String, val As Integer) Handles _TcpVariablen.VariableChanged
+
     End Sub
 
     '-----------------------------------------------------------------------------------------------------------------------
@@ -568,6 +620,9 @@ Public Class Form_Main
         CvInvoke.Circle(result, New Point(PointMax.X, PointMax.Y), 1, New MCvScalar(255, 0, 0), 1)
     End Sub
 
+    Private Sub _refreshDataGridView()
+        dgv_TCPVariableViewer.DataSource = _TcpVariablen.GetGridViewDataSource
+    End Sub
     '-----------------------------------------------------------------------------------------------------------------------
     'Sonstige Funktionen
     '-----------------------------------------------------------------------------------------------------------------------
