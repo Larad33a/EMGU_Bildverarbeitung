@@ -34,8 +34,6 @@ Partial Class Form_Main
         Me.P3_Rev = New System.Windows.Forms.TabPage()
         Me.ib_rev_Depth = New Emgu.CV.UI.ImageBox()
         Me.ib_rev_Color = New Emgu.CV.UI.ImageBox()
-        Me.P4_DepthZ16 = New System.Windows.Forms.TabPage()
-        Me.ib_depth_01 = New Emgu.CV.UI.ImageBox()
         Me.P5_ResultSearchObj = New System.Windows.Forms.TabPage()
         Me.lbl_FoundWidth = New System.Windows.Forms.Label()
         Me.Label28 = New System.Windows.Forms.Label()
@@ -46,6 +44,20 @@ Partial Class Form_Main
         Me.lbl_FoundObj = New System.Windows.Forms.Label()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.ImageBox1 = New Emgu.CV.UI.ImageBox()
+        Me.P4_DepthZ16 = New System.Windows.Forms.TabPage()
+        Me.ib_depth_01 = New Emgu.CV.UI.ImageBox()
+        Me.P6_Sub_IOI = New System.Windows.Forms.TabPage()
+        Me.ib_ImOfIn_02 = New Emgu.CV.UI.ImageBox()
+        Me.ib_ImOfIn_01 = New Emgu.CV.UI.ImageBox()
+        Me.P7_Sub_Laplace = New System.Windows.Forms.TabPage()
+        Me.lb_laplace_02 = New Emgu.CV.UI.ImageBox()
+        Me.lb_laplace_01 = New Emgu.CV.UI.ImageBox()
+        Me.P8_Sub_Mask = New System.Windows.Forms.TabPage()
+        Me.lb_mask_02 = New Emgu.CV.UI.ImageBox()
+        Me.lb_mask_01 = New Emgu.CV.UI.ImageBox()
+        Me.P9_Sub_Points = New System.Windows.Forms.TabPage()
+        Me.lb_points_02 = New Emgu.CV.UI.ImageBox()
+        Me.lb_points_01 = New Emgu.CV.UI.ImageBox()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.lb_Info = New System.Windows.Forms.ListBox()
         Me.GroupBox6 = New System.Windows.Forms.GroupBox()
@@ -131,11 +143,9 @@ Partial Class Form_Main
         Me.num_ThreshHoch = New System.Windows.Forms.NumericUpDown()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
-        Me.cb_Auswertung_Color = New System.Windows.Forms.CheckBox()
-        Me.cb_Auswertung_Depth = New System.Windows.Forms.CheckBox()
         Me.P5_Conection = New System.Windows.Forms.TabPage()
-        Me.dgv_TCPVariableViewer = New System.Windows.Forms.DataGridView()
         Me.GroupBox17 = New System.Windows.Forms.GroupBox()
+        Me.dgv_TCPVariableViewer = New System.Windows.Forms.DataGridView()
         Me.btn_TCPVariable_Del = New System.Windows.Forms.Button()
         Me.btn_TCPVariable_Set = New System.Windows.Forms.Button()
         Me.btn_TCPVariable_New = New System.Windows.Forms.Button()
@@ -162,6 +172,10 @@ Partial Class Form_Main
         Me.cb_refdTaken = New System.Windows.Forms.CheckBox()
         Me.cb_depthtaken = New System.Windows.Forms.CheckBox()
         Me.cb_refcTaken = New System.Windows.Forms.CheckBox()
+        Me.rb_Auswertung_Color = New System.Windows.Forms.RadioButton()
+        Me.rb_Auswertung_Depth = New System.Windows.Forms.RadioButton()
+        Me.rb_Auswertung_Kombi = New System.Windows.Forms.RadioButton()
+        Me.GroupBox18 = New System.Windows.Forms.GroupBox()
         Me.GroupBox1.SuspendLayout()
         Me.TC2_Bilder.SuspendLayout()
         Me.P1_NewImg.SuspendLayout()
@@ -173,10 +187,22 @@ Partial Class Form_Main
         Me.P3_Rev.SuspendLayout()
         CType(Me.ib_rev_Depth, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ib_rev_Color, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.P4_DepthZ16.SuspendLayout()
-        CType(Me.ib_depth_01, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.P5_ResultSearchObj.SuspendLayout()
         CType(Me.ImageBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.P4_DepthZ16.SuspendLayout()
+        CType(Me.ib_depth_01, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.P6_Sub_IOI.SuspendLayout()
+        CType(Me.ib_ImOfIn_02, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ib_ImOfIn_01, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.P7_Sub_Laplace.SuspendLayout()
+        CType(Me.lb_laplace_02, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.lb_laplace_01, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.P8_Sub_Mask.SuspendLayout()
+        CType(Me.lb_mask_02, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.lb_mask_01, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.P9_Sub_Points.SuspendLayout()
+        CType(Me.lb_points_02, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.lb_points_01, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox6.SuspendLayout()
         CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -207,14 +233,15 @@ Partial Class Form_Main
         CType(Me.num_ThreshTief, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.num_ThreshHoch, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.P5_Conection.SuspendLayout()
-        CType(Me.dgv_TCPVariableViewer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox17.SuspendLayout()
+        CType(Me.dgv_TCPVariableViewer, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.num_TCPVariable_Wert, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox16.SuspendLayout()
         CType(Me.num_TCP_Port, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.P6_test.SuspendLayout()
         Me.GroupBox11.SuspendLayout()
         Me.GroupBox8.SuspendLayout()
+        Me.GroupBox18.SuspendLayout()
         Me.SuspendLayout()
         '
         'GroupBox1
@@ -235,8 +262,12 @@ Partial Class Form_Main
         Me.TC2_Bilder.Controls.Add(Me.P1_NewImg)
         Me.TC2_Bilder.Controls.Add(Me.P2_Result)
         Me.TC2_Bilder.Controls.Add(Me.P3_Rev)
-        Me.TC2_Bilder.Controls.Add(Me.P4_DepthZ16)
         Me.TC2_Bilder.Controls.Add(Me.P5_ResultSearchObj)
+        Me.TC2_Bilder.Controls.Add(Me.P4_DepthZ16)
+        Me.TC2_Bilder.Controls.Add(Me.P6_Sub_IOI)
+        Me.TC2_Bilder.Controls.Add(Me.P7_Sub_Laplace)
+        Me.TC2_Bilder.Controls.Add(Me.P8_Sub_Mask)
+        Me.TC2_Bilder.Controls.Add(Me.P9_Sub_Points)
         Me.TC2_Bilder.Location = New System.Drawing.Point(6, 25)
         Me.TC2_Bilder.Name = "TC2_Bilder"
         Me.TC2_Bilder.SelectedIndex = 0
@@ -344,28 +375,6 @@ Partial Class Form_Main
         Me.ib_rev_Color.TabIndex = 10
         Me.ib_rev_Color.TabStop = False
         '
-        'P4_DepthZ16
-        '
-        Me.P4_DepthZ16.AutoScroll = True
-        Me.P4_DepthZ16.Controls.Add(Me.ib_depth_01)
-        Me.P4_DepthZ16.Location = New System.Drawing.Point(4, 25)
-        Me.P4_DepthZ16.Name = "P4_DepthZ16"
-        Me.P4_DepthZ16.Size = New System.Drawing.Size(1296, 489)
-        Me.P4_DepthZ16.TabIndex = 3
-        Me.P4_DepthZ16.Text = "Z16 Tiefenbild"
-        Me.P4_DepthZ16.UseVisualStyleBackColor = True
-        '
-        'ib_depth_01
-        '
-        Me.ib_depth_01.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ib_depth_01.Location = New System.Drawing.Point(6, 6)
-        Me.ib_depth_01.Name = "ib_depth_01"
-        Me.ib_depth_01.Size = New System.Drawing.Size(1280, 480)
-        Me.ib_depth_01.TabIndex = 9
-        Me.ib_depth_01.TabStop = False
-        '
         'P5_ResultSearchObj
         '
         Me.P5_ResultSearchObj.Controls.Add(Me.lbl_FoundWidth)
@@ -465,6 +474,160 @@ Partial Class Form_Main
         Me.ImageBox1.Size = New System.Drawing.Size(640, 480)
         Me.ImageBox1.TabIndex = 9
         Me.ImageBox1.TabStop = False
+        '
+        'P4_DepthZ16
+        '
+        Me.P4_DepthZ16.AutoScroll = True
+        Me.P4_DepthZ16.Controls.Add(Me.ib_depth_01)
+        Me.P4_DepthZ16.Location = New System.Drawing.Point(4, 25)
+        Me.P4_DepthZ16.Name = "P4_DepthZ16"
+        Me.P4_DepthZ16.Size = New System.Drawing.Size(1296, 489)
+        Me.P4_DepthZ16.TabIndex = 3
+        Me.P4_DepthZ16.Text = "Z16 Tiefenbild"
+        Me.P4_DepthZ16.UseVisualStyleBackColor = True
+        '
+        'ib_depth_01
+        '
+        Me.ib_depth_01.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ib_depth_01.Location = New System.Drawing.Point(6, 6)
+        Me.ib_depth_01.Name = "ib_depth_01"
+        Me.ib_depth_01.Size = New System.Drawing.Size(1280, 480)
+        Me.ib_depth_01.TabIndex = 9
+        Me.ib_depth_01.TabStop = False
+        '
+        'P6_Sub_IOI
+        '
+        Me.P6_Sub_IOI.Controls.Add(Me.ib_ImOfIn_02)
+        Me.P6_Sub_IOI.Controls.Add(Me.ib_ImOfIn_01)
+        Me.P6_Sub_IOI.Location = New System.Drawing.Point(4, 25)
+        Me.P6_Sub_IOI.Name = "P6_Sub_IOI"
+        Me.P6_Sub_IOI.Size = New System.Drawing.Size(1296, 489)
+        Me.P6_Sub_IOI.TabIndex = 5
+        Me.P6_Sub_IOI.Text = "Sub_ImageOfInterest"
+        Me.P6_Sub_IOI.UseVisualStyleBackColor = True
+        '
+        'ib_ImOfIn_02
+        '
+        Me.ib_ImOfIn_02.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ib_ImOfIn_02.Location = New System.Drawing.Point(653, 4)
+        Me.ib_ImOfIn_02.Name = "ib_ImOfIn_02"
+        Me.ib_ImOfIn_02.Size = New System.Drawing.Size(640, 480)
+        Me.ib_ImOfIn_02.TabIndex = 11
+        Me.ib_ImOfIn_02.TabStop = False
+        '
+        'ib_ImOfIn_01
+        '
+        Me.ib_ImOfIn_01.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ib_ImOfIn_01.Location = New System.Drawing.Point(4, 4)
+        Me.ib_ImOfIn_01.Name = "ib_ImOfIn_01"
+        Me.ib_ImOfIn_01.Size = New System.Drawing.Size(640, 480)
+        Me.ib_ImOfIn_01.TabIndex = 10
+        Me.ib_ImOfIn_01.TabStop = False
+        '
+        'P7_Sub_Laplace
+        '
+        Me.P7_Sub_Laplace.Controls.Add(Me.lb_laplace_02)
+        Me.P7_Sub_Laplace.Controls.Add(Me.lb_laplace_01)
+        Me.P7_Sub_Laplace.Location = New System.Drawing.Point(4, 25)
+        Me.P7_Sub_Laplace.Name = "P7_Sub_Laplace"
+        Me.P7_Sub_Laplace.Size = New System.Drawing.Size(1296, 489)
+        Me.P7_Sub_Laplace.TabIndex = 6
+        Me.P7_Sub_Laplace.Text = "Sub_LaplaceSharped"
+        Me.P7_Sub_Laplace.UseVisualStyleBackColor = True
+        '
+        'lb_laplace_02
+        '
+        Me.lb_laplace_02.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lb_laplace_02.Location = New System.Drawing.Point(653, 4)
+        Me.lb_laplace_02.Name = "lb_laplace_02"
+        Me.lb_laplace_02.Size = New System.Drawing.Size(640, 480)
+        Me.lb_laplace_02.TabIndex = 13
+        Me.lb_laplace_02.TabStop = False
+        '
+        'lb_laplace_01
+        '
+        Me.lb_laplace_01.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lb_laplace_01.Location = New System.Drawing.Point(4, 4)
+        Me.lb_laplace_01.Name = "lb_laplace_01"
+        Me.lb_laplace_01.Size = New System.Drawing.Size(640, 480)
+        Me.lb_laplace_01.TabIndex = 12
+        Me.lb_laplace_01.TabStop = False
+        '
+        'P8_Sub_Mask
+        '
+        Me.P8_Sub_Mask.Controls.Add(Me.lb_mask_02)
+        Me.P8_Sub_Mask.Controls.Add(Me.lb_mask_01)
+        Me.P8_Sub_Mask.Location = New System.Drawing.Point(4, 25)
+        Me.P8_Sub_Mask.Name = "P8_Sub_Mask"
+        Me.P8_Sub_Mask.Size = New System.Drawing.Size(1296, 489)
+        Me.P8_Sub_Mask.TabIndex = 7
+        Me.P8_Sub_Mask.Text = "Sub_Maske"
+        Me.P8_Sub_Mask.UseVisualStyleBackColor = True
+        '
+        'lb_mask_02
+        '
+        Me.lb_mask_02.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lb_mask_02.Location = New System.Drawing.Point(653, 4)
+        Me.lb_mask_02.Name = "lb_mask_02"
+        Me.lb_mask_02.Size = New System.Drawing.Size(640, 480)
+        Me.lb_mask_02.TabIndex = 13
+        Me.lb_mask_02.TabStop = False
+        '
+        'lb_mask_01
+        '
+        Me.lb_mask_01.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lb_mask_01.Location = New System.Drawing.Point(4, 4)
+        Me.lb_mask_01.Name = "lb_mask_01"
+        Me.lb_mask_01.Size = New System.Drawing.Size(640, 480)
+        Me.lb_mask_01.TabIndex = 12
+        Me.lb_mask_01.TabStop = False
+        '
+        'P9_Sub_Points
+        '
+        Me.P9_Sub_Points.Controls.Add(Me.lb_points_02)
+        Me.P9_Sub_Points.Controls.Add(Me.lb_points_01)
+        Me.P9_Sub_Points.Location = New System.Drawing.Point(4, 25)
+        Me.P9_Sub_Points.Name = "P9_Sub_Points"
+        Me.P9_Sub_Points.Size = New System.Drawing.Size(1296, 489)
+        Me.P9_Sub_Points.TabIndex = 8
+        Me.P9_Sub_Points.Text = "Sub_Punkte"
+        Me.P9_Sub_Points.UseVisualStyleBackColor = True
+        '
+        'lb_points_02
+        '
+        Me.lb_points_02.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lb_points_02.Location = New System.Drawing.Point(653, 4)
+        Me.lb_points_02.Name = "lb_points_02"
+        Me.lb_points_02.Size = New System.Drawing.Size(640, 480)
+        Me.lb_points_02.TabIndex = 13
+        Me.lb_points_02.TabStop = False
+        '
+        'lb_points_01
+        '
+        Me.lb_points_01.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lb_points_01.Location = New System.Drawing.Point(4, 4)
+        Me.lb_points_01.Name = "lb_points_01"
+        Me.lb_points_01.Size = New System.Drawing.Size(640, 480)
+        Me.lb_points_01.TabIndex = 12
+        Me.lb_points_01.TabStop = False
         '
         'GroupBox3
         '
@@ -1226,9 +1389,8 @@ Partial Class Form_Main
         '
         'P4_Auswertung
         '
+        Me.P4_Auswertung.Controls.Add(Me.GroupBox18)
         Me.P4_Auswertung.Controls.Add(Me.GroupBox5)
-        Me.P4_Auswertung.Controls.Add(Me.cb_Auswertung_Color)
-        Me.P4_Auswertung.Controls.Add(Me.cb_Auswertung_Depth)
         Me.P4_Auswertung.Location = New System.Drawing.Point(4, 25)
         Me.P4_Auswertung.Name = "P4_Auswertung"
         Me.P4_Auswertung.Size = New System.Drawing.Size(1668, 156)
@@ -1246,7 +1408,7 @@ Partial Class Form_Main
         Me.GroupBox5.Controls.Add(Me.num_ThreshHoch)
         Me.GroupBox5.Controls.Add(Me.Label6)
         Me.GroupBox5.Controls.Add(Me.Label7)
-        Me.GroupBox5.Location = New System.Drawing.Point(103, 3)
+        Me.GroupBox5.Location = New System.Drawing.Point(176, 10)
         Me.GroupBox5.Name = "GroupBox5"
         Me.GroupBox5.Size = New System.Drawing.Size(413, 150)
         Me.GroupBox5.TabIndex = 19
@@ -1339,28 +1501,6 @@ Partial Class Form_Main
         Me.Label7.TabIndex = 14
         Me.Label7.Text = "höchste Region:"
         '
-        'cb_Auswertung_Color
-        '
-        Me.cb_Auswertung_Color.AutoSize = True
-        Me.cb_Auswertung_Color.Location = New System.Drawing.Point(5, 13)
-        Me.cb_Auswertung_Color.Name = "cb_Auswertung_Color"
-        Me.cb_Auswertung_Color.Size = New System.Drawing.Size(81, 21)
-        Me.cb_Auswertung_Color.TabIndex = 6
-        Me.cb_Auswertung_Color.Text = "Farbbild"
-        Me.cb_Auswertung_Color.UseVisualStyleBackColor = True
-        '
-        'cb_Auswertung_Depth
-        '
-        Me.cb_Auswertung_Depth.AutoSize = True
-        Me.cb_Auswertung_Depth.Checked = True
-        Me.cb_Auswertung_Depth.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.cb_Auswertung_Depth.Location = New System.Drawing.Point(5, 40)
-        Me.cb_Auswertung_Depth.Name = "cb_Auswertung_Depth"
-        Me.cb_Auswertung_Depth.Size = New System.Drawing.Size(92, 21)
-        Me.cb_Auswertung_Depth.TabIndex = 19
-        Me.cb_Auswertung_Depth.Text = "Tiefenbild"
-        Me.cb_Auswertung_Depth.UseVisualStyleBackColor = True
-        '
         'P5_Conection
         '
         Me.P5_Conection.Controls.Add(Me.GroupBox17)
@@ -1371,17 +1511,6 @@ Partial Class Form_Main
         Me.P5_Conection.TabIndex = 3
         Me.P5_Conection.Text = "TCP Variablen"
         Me.P5_Conection.UseVisualStyleBackColor = True
-        '
-        'dgv_TCPVariableViewer
-        '
-        Me.dgv_TCPVariableViewer.BackgroundColor = System.Drawing.SystemColors.Window
-        Me.dgv_TCPVariableViewer.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.dgv_TCPVariableViewer.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_TCPVariableViewer.Location = New System.Drawing.Point(350, 10)
-        Me.dgv_TCPVariableViewer.Name = "dgv_TCPVariableViewer"
-        Me.dgv_TCPVariableViewer.RowTemplate.Height = 24
-        Me.dgv_TCPVariableViewer.Size = New System.Drawing.Size(250, 140)
-        Me.dgv_TCPVariableViewer.TabIndex = 9
         '
         'GroupBox17
         '
@@ -1399,6 +1528,17 @@ Partial Class Form_Main
         Me.GroupBox17.TabIndex = 8
         Me.GroupBox17.TabStop = False
         Me.GroupBox17.Text = "Variablen"
+        '
+        'dgv_TCPVariableViewer
+        '
+        Me.dgv_TCPVariableViewer.BackgroundColor = System.Drawing.SystemColors.Window
+        Me.dgv_TCPVariableViewer.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.dgv_TCPVariableViewer.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgv_TCPVariableViewer.Location = New System.Drawing.Point(350, 10)
+        Me.dgv_TCPVariableViewer.Name = "dgv_TCPVariableViewer"
+        Me.dgv_TCPVariableViewer.RowTemplate.Height = 24
+        Me.dgv_TCPVariableViewer.Size = New System.Drawing.Size(250, 140)
+        Me.dgv_TCPVariableViewer.TabIndex = 9
         '
         'btn_TCPVariable_Del
         '
@@ -1657,6 +1797,51 @@ Partial Class Form_Main
         Me.cb_refcTaken.Text = "Ref_C"
         Me.cb_refcTaken.UseVisualStyleBackColor = True
         '
+        'rb_Auswertung_Color
+        '
+        Me.rb_Auswertung_Color.AutoSize = True
+        Me.rb_Auswertung_Color.Location = New System.Drawing.Point(6, 28)
+        Me.rb_Auswertung_Color.Name = "rb_Auswertung_Color"
+        Me.rb_Auswertung_Color.Size = New System.Drawing.Size(136, 21)
+        Me.rb_Auswertung_Color.TabIndex = 21
+        Me.rb_Auswertung_Color.TabStop = True
+        Me.rb_Auswertung_Color.Text = "Farb Auswertung"
+        Me.rb_Auswertung_Color.UseVisualStyleBackColor = True
+        '
+        'rb_Auswertung_Depth
+        '
+        Me.rb_Auswertung_Depth.AutoSize = True
+        Me.rb_Auswertung_Depth.Location = New System.Drawing.Point(6, 55)
+        Me.rb_Auswertung_Depth.Name = "rb_Auswertung_Depth"
+        Me.rb_Auswertung_Depth.Size = New System.Drawing.Size(147, 21)
+        Me.rb_Auswertung_Depth.TabIndex = 22
+        Me.rb_Auswertung_Depth.TabStop = True
+        Me.rb_Auswertung_Depth.Text = "Tiefen Auswertung"
+        Me.rb_Auswertung_Depth.UseVisualStyleBackColor = True
+        '
+        'rb_Auswertung_Kombi
+        '
+        Me.rb_Auswertung_Kombi.AutoSize = True
+        Me.rb_Auswertung_Kombi.Location = New System.Drawing.Point(6, 82)
+        Me.rb_Auswertung_Kombi.Name = "rb_Auswertung_Kombi"
+        Me.rb_Auswertung_Kombi.Size = New System.Drawing.Size(146, 21)
+        Me.rb_Auswertung_Kombi.TabIndex = 23
+        Me.rb_Auswertung_Kombi.TabStop = True
+        Me.rb_Auswertung_Kombi.Text = "Kombi Auswertung"
+        Me.rb_Auswertung_Kombi.UseVisualStyleBackColor = True
+        '
+        'GroupBox18
+        '
+        Me.GroupBox18.Controls.Add(Me.rb_Auswertung_Color)
+        Me.GroupBox18.Controls.Add(Me.rb_Auswertung_Kombi)
+        Me.GroupBox18.Controls.Add(Me.rb_Auswertung_Depth)
+        Me.GroupBox18.Location = New System.Drawing.Point(5, 10)
+        Me.GroupBox18.Name = "GroupBox18"
+        Me.GroupBox18.Size = New System.Drawing.Size(165, 150)
+        Me.GroupBox18.TabIndex = 24
+        Me.GroupBox18.TabStop = False
+        Me.GroupBox18.Text = "Auswertung"
+        '
         'Form_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
@@ -1680,11 +1865,23 @@ Partial Class Form_Main
         Me.P3_Rev.ResumeLayout(False)
         CType(Me.ib_rev_Depth, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ib_rev_Color, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.P4_DepthZ16.ResumeLayout(False)
-        CType(Me.ib_depth_01, System.ComponentModel.ISupportInitialize).EndInit()
         Me.P5_ResultSearchObj.ResumeLayout(False)
         Me.P5_ResultSearchObj.PerformLayout()
         CType(Me.ImageBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.P4_DepthZ16.ResumeLayout(False)
+        CType(Me.ib_depth_01, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.P6_Sub_IOI.ResumeLayout(False)
+        CType(Me.ib_ImOfIn_02, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ib_ImOfIn_01, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.P7_Sub_Laplace.ResumeLayout(False)
+        CType(Me.lb_laplace_02, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.lb_laplace_01, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.P8_Sub_Mask.ResumeLayout(False)
+        CType(Me.lb_mask_02, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.lb_mask_01, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.P9_Sub_Points.ResumeLayout(False)
+        CType(Me.lb_points_02, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.lb_points_01, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox3.ResumeLayout(False)
         Me.GroupBox6.ResumeLayout(False)
         CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1718,15 +1915,14 @@ Partial Class Form_Main
         CType(Me.num_MaskH, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.num_MaskV, System.ComponentModel.ISupportInitialize).EndInit()
         Me.P4_Auswertung.ResumeLayout(False)
-        Me.P4_Auswertung.PerformLayout()
         Me.GroupBox5.ResumeLayout(False)
         Me.GroupBox5.PerformLayout()
         CType(Me.num_ThreshTief, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.num_ThreshHoch, System.ComponentModel.ISupportInitialize).EndInit()
         Me.P5_Conection.ResumeLayout(False)
-        CType(Me.dgv_TCPVariableViewer, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox17.ResumeLayout(False)
         Me.GroupBox17.PerformLayout()
+        CType(Me.dgv_TCPVariableViewer, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.num_TCPVariable_Wert, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox16.ResumeLayout(False)
         Me.GroupBox16.PerformLayout()
@@ -1735,6 +1931,8 @@ Partial Class Form_Main
         Me.GroupBox11.ResumeLayout(False)
         Me.GroupBox8.ResumeLayout(False)
         Me.GroupBox8.PerformLayout()
+        Me.GroupBox18.ResumeLayout(False)
+        Me.GroupBox18.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -1837,8 +2035,6 @@ Partial Class Form_Main
     Friend WithEvents num_ThreshHoch As NumericUpDown
     Friend WithEvents Label6 As Label
     Friend WithEvents Label7 As Label
-    Friend WithEvents cb_Auswertung_Color As CheckBox
-    Friend WithEvents cb_Auswertung_Depth As CheckBox
     Friend WithEvents Label17 As Label
     Friend WithEvents Num_SearchToleranz As NumericUpDown
     Friend WithEvents Label15 As Label
@@ -1877,4 +2073,20 @@ Partial Class Form_Main
     Friend WithEvents btn_TCPVariable_Del As Button
     Friend WithEvents btn_TCPVariable_Set As Button
     Friend WithEvents dgv_TCPVariableViewer As DataGridView
+    Friend WithEvents P6_Sub_IOI As TabPage
+    Friend WithEvents ib_ImOfIn_02 As Emgu.CV.UI.ImageBox
+    Friend WithEvents ib_ImOfIn_01 As Emgu.CV.UI.ImageBox
+    Friend WithEvents P7_Sub_Laplace As TabPage
+    Friend WithEvents lb_laplace_02 As Emgu.CV.UI.ImageBox
+    Friend WithEvents lb_laplace_01 As Emgu.CV.UI.ImageBox
+    Friend WithEvents P8_Sub_Mask As TabPage
+    Friend WithEvents lb_mask_02 As Emgu.CV.UI.ImageBox
+    Friend WithEvents lb_mask_01 As Emgu.CV.UI.ImageBox
+    Friend WithEvents P9_Sub_Points As TabPage
+    Friend WithEvents lb_points_02 As Emgu.CV.UI.ImageBox
+    Friend WithEvents lb_points_01 As Emgu.CV.UI.ImageBox
+    Friend WithEvents GroupBox18 As GroupBox
+    Friend WithEvents rb_Auswertung_Color As RadioButton
+    Friend WithEvents rb_Auswertung_Kombi As RadioButton
+    Friend WithEvents rb_Auswertung_Depth As RadioButton
 End Class

@@ -235,6 +235,8 @@ Public Class Form_Main
 
     'TCP_Variablen
     Private Sub btn_TCP_Connect_Click(sender As Object, e As EventArgs) Handles btn_TCP_Connect.Click
+        lbl_TCP_Status.ForeColor = Color.Black
+        lbl_TCP_Status.Text = "Warten.."
         _TcpVariablen.Connect(tb_TCP_HOST.Text, CInt(num_TCP_Port.Value))
     End Sub
     Private Sub btn_TCPVariable_New_Click(sender As Object, e As EventArgs) Handles btn_TCPVariable_New.Click
@@ -320,7 +322,6 @@ Public Class Form_Main
         num_CamOffset.Value = cCamOffset
     End Sub
 
-
     Private Sub cb_colortaken_CheckedChanged(sender As Object, e As EventArgs)
         ImgStatus()
     End Sub
@@ -338,17 +339,6 @@ Public Class Form_Main
     End Sub
     Private Sub cb_refdcTaken_CheckedChanged(sender As Object, e As EventArgs)
         ImgStatus()
-    End Sub
-
-    Private Sub cb_Auswertung_Color_CheckedChanged(sender As Object, e As EventArgs)
-        cb_Auswertung_Depth.Checked = Not cb_Auswertung_Color.Checked
-        cb_ioi_Differenz.Checked = cb_Auswertung_Color.Checked
-        cb_ioi_Depth.Checked = Not cb_Auswertung_Color.Checked
-    End Sub
-    Private Sub cb_Auswertung_Depth_CheckedChanged(sender As Object, e As EventArgs)
-        cb_Auswertung_Color.Checked = Not cb_Auswertung_Depth.Checked
-        cb_ioi_Differenz.Checked = Not cb_Auswertung_Depth.Checked
-        cb_ioi_Depth.Checked = cb_Auswertung_Depth.Checked
     End Sub
 
     'Konfig Farbe
@@ -416,19 +406,28 @@ Public Class Form_Main
         lbl_TCP_Status.Text = "Fehler"
     End Sub
     Private Sub _TcpVariablen_Disconnected() Handles _TcpVariablen.Disconnected
+        Me.Invoke(Sub() Disconect())
+    End Sub
+
+    Private Sub _TcpVariablen_VariableChanged(name As String, val As Integer) Handles _TcpVariablen.VariableChanged
+        Me.Invoke(Sub() VaribleChange(name, val))
+
+    End Sub
+
+    Sub Disconect()
         lbl_TCP_Status.ForeColor = Color.Yellow
         lbl_TCP_Status.Text = "Getrennt"
     End Sub
 
-    Private Sub _TcpVariablen_VariableChanged(name As String, val As Integer) Handles _TcpVariablen.VariableChanged
-        Invoke(Sub() _refreshDataGridView())
+    Sub VaribleChange(name As String, val As Int32)
+        _refreshDataGridView()
         lb_Info.Items.Insert(0, $"Variabel wurde geändert {name} {val}")
     End Sub
 
     '-----------------------------------------------------------------------------------------------------------------------
     'Sonstige Sub's
     '-----------------------------------------------------------------------------------------------------------------------
-    Sub KonfigPipe(typ As Enum_Format, widht As Int32, height As Int32, format As Format, fps As Int32)
+    Private Sub KonfigPipe(typ As Enum_Format, widht As Int32, height As Int32, format As Format, fps As Int32)
 
         _MyCFG.DisableAllStreams()
         Try
@@ -450,7 +449,7 @@ Public Class Form_Main
             Return
         End Try
     End Sub
-    Sub KonfigPipe()
+    Private Sub KonfigPipe()
 
         _MyCFG.DisableAllStreams()
         Try
@@ -470,7 +469,7 @@ Public Class Form_Main
         End Try
     End Sub
 
-    Sub RestartCam()
+    Private Sub RestartCam()
         If _MyPipelineAktiv Then
             _MyPipelineAktiv = False
             btn_NewImg.Enabled = False
@@ -495,7 +494,7 @@ Public Class Form_Main
         lb_Info.Items.Insert(0, $"Cam_Ready")
     End Sub
 
-    Sub ImgStatus()
+    Private Sub ImgStatus()
         If (_MatColor IsNot Nothing) Then
             _ColorImgTaken = (Not _MatColor.IsEmpty)
         End If
@@ -521,7 +520,7 @@ Public Class Form_Main
         btn_pos.Enabled = _ColorImgTaken Or _RefCImgTaken
     End Sub
 
-    Sub Autoreferenz()
+    Private Sub Autoreferenz()
         'For i = 1 To 10  ' Möglicherweise machen hier 30 Frames Sinn
         '    Using frames = _MyPipeline.WaitForFrames()
         '    End Using
@@ -695,10 +694,14 @@ Public Class Form_Main
         If vortsetzen Then
             If (cb_ioi_Differenz.Checked And _RefCImgTaken And _RefDImgTaken) Or Not cb_ioi_Differenz.Checked Then
                 If (cb_ioi_Depth.Checked And _DepthImgTaken) Or Not cb_ioi_Depth.Checked Then
-                    If cb_Auswertung_Color.Checked Then
+                    If rb_Auswertung_Color.Checked Then
                         Ergebnis = MyWatershedColor(_MatColor, _MatResult, _MatRefC, cb_debug.Checked)
-                    Else
+                    End If
+                    If rb_Auswertung_Depth.Checked Then
                         Ergebnis = MyWatershedDepth(_MatDepth, _MatResult, _MatRefD, cb_debug.Checked)
+                    End If
+                    If rb_Auswertung_Kombi.Checked Then
+
                     End If
                 Else
                     lb_Info.Items.Insert(0, "Für Tiefen Filderung wird ein Tiefenbild benötigt")
@@ -966,6 +969,220 @@ Public Class Form_Main
         Dim dst As New Mat
         Dim Display As New Mat
 
+        Const cThreshhold1 = 10
+        Const cThreshhold2 = 0.1 '0.3
+
+
+
+        '1. Hintergrung Ausblenden über Tiefe dann Kiste Ausmaskieren
+        ' Über Tiefe und Treshold
+        ImgOfInterest_Tiefe(resurce, ImgOfInterest, CInt(num_ThreshHoch.Value), CInt(num_ThreshTief.Value))
+        'Maske
+        ImgOfInterest = Maskieren(ImgOfInterest, CInt(num_MaskH.Value), CInt(num_MaskV.Value), CInt(num_CamOffset.Value))
+        If debug Then
+            ImgOfInterest.ConvertTo(Display, DepthType.Cv8U)
+            Dim v2 As New ImageViewer
+            v2.Image = Display.Clone : v2.Text = "ImgOfInterest"
+            v2.Show()
+        End If
+
+
+        '2. Bild Aufbereiten (laplace)
+        Dim Kernel As New Matrix(Of Single)(New Single(,) {
+                                            {1, 1, 1},
+                                            {1, -8, 1},
+                                            {1, 1, 1}})
+        Laplace32F = New Mat(ImgOfInterest.Size, DepthType.Cv32F, ImgOfInterest.NumberOfChannels)
+        Result32F = New Mat(ImgOfInterest.Size, DepthType.Cv32F, ImgOfInterest.NumberOfChannels)
+        CvInvoke.Filter2D(ImgOfInterest, Laplace32F, Kernel, New Point(-1, -1))
+        IMG32F = New Mat : ImgOfInterest.ConvertTo(IMG32F, DepthType.Cv32F)
+        CvInvoke.Subtract(IMG32F, Laplace32F, Result32F)
+        'zurückwandeln
+        Laplace16s = New Mat
+        Result16s = New Mat
+        Laplace32F.ConvertTo(Laplace16s, DepthType.Cv16S)
+        Result32F.ConvertTo(Result16s, DepthType.Cv16S)
+        Result32F.ConvertTo(Result8U, DepthType.Cv8U)
+        If debug Then
+            CvInvoke.Imshow("Result32", Result32F)
+            CvInvoke.Imshow("Result16", Result16s)
+            CvInvoke.Imshow("Result8", Result8U)
+        End If
+        CvInvoke.GaussianBlur(Result16s, Result16s, New Drawing.Size(5, 5), 3)
+
+
+        '3. Graustufen- & Binäresbild erzeugen
+        If Result16s.NumberOfChannels = 3 Then
+            CvInvoke.CvtColor(Result16s, GrayImg, ColorConversion.Bgr2Gray, 1)
+        Else
+            Result16s.CopyTo(GrayImg)
+        End If
+        GrayImg.ConvertTo(Result8U, DepthType.Cv8U)
+
+        CvInvoke.Threshold(Result8U, BinaerImg, cThreshhold1, 255, ThresholdType.Binary Or ThresholdType.Otsu) 'benötigt cv8u
+        If debug Then
+            CvInvoke.Imshow("Result8", Result8U)
+            CvInvoke.Imshow("BinaerImg", BinaerImg)
+        End If
+
+
+        '4. Distanc Funktion & normalize
+        CvInvoke.DistanceTransform(BinaerImg, DistImg, Nothing, DistType.L2, 3) 'Mask size muss 0 || 3 ||5 sein  'CvInvoke.DistanceTransform(BinaerImg, DistImg, Nothing, DistType.L2, 3)
+        CvInvoke.Normalize(DistImg, DistImg, 0, 1.0, NormType.MinMax)
+        If debug Then
+            CvInvoke.Imshow("DistImg", DistImg)
+        End If
+
+
+        '5. Bild bereinigen (mit Treshold) und in CV8 wandeln
+        CvInvoke.Threshold(DistImg, DistImgClear, cThreshhold2, 1.0, ThresholdType.Binary) '0.3
+
+        Dim kernel1 = Mat.Ones(3, 3, DepthType.Cv8U, 1)
+        CvInvoke.Dilate(DistImgClear, DistImgClear, kernel1, New Point(-1, -1), 1, BorderType.Default, New MCvScalar(0))
+        If debug Then
+            CvInvoke.Imshow("DistImgClear", DistImgClear)
+        End If
+
+        CvInvoke.Normalize(DistImgClear, DistImg8u, 0, 255, NormType.MinMax, DepthType.Cv8U)
+
+        '6. Objekte bezeichnen
+        Dim Contours As New VectorOfVectorOfPoint
+        CvInvoke.FindContours(DistImg8u, Contours, Nothing, RetrType.List, ChainApproxMethod.ChainApproxSimple)
+        lb_Info.Items.Insert(0, $"Es wurden {Contours.Size} Kontuen Gefunden")
+        ' Create the marker image for the watershed algorithm
+        Markers = New Mat(resurce.Size, DepthType.Cv32S, 1) ' Zur Anzeige farbiger Bilder
+        Markers.SetTo(New MCvScalar(0)) ' AnzeigenBild auf schwarz setzen
+        For i = 0 To Contours.Size - 1
+            Dim Colo = New MCvScalar((i + 1) * 10) ' An 1 nummerieren. 0 ist ja der Hintergrund
+            CvInvoke.DrawContours(Markers, Contours, i, Colo, -1) ' -1 damit die contour ausgefüllt wird
+        Next
+        If debug Then
+            Dim Maskshow As New Mat
+            Markers.ConvertTo(Maskshow, DepthType.Cv8U)
+            CvInvoke.Imshow("markers32S1", Maskshow)
+        End If
+
+        CvInvoke.Circle(Markers, New Point(5, 5), 3, New MCvScalar(255), -1)
+        If debug Then
+            Dim Maskshow2 As New Mat
+            Markers.ConvertTo(Maskshow2, DepthType.Cv8U)
+            CvInvoke.Imshow("markers32S1_2", Maskshow2)
+        End If
+
+
+        '7. Watershed zu objekt Auswertung  Unklar ob Result8U oder DistImg8u
+        Dim imgWater8U3 As New Mat
+        If Result8U.NumberOfChannels = 3 Then
+
+            imgWater8U3 = Result8U
+        Else
+            CvInvoke.CvtColor(Result8U, imgWater8U3, ColorConversion.Gray2Bgr, 3)
+        End If
+
+        ' CvInvoke.WaitKey(0)
+        CvInvoke.Watershed(imgWater8U3, Markers)
+        Dim Maskshow3 As New Mat
+        Markers.ConvertTo(Maskshow3, DepthType.Cv8U)
+        CvInvoke.Imshow("Watershed", Maskshow3)
+
+
+        '8. Farbenvergeben
+        Dim Nc = Contours.Size ' Anzahl Contours = Anzahl an markierten Elementen
+        Dim Cols(Nc) As MCvScalar : Dim RND As New Random 'Dim Cols(Nc - 1) As MCvScalar : Dim RND As New Random
+        For i = 0 To Nc '- 1
+            Cols(i) = New Bgr(RND.Next(0, 256), RND.Next(0, 256), RND.Next(0, 256)).MCvScalar
+        Next
+
+        Dim ZeichenMat2 = Mat.Zeros(Markers.Rows, Markers.Cols, DepthType.Cv8U, 3)
+        For Zeile = 0 To Markers.Rows - 1
+            For Spalte = 0 To Markers.Cols - 1
+                Dim wert As Int32
+                Dim gefunden As Boolean = False
+                wert = UmwandlungClass.GetInt32Value(Markers, Zeile, Spalte)
+                If _MyObjekte.Count < 1 And wert > 0 And wert < 255 Then
+                    Dim tmpObjekt As New MyObekt(wert)
+                    Dim tiefe As Int32 = UmwandlungClass.GetInt16Value(_MatDepth, Zeile, Spalte)
+                    tmpObjekt.Add_Ref(Spalte, Zeile, tiefe)
+                    _MyObjekte.Add(tmpObjekt)
+                Else
+                    For Each ob As MyObekt In _MyObjekte
+                        If wert = ob.ID Then
+                            gefunden = True
+                            Dim tiefe As Int32 = UmwandlungClass.GetInt16Value(_MatDepth, Zeile, Spalte)
+                            ob.Add_Ref(Spalte, Zeile, tiefe)
+                        End If
+                    Next
+                    If Not gefunden And wert > 0 And wert < 255 Then
+                        Dim tmpObjekt As New MyObekt(wert)
+                        Dim tiefe As Int32 = UmwandlungClass.GetInt16Value(_MatDepth, Zeile, Spalte)
+                        tmpObjekt.Add_Ref(Spalte, Zeile, tiefe)
+                        _MyObjekte.Add(tmpObjekt)
+                    End If
+                End If
+                Dim Marke As Int32 = UmwandlungClass.GetInt32Value(Markers, Zeile, Spalte)
+                If Marke > 0 And Marke <= Nc * 10 Then
+                    Dim ByteWerte() As Byte = {CByte(Cols(Marke \ 10).V0), CByte(Cols(Marke \ 10).V1), CByte(Cols(Marke \ 10).V2)}
+                    UmwandlungClass.SetByteValues(ZeichenMat2, Zeile, Spalte, ByteWerte)
+                End If
+            Next
+        Next
+
+        For Each ob2 As MyObekt In _MyObjekte
+            LB_obj.Items.Add(ob2.ToString)
+        Next
+        ZeichenMat2.CopyTo(result)
+        If debug Then
+            CvInvoke.Imshow("Ergebnis", ZeichenMat2)
+        End If
+
+        '9. Draw Points
+        If cb_DrawPoint.Checked Then
+            For Each obj As MyObekt In _MyObjekte
+                'X min => Grün
+                CvInvoke.Circle(ZeichenMat2, New Point(obj.Min_X.X, obj.Min_X.Y), 6, New MCvScalar(255, 255, 255), 3)
+                CvInvoke.Circle(ZeichenMat2, New Point(obj.Min_X.X, obj.Min_X.Y), 1, New MCvScalar(0, 255, 0), 1) 'Gün
+                'X max => GrünRot
+                CvInvoke.Circle(ZeichenMat2, New Point(obj.Max_X.X, obj.Max_X.Y), 6, New MCvScalar(255, 255, 255), 3)
+                CvInvoke.Circle(ZeichenMat2, New Point(obj.Max_X.X, obj.Max_X.Y), 1, New MCvScalar(0, 255, 255), 1) 'Gün
+                'Y min => Blau
+                CvInvoke.Circle(ZeichenMat2, New Point(obj.Min_Y.X, obj.Min_Y.Y), 6, New MCvScalar(255, 255, 255), 3)
+                CvInvoke.Circle(ZeichenMat2, New Point(obj.Min_Y.X, obj.Min_Y.Y), 1, New MCvScalar(255, 0, 0), 1) 'Blau
+                'Y max => BlauRot
+                CvInvoke.Circle(ZeichenMat2, New Point(obj.Max_Y.X, obj.Max_Y.Y), 6, New MCvScalar(255, 255, 255), 3)
+                CvInvoke.Circle(ZeichenMat2, New Point(obj.Max_Y.X, obj.Max_Y.Y), 1, New MCvScalar(255, 0, 255), 1) 'Blau
+                'Virtueller Start => Rot
+                CvInvoke.Circle(ZeichenMat2, New Point(obj.Min_X.X, obj.Min_Y.Y), 6, New MCvScalar(255, 255, 255), 3)
+                CvInvoke.Circle(ZeichenMat2, New Point(obj.Min_X.X, obj.Min_Y.Y), 1, New MCvScalar(0, 0, 255), 1) 'Rot
+                'Virtuelles Ende => Rotgrünblau
+                CvInvoke.Circle(ZeichenMat2, New Point(obj.Max_X.X, obj.Max_Y.Y), 6, New MCvScalar(255, 255, 255), 3)
+                CvInvoke.Circle(ZeichenMat2, New Point(obj.Max_X.X, obj.Max_Y.Y), 1, New MCvScalar(125, 125, 255), 1) 'Rot
+            Next
+            Dim v4 As New ImageViewer
+            v4.Image = ZeichenMat2.Clone : v4.Text = "Ergbnis"
+            v4.Show()
+        End If
+        Return True
+    End Function
+
+    Private Function MyWatershedBoth(resurce As Mat, result As Mat, rev As Mat, Optional debug As Boolean = False) As Boolean
+        Dim ImgOfInterest As New Mat
+        Dim Laplace32F As Mat
+        Dim Result32F As Mat
+        Dim IMG32F As Mat
+        Dim Laplace16s As Mat
+        Dim Result16s As Mat
+        Dim Result8U As New Mat
+        Dim GrayImg As New Mat
+        Dim BinaerImg As New Mat
+        Dim DistImg As New Mat
+        Dim DistImgClear As New Mat
+        Dim DistImg8u As New Mat
+        Dim Markers As New Mat
+        Dim Mask As New Mat
+        Dim TmpResult As New Mat
+        Dim dst As New Mat
+        Dim Display As New Mat
+
         Dim testcolor_mask As Mat
         Dim testColor_Offset As Mat
         Dim testcolo_laplace32 As Mat
@@ -1133,31 +1350,35 @@ Public Class Form_Main
         For Zeile = 0 To Markers.Rows - 1
             For Spalte = 0 To Markers.Cols - 1
                 Dim wert As Int32
-                Dim gefunden As Boolean = False
+
                 wert = UmwandlungClass.GetInt32Value(Markers, Zeile, Spalte)
-                If _MyObjekte.Count < 1 And wert > 0 And wert < 255 Then
-                    Dim tmpObjekt As New MyObekt(wert)
-                    Dim tiefe As Int32 = UmwandlungClass.GetInt16Value(_MatDepth, Zeile, Spalte)
-                    tmpObjekt.Add_Ref(Spalte, Zeile, tiefe)
-                    _MyObjekte.Add(tmpObjekt)
-                Else
-                    For Each ob As MyObekt In _MyObjekte
-                        If wert = ob.ID Then
-                            gefunden = True
-                            Dim tiefe As Int32 = UmwandlungClass.GetInt16Value(_MatDepth, Zeile, Spalte)
-                            ob.Add_Ref(Spalte, Zeile, tiefe)
-                        End If
-                    Next
-                    If Not gefunden And wert > 0 And wert < 255 Then
-                        Dim tmpObjekt As New MyObekt(wert)
+
+                Dim Marke As Int32 = UmwandlungClass.GetInt32Value(Markers, Zeile, Spalte)
+                Dim gefunden As Boolean = False
+                If Marke > 0 And Marke <= Nc * 10 Then
+                    Dim ByteWerte() As Byte = {CByte(Cols(Marke \ 10).V0), CByte(Cols(Marke \ 10).V1), CByte(Cols(Marke \ 10).V2)}
+                    'Objekt eintragen
+                    If _MyObjekte.Count < 1 Then
+                        Dim tmpObjekt As New MyObekt(wert, ByteWerte)
                         Dim tiefe As Int32 = UmwandlungClass.GetInt16Value(_MatDepth, Zeile, Spalte)
                         tmpObjekt.Add_Ref(Spalte, Zeile, tiefe)
                         _MyObjekte.Add(tmpObjekt)
+                    Else
+                        For Each ob As MyObekt In _MyObjekte
+                            If wert = ob.ID Then
+                                gefunden = True
+                                Dim tiefe As Int32 = UmwandlungClass.GetInt16Value(_MatDepth, Zeile, Spalte)
+                                ob.Add_Ref(Spalte, Zeile, tiefe)
+                            End If
+                        Next
+                        If Not gefunden Then
+                            Dim tmpObjekt As New MyObekt(wert, ByteWerte)
+                            Dim tiefe As Int32 = UmwandlungClass.GetInt16Value(_MatDepth, Zeile, Spalte)
+                            tmpObjekt.Add_Ref(Spalte, Zeile, tiefe)
+                            _MyObjekte.Add(tmpObjekt)
+                        End If
                     End If
-                End If
-                Dim Marke As Int32 = UmwandlungClass.GetInt32Value(Markers, Zeile, Spalte)
-                If Marke > 0 And Marke <= Nc * 10 Then
-                    Dim ByteWerte() As Byte = {CByte(Cols(Marke \ 10).V0), CByte(Cols(Marke \ 10).V1), CByte(Cols(Marke \ 10).V2)}
+
                     UmwandlungClass.SetByteValues(ZeichenMat2, Zeile, Spalte, ByteWerte)
                 End If
             Next
@@ -1178,6 +1399,7 @@ Public Class Form_Main
         ib_res_02.Image = ZeichenMat3.Clone
         'Test-------------------------------------------------------------------------
         For Each ob2 As MyObekt In _MyObjekte
+            LB_obj.ForeColor = Color.FromArgb(0, ob2.Color(2), ob2.Color(1), ob2.Color(0)) 'ob2.color ist bgr Farbe form arg erwartet argb Farbe
             LB_obj.Items.Add(ob2.ToString)
         Next
         ZeichenMat2.CopyTo(result)
@@ -1214,5 +1436,39 @@ Public Class Form_Main
         Return True
     End Function
 
+    Private Function ImageOfInterest(resurce As Mat, result As Mat, Optional rev As Mat = Nothing, Optional dif As Boolean = False, Optional mask As Boolean = False, Optional depth As Boolean = False, Optional gaus As Boolean = False, Optional offset As Int32 = 0, Optional number As Int32 = 1) As Boolean
+        Dim Ergebnis As Boolean = True
+        Dim tmp_Mat As New Mat
+        tmp_Mat = resurce
+        'Differenz
+        If dif And Ergebnis Then
+            If rev IsNot Nothing Then
+                CvInvoke.AbsDiff(tmp_Mat, rev, tmp_Mat)
+            Else
+                lb_Info.Items.Insert(0, "IOIFehler keine Reverenz übergeben")
+                Ergebnis = False
+            End If
+        End If
+        'Maskierung
+        If mask And Ergebnis Then
+            tmp_Mat = Maskieren(tmp_Mat, CInt(num_MaskH.Value), CInt(num_MaskV.Value), offset)
+        End If
+        'Tiefenfilder
+        If depth And Ergebnis Then
+            CvInvoke.Threshold(tmp_Mat, tmp_Mat, CInt(num_ThreshHoch.Value), 100, ThresholdType.ToZero)
+            CvInvoke.Threshold(tmp_Mat, tmp_Mat, CInt(num_ThreshTief.Value), 100, ThresholdType.ToZeroInv)
+        End If
+        'Gaus
+        If gaus And Ergebnis Then
+            CvInvoke.GaussianBlur(tmp_Mat, tmp_Mat, New Drawing.Size(3, 3), 2)
+        End If
+        If number = 2 Then
+            ib_ImOfIn_02.Image = tmp_Mat.Clone
+        Else
+            ib_ImOfIn_01.Image = tmp_Mat.Clone
+        End If
+        result = tmp_Mat
+        Return Ergebnis
+    End Function
 
 End Class 'Form1

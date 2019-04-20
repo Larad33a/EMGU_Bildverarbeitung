@@ -63,6 +63,10 @@
     Sub New(id As Int32)
         _ID = id
     End Sub
+    Sub New(id As Int32, color As Byte())
+        _ID = id
+        _Color = color
+    End Sub
 
     Public Sub Add_Ref(x As Int32, y As Int32, z As Int32)
         Dim tmpPoint As New MyPoint(x, y, z)
