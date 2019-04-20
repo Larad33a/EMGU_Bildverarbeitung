@@ -421,7 +421,8 @@ Public Class Form_Main
     End Sub
 
     Private Sub _TcpVariablen_VariableChanged(name As String, val As Integer) Handles _TcpVariablen.VariableChanged
-
+        Invoke(Sub() _refreshDataGridView())
+        lb_Info.Items.Insert(0, $"Variabel wurde geändert {name} {val}")
     End Sub
 
     '-----------------------------------------------------------------------------------------------------------------------
