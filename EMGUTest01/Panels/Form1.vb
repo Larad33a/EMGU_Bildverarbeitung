@@ -1436,10 +1436,14 @@ Public Class Form_Main
         Return True
     End Function
 
-    Private Function ImageOfInterest(resurce As Mat, result As Mat, Optional rev As Mat = Nothing, Optional dif As Boolean = False, Optional mask As Boolean = False, Optional depth As Boolean = False, Optional gaus As Boolean = False, Optional offset As Int32 = 0, Optional number As Int32 = 1) As Boolean
+    '----------------------------------------------------------------------------------------------------------------------------
+    'Watershed Module
+    '----------------------------------------------------------------------------------------------------------------------------
+
+    Private Function ImageOfInterest(resurce As Mat, result As Mat, Optional rev As Mat = Nothing, Optional dif As Boolean = False, Optional mask As Boolean = False, Optional depth As Boolean = False, Optional gaus As Boolean = False, Optional offset As Int32 = 0) As Boolean
         Dim Ergebnis As Boolean = True
         Dim tmp_Mat As New Mat
-        tmp_Mat = resurce
+        tmp_Mat = resurce.Clone
         'Differenz
         If dif And Ergebnis Then
             If rev IsNot Nothing Then
@@ -1462,13 +1466,93 @@ Public Class Form_Main
         If gaus And Ergebnis Then
             CvInvoke.GaussianBlur(tmp_Mat, tmp_Mat, New Drawing.Size(3, 3), 2)
         End If
-        If number = 2 Then
-            ib_ImOfIn_02.Image = tmp_Mat.Clone
-        Else
-            ib_ImOfIn_01.Image = tmp_Mat.Clone
-        End If
-        result = tmp_Mat
+        result = tmp_Mat.Clone
         Return Ergebnis
     End Function
+
+    Private Function LaplaceFiltering(resurce As Mat, result As Mat, Optional UseGaus As Boolean = False) As Boolean
+        Dim tmp_Mat As New Mat
+        tmp_Mat = resurce.Clone
+        Dim tmpResul As New Mat
+        Dim Kernel As New Matrix(Of Single)(New Single(,) {
+                                            {1, 1, 1},
+                                            {1, -8, 1},
+                                            {1, 1, 1}})
+        Dim Laplace32F As New Mat(tmp_Mat.Size, DepthType.Cv32F, tmp_Mat.NumberOfChannels)
+        Dim Result32F As New Mat(tmp_Mat.Size, DepthType.Cv32F, tmp_Mat.NumberOfChannels)
+        CvInvoke.Filter2D(tmp_Mat, Laplace32F, Kernel, New Point(-1, -1))
+        Dim IMG32F As New Mat : tmp_Mat.ConvertTo(IMG32F, DepthType.Cv32F)
+        CvInvoke.Subtract(IMG32F, Laplace32F, Result32F)
+
+        'zurückwandeln
+        Result32F.ConvertTo(tmpResul, resurce.Depth)
+        If UseGaus Then
+            CvInvoke.GaussianBlur(tmpResul, tmpResul, New Drawing.Size(5, 5), 3)
+        End If
+        result = tmpResul.Clone
+        Return True
+    End Function
+
+    Private Function DistanceDetection(resurce As Mat, resultobjekts As Mat, resultbackground As Mat, Optional threshholdvalue As Int32 = 0.1) As Boolean
+        Dim tmp_Mat As New Mat
+        tmp_Mat = resurce.Clone
+        Dim tmp_MatInv As New Mat
+        CvInvoke.BitwiseNot(tmp_Mat, tmp_MatInv)
+        'Distanc Funktion & normalize for objects
+        CvInvoke.DistanceTransform(tmp_Mat, tmp_Mat, Nothing, DistType.L2, 3) 'Mask size muss 0 || 3 ||5 sein  'CvInvoke.DistanceTransform(BinaerImg, DistImg, Nothing, DistType.L2, 3)
+        CvInvoke.Normalize(tmp_Mat, tmp_Mat, 0, 1.0, NormType.MinMax)
+        'Distanc Funktion & normalize for background
+        CvInvoke.DistanceTransform(tmp_MatInv, tmp_MatInv, Nothing, DistType.L2, 3) 'Mask size muss 0 || 3 ||5 sein  'CvInvoke.DistanceTransform(BinaerImg, DistImg, Nothing, DistType.L2, 3)
+        CvInvoke.Normalize(tmp_MatInv, tmp_MatInv, 0, 1.0, NormType.MinMax)
+
+
+        Dim kernel1 = Mat.Ones(3, 3, DepthType.Cv8U, 1)
+        'Bild bereinigen (mit Treshold) und in CV8 wandeln objects
+        CvInvoke.Threshold(tmp_Mat, tmp_Mat, threshholdvalue, 1.0, ThresholdType.Binary) '0.3
+        CvInvoke.Dilate(tmp_Mat, tmp_Mat, kernel1, New Point(-1, -1), 1, BorderType.Default, New MCvScalar(0))
+        CvInvoke.Normalize(tmp_Mat, tmp_Mat, 0, 255, NormType.MinMax, DepthType.Cv8U)
+        'Bild bereinigen (mit Treshold) und in CV8 wandeln background
+        CvInvoke.Threshold(tmp_MatInv, tmp_MatInv, threshholdvalue, 1.0, ThresholdType.Binary) '0.3
+        CvInvoke.Dilate(tmp_MatInv, tmp_MatInv, kernel1, New Point(-1, -1), 1, BorderType.Default, New MCvScalar(0))
+        CvInvoke.Normalize(tmp_MatInv, tmp_MatInv, 0, 255, NormType.MinMax, DepthType.Cv8U)
+        resultobjekts = tmp_Mat.Clone
+        resultbackground = tmp_MatInv.Clone
+        Return True
+    End Function
+
+    Private Function MarkObjects(resurceObjects As Mat, resurceBackground As Mat, result As Mat) As Boolean
+        Dim ContoursBack As New VectorOfVectorOfPoint
+        Dim ContoursObj As New VectorOfVectorOfPoint
+        Dim Markers As New Mat(resurceObjects.Size, DepthType.Cv32S, 1) ' Zur Anzeige farbiger Bilder
+        Markers.SetTo(New MCvScalar(0)) ' AnzeigenBild auf schwarz setzen. 0 = undefinierter Bereich
+        If resurceObjects.Size <> resurceBackground.Size Or resurceObjects.Depth <> resurceBackground.Depth Or resurceObjects.NumberOfChannels <> resurceBackground.NumberOfChannels Then
+            result = Markers.Clone
+            lb_Info.Items.Insert(0, $"MarkObjects: Fehler ObjektMaske und Hintergrund Maske passen nicht aufeinander")
+            Return False
+        End If
+        'Background bezeichnen
+        CvInvoke.FindContours(resurceBackground, ContoursBack, Nothing, RetrType.List, ChainApproxMethod.ChainApproxSimple)
+        lb_Info.Items.Insert(0, $"Es wurden {ContoursBack.Size} Hintergrundkontuen Gefunden")
+        For i = 0 To ContoursBack.Size - 1
+            Dim Colo = New MCvScalar(-1) ' -1 ist der Hintergrund
+            CvInvoke.DrawContours(Markers, ContoursBack, -1, Colo, -1) ' -1 damit die contour ausgefüllt wird
+        Next
+        'Objekte bezeichnen
+        CvInvoke.FindContours(resurceObjects, ContoursObj, Nothing, RetrType.List, ChainApproxMethod.ChainApproxSimple)
+        lb_Info.Items.Insert(0, $"Es wurden {ContoursObj.Size} Objektkontuen Gefunden")
+        For i = 0 To ContoursObj.Size - 1
+            Dim Colo = New MCvScalar((i + 1) * 10) ' An 1 nummerieren. 0 ist ja der Hintergrund
+            CvInvoke.DrawContours(Markers, ContoursObj, i, Colo, -1) ' -1 damit die contour ausgefüllt wird
+        Next
+        If ContoursBack.Size <= 0 Or ContoursObj.Size <= 0 Then
+            lb_Info.Items.Insert(0, $"MarkObjects: Fehler es wurden nur {ContoursObj.Size} Objekt- und {ContoursBack.Size} Hintergrundkontuen Gefunden")
+            result = Markers.Clone
+            Return False
+
+        End If
+        result = Markers.Clone
+        Return True
+    End Function
+
 
 End Class 'Form1
