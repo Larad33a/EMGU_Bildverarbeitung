@@ -143,6 +143,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Klassen\MyMatchObj.vb" />
     <Compile Include="Panels\Form1.vb">
       <SubType>Form</SubType>
     </Compile>

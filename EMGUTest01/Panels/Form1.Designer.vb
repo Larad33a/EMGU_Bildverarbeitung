@@ -43,21 +43,21 @@ Partial Class Form_Main
         Me.Label24 = New System.Windows.Forms.Label()
         Me.lbl_FoundObj = New System.Windows.Forms.Label()
         Me.Label22 = New System.Windows.Forms.Label()
-        Me.ImageBox1 = New Emgu.CV.UI.ImageBox()
+        Me.ib_Found = New Emgu.CV.UI.ImageBox()
         Me.P4_DepthZ16 = New System.Windows.Forms.TabPage()
         Me.ib_depth_01 = New Emgu.CV.UI.ImageBox()
         Me.P6_Sub_IOI = New System.Windows.Forms.TabPage()
         Me.ib_ImOfIn_02 = New Emgu.CV.UI.ImageBox()
         Me.ib_ImOfIn_01 = New Emgu.CV.UI.ImageBox()
         Me.P7_Sub_Laplace = New System.Windows.Forms.TabPage()
-        Me.lb_laplace_02 = New Emgu.CV.UI.ImageBox()
-        Me.lb_laplace_01 = New Emgu.CV.UI.ImageBox()
-        Me.P8_Sub_Mask = New System.Windows.Forms.TabPage()
-        Me.lb_mask_02 = New Emgu.CV.UI.ImageBox()
-        Me.lb_mask_01 = New Emgu.CV.UI.ImageBox()
-        Me.P9_Sub_Points = New System.Windows.Forms.TabPage()
-        Me.lb_points_02 = New Emgu.CV.UI.ImageBox()
-        Me.lb_points_01 = New Emgu.CV.UI.ImageBox()
+        Me.ib_laplace_02 = New Emgu.CV.UI.ImageBox()
+        Me.ib_laplace_01 = New Emgu.CV.UI.ImageBox()
+        Me.P9_Sub_Mask = New System.Windows.Forms.TabPage()
+        Me.ib_mask_02 = New Emgu.CV.UI.ImageBox()
+        Me.ib_mask_01 = New Emgu.CV.UI.ImageBox()
+        Me.P10_Sub_Points = New System.Windows.Forms.TabPage()
+        Me.ib_points_02 = New Emgu.CV.UI.ImageBox()
+        Me.ib_points_01 = New Emgu.CV.UI.ImageBox()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.lb_Info = New System.Windows.Forms.ListBox()
         Me.GroupBox6 = New System.Windows.Forms.GroupBox()
@@ -134,6 +134,10 @@ Partial Class Form_Main
         Me.Label9 = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.P4_Auswertung = New System.Windows.Forms.TabPage()
+        Me.GroupBox18 = New System.Windows.Forms.GroupBox()
+        Me.rb_Auswertung_Color = New System.Windows.Forms.RadioButton()
+        Me.rb_Auswertung_Kombi = New System.Windows.Forms.RadioButton()
+        Me.rb_Auswertung_Depth = New System.Windows.Forms.RadioButton()
         Me.GroupBox5 = New System.Windows.Forms.GroupBox()
         Me.cb_ioi_Gaus = New System.Windows.Forms.CheckBox()
         Me.cb_ioi_Mask = New System.Windows.Forms.CheckBox()
@@ -163,8 +167,6 @@ Partial Class Form_Main
         Me.Label27 = New System.Windows.Forms.Label()
         Me.P6_test = New System.Windows.Forms.TabPage()
         Me.btn_TestVerschieben = New System.Windows.Forms.Button()
-        Me.LB_obj = New System.Windows.Forms.ListBox()
-        Me.GroupBox11 = New System.Windows.Forms.GroupBox()
         Me.GroupBox8 = New System.Windows.Forms.GroupBox()
         Me.cb_refdcTaken = New System.Windows.Forms.CheckBox()
         Me.cb_colortaken = New System.Windows.Forms.CheckBox()
@@ -172,10 +174,17 @@ Partial Class Form_Main
         Me.cb_refdTaken = New System.Windows.Forms.CheckBox()
         Me.cb_depthtaken = New System.Windows.Forms.CheckBox()
         Me.cb_refcTaken = New System.Windows.Forms.CheckBox()
-        Me.rb_Auswertung_Color = New System.Windows.Forms.RadioButton()
-        Me.rb_Auswertung_Depth = New System.Windows.Forms.RadioButton()
-        Me.rb_Auswertung_Kombi = New System.Windows.Forms.RadioButton()
-        Me.GroupBox18 = New System.Windows.Forms.GroupBox()
+        Me.P8_Sub_DistImg = New System.Windows.Forms.TabPage()
+        Me.ib_Dist02 = New Emgu.CV.UI.ImageBox()
+        Me.ib_Dist01 = New Emgu.CV.UI.ImageBox()
+        Me.TC3_ObjLists = New System.Windows.Forms.TabControl()
+        Me.P1_All = New System.Windows.Forms.TabPage()
+        Me.LB_obj = New System.Windows.Forms.ListBox()
+        Me.P2_Found = New System.Windows.Forms.TabPage()
+        Me.lb_Found = New System.Windows.Forms.ListBox()
+        Me.btn_SaveSearch = New System.Windows.Forms.Button()
+        Me.btn_LoadSearch = New System.Windows.Forms.Button()
+        Me.lbl_Prozent = New System.Windows.Forms.Label()
         Me.GroupBox1.SuspendLayout()
         Me.TC2_Bilder.SuspendLayout()
         Me.P1_NewImg.SuspendLayout()
@@ -188,21 +197,21 @@ Partial Class Form_Main
         CType(Me.ib_rev_Depth, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ib_rev_Color, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.P5_ResultSearchObj.SuspendLayout()
-        CType(Me.ImageBox1, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ib_Found, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.P4_DepthZ16.SuspendLayout()
         CType(Me.ib_depth_01, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.P6_Sub_IOI.SuspendLayout()
         CType(Me.ib_ImOfIn_02, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.ib_ImOfIn_01, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.P7_Sub_Laplace.SuspendLayout()
-        CType(Me.lb_laplace_02, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.lb_laplace_01, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.P8_Sub_Mask.SuspendLayout()
-        CType(Me.lb_mask_02, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.lb_mask_01, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.P9_Sub_Points.SuspendLayout()
-        CType(Me.lb_points_02, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.lb_points_01, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ib_laplace_02, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ib_laplace_01, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.P9_Sub_Mask.SuspendLayout()
+        CType(Me.ib_mask_02, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ib_mask_01, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.P10_Sub_Points.SuspendLayout()
+        CType(Me.ib_points_02, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ib_points_01, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox3.SuspendLayout()
         Me.GroupBox6.SuspendLayout()
         CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -229,6 +238,7 @@ Partial Class Form_Main
         CType(Me.num_MaskH, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.num_MaskV, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.P4_Auswertung.SuspendLayout()
+        Me.GroupBox18.SuspendLayout()
         Me.GroupBox5.SuspendLayout()
         CType(Me.num_ThreshTief, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.num_ThreshHoch, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -239,9 +249,13 @@ Partial Class Form_Main
         Me.GroupBox16.SuspendLayout()
         CType(Me.num_TCP_Port, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.P6_test.SuspendLayout()
-        Me.GroupBox11.SuspendLayout()
         Me.GroupBox8.SuspendLayout()
-        Me.GroupBox18.SuspendLayout()
+        Me.P8_Sub_DistImg.SuspendLayout()
+        CType(Me.ib_Dist02, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ib_Dist01, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TC3_ObjLists.SuspendLayout()
+        Me.P1_All.SuspendLayout()
+        Me.P2_Found.SuspendLayout()
         Me.SuspendLayout()
         '
         'GroupBox1
@@ -266,8 +280,9 @@ Partial Class Form_Main
         Me.TC2_Bilder.Controls.Add(Me.P4_DepthZ16)
         Me.TC2_Bilder.Controls.Add(Me.P6_Sub_IOI)
         Me.TC2_Bilder.Controls.Add(Me.P7_Sub_Laplace)
-        Me.TC2_Bilder.Controls.Add(Me.P8_Sub_Mask)
-        Me.TC2_Bilder.Controls.Add(Me.P9_Sub_Points)
+        Me.TC2_Bilder.Controls.Add(Me.P8_Sub_DistImg)
+        Me.TC2_Bilder.Controls.Add(Me.P9_Sub_Mask)
+        Me.TC2_Bilder.Controls.Add(Me.P10_Sub_Points)
         Me.TC2_Bilder.Location = New System.Drawing.Point(6, 25)
         Me.TC2_Bilder.Name = "TC2_Bilder"
         Me.TC2_Bilder.SelectedIndex = 0
@@ -377,6 +392,7 @@ Partial Class Form_Main
         '
         'P5_ResultSearchObj
         '
+        Me.P5_ResultSearchObj.Controls.Add(Me.lbl_Prozent)
         Me.P5_ResultSearchObj.Controls.Add(Me.lbl_FoundWidth)
         Me.P5_ResultSearchObj.Controls.Add(Me.Label28)
         Me.P5_ResultSearchObj.Controls.Add(Me.lbl_Found_Rot)
@@ -385,7 +401,7 @@ Partial Class Form_Main
         Me.P5_ResultSearchObj.Controls.Add(Me.Label24)
         Me.P5_ResultSearchObj.Controls.Add(Me.lbl_FoundObj)
         Me.P5_ResultSearchObj.Controls.Add(Me.Label22)
-        Me.P5_ResultSearchObj.Controls.Add(Me.ImageBox1)
+        Me.P5_ResultSearchObj.Controls.Add(Me.ib_Found)
         Me.P5_ResultSearchObj.Location = New System.Drawing.Point(4, 25)
         Me.P5_ResultSearchObj.Name = "P5_ResultSearchObj"
         Me.P5_ResultSearchObj.Size = New System.Drawing.Size(1296, 489)
@@ -464,16 +480,16 @@ Partial Class Form_Main
         Me.Label22.Text = "Objekt: "
         Me.Label22.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
-        'ImageBox1
+        'ib_Found
         '
-        Me.ImageBox1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.ib_Found.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ImageBox1.Location = New System.Drawing.Point(6, 6)
-        Me.ImageBox1.Name = "ImageBox1"
-        Me.ImageBox1.Size = New System.Drawing.Size(640, 480)
-        Me.ImageBox1.TabIndex = 9
-        Me.ImageBox1.TabStop = False
+        Me.ib_Found.Location = New System.Drawing.Point(6, 6)
+        Me.ib_Found.Name = "ib_Found"
+        Me.ib_Found.Size = New System.Drawing.Size(640, 480)
+        Me.ib_Found.TabIndex = 9
+        Me.ib_Found.TabStop = False
         '
         'P4_DepthZ16
         '
@@ -532,8 +548,8 @@ Partial Class Form_Main
         '
         'P7_Sub_Laplace
         '
-        Me.P7_Sub_Laplace.Controls.Add(Me.lb_laplace_02)
-        Me.P7_Sub_Laplace.Controls.Add(Me.lb_laplace_01)
+        Me.P7_Sub_Laplace.Controls.Add(Me.ib_laplace_02)
+        Me.P7_Sub_Laplace.Controls.Add(Me.ib_laplace_01)
         Me.P7_Sub_Laplace.Location = New System.Drawing.Point(4, 25)
         Me.P7_Sub_Laplace.Name = "P7_Sub_Laplace"
         Me.P7_Sub_Laplace.Size = New System.Drawing.Size(1296, 489)
@@ -541,93 +557,93 @@ Partial Class Form_Main
         Me.P7_Sub_Laplace.Text = "Sub_LaplaceSharped"
         Me.P7_Sub_Laplace.UseVisualStyleBackColor = True
         '
-        'lb_laplace_02
+        'ib_laplace_02
         '
-        Me.lb_laplace_02.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.ib_laplace_02.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lb_laplace_02.Location = New System.Drawing.Point(653, 4)
-        Me.lb_laplace_02.Name = "lb_laplace_02"
-        Me.lb_laplace_02.Size = New System.Drawing.Size(640, 480)
-        Me.lb_laplace_02.TabIndex = 13
-        Me.lb_laplace_02.TabStop = False
+        Me.ib_laplace_02.Location = New System.Drawing.Point(653, 4)
+        Me.ib_laplace_02.Name = "ib_laplace_02"
+        Me.ib_laplace_02.Size = New System.Drawing.Size(640, 480)
+        Me.ib_laplace_02.TabIndex = 13
+        Me.ib_laplace_02.TabStop = False
         '
-        'lb_laplace_01
+        'ib_laplace_01
         '
-        Me.lb_laplace_01.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.ib_laplace_01.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lb_laplace_01.Location = New System.Drawing.Point(4, 4)
-        Me.lb_laplace_01.Name = "lb_laplace_01"
-        Me.lb_laplace_01.Size = New System.Drawing.Size(640, 480)
-        Me.lb_laplace_01.TabIndex = 12
-        Me.lb_laplace_01.TabStop = False
+        Me.ib_laplace_01.Location = New System.Drawing.Point(4, 4)
+        Me.ib_laplace_01.Name = "ib_laplace_01"
+        Me.ib_laplace_01.Size = New System.Drawing.Size(640, 480)
+        Me.ib_laplace_01.TabIndex = 12
+        Me.ib_laplace_01.TabStop = False
         '
-        'P8_Sub_Mask
+        'P9_Sub_Mask
         '
-        Me.P8_Sub_Mask.Controls.Add(Me.lb_mask_02)
-        Me.P8_Sub_Mask.Controls.Add(Me.lb_mask_01)
-        Me.P8_Sub_Mask.Location = New System.Drawing.Point(4, 25)
-        Me.P8_Sub_Mask.Name = "P8_Sub_Mask"
-        Me.P8_Sub_Mask.Size = New System.Drawing.Size(1296, 489)
-        Me.P8_Sub_Mask.TabIndex = 7
-        Me.P8_Sub_Mask.Text = "Sub_Maske"
-        Me.P8_Sub_Mask.UseVisualStyleBackColor = True
+        Me.P9_Sub_Mask.Controls.Add(Me.ib_mask_02)
+        Me.P9_Sub_Mask.Controls.Add(Me.ib_mask_01)
+        Me.P9_Sub_Mask.Location = New System.Drawing.Point(4, 25)
+        Me.P9_Sub_Mask.Name = "P9_Sub_Mask"
+        Me.P9_Sub_Mask.Size = New System.Drawing.Size(1296, 489)
+        Me.P9_Sub_Mask.TabIndex = 7
+        Me.P9_Sub_Mask.Text = "Sub_Maske"
+        Me.P9_Sub_Mask.UseVisualStyleBackColor = True
         '
-        'lb_mask_02
+        'ib_mask_02
         '
-        Me.lb_mask_02.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.ib_mask_02.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lb_mask_02.Location = New System.Drawing.Point(653, 4)
-        Me.lb_mask_02.Name = "lb_mask_02"
-        Me.lb_mask_02.Size = New System.Drawing.Size(640, 480)
-        Me.lb_mask_02.TabIndex = 13
-        Me.lb_mask_02.TabStop = False
+        Me.ib_mask_02.Location = New System.Drawing.Point(653, 4)
+        Me.ib_mask_02.Name = "ib_mask_02"
+        Me.ib_mask_02.Size = New System.Drawing.Size(640, 480)
+        Me.ib_mask_02.TabIndex = 13
+        Me.ib_mask_02.TabStop = False
         '
-        'lb_mask_01
+        'ib_mask_01
         '
-        Me.lb_mask_01.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.ib_mask_01.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lb_mask_01.Location = New System.Drawing.Point(4, 4)
-        Me.lb_mask_01.Name = "lb_mask_01"
-        Me.lb_mask_01.Size = New System.Drawing.Size(640, 480)
-        Me.lb_mask_01.TabIndex = 12
-        Me.lb_mask_01.TabStop = False
+        Me.ib_mask_01.Location = New System.Drawing.Point(4, 4)
+        Me.ib_mask_01.Name = "ib_mask_01"
+        Me.ib_mask_01.Size = New System.Drawing.Size(640, 480)
+        Me.ib_mask_01.TabIndex = 12
+        Me.ib_mask_01.TabStop = False
         '
-        'P9_Sub_Points
+        'P10_Sub_Points
         '
-        Me.P9_Sub_Points.Controls.Add(Me.lb_points_02)
-        Me.P9_Sub_Points.Controls.Add(Me.lb_points_01)
-        Me.P9_Sub_Points.Location = New System.Drawing.Point(4, 25)
-        Me.P9_Sub_Points.Name = "P9_Sub_Points"
-        Me.P9_Sub_Points.Size = New System.Drawing.Size(1296, 489)
-        Me.P9_Sub_Points.TabIndex = 8
-        Me.P9_Sub_Points.Text = "Sub_Punkte"
-        Me.P9_Sub_Points.UseVisualStyleBackColor = True
+        Me.P10_Sub_Points.Controls.Add(Me.ib_points_02)
+        Me.P10_Sub_Points.Controls.Add(Me.ib_points_01)
+        Me.P10_Sub_Points.Location = New System.Drawing.Point(4, 25)
+        Me.P10_Sub_Points.Name = "P10_Sub_Points"
+        Me.P10_Sub_Points.Size = New System.Drawing.Size(1296, 489)
+        Me.P10_Sub_Points.TabIndex = 8
+        Me.P10_Sub_Points.Text = "Sub_Punkte"
+        Me.P10_Sub_Points.UseVisualStyleBackColor = True
         '
-        'lb_points_02
+        'ib_points_02
         '
-        Me.lb_points_02.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.ib_points_02.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lb_points_02.Location = New System.Drawing.Point(653, 4)
-        Me.lb_points_02.Name = "lb_points_02"
-        Me.lb_points_02.Size = New System.Drawing.Size(640, 480)
-        Me.lb_points_02.TabIndex = 13
-        Me.lb_points_02.TabStop = False
+        Me.ib_points_02.Location = New System.Drawing.Point(653, 4)
+        Me.ib_points_02.Name = "ib_points_02"
+        Me.ib_points_02.Size = New System.Drawing.Size(640, 480)
+        Me.ib_points_02.TabIndex = 13
+        Me.ib_points_02.TabStop = False
         '
-        'lb_points_01
+        'ib_points_01
         '
-        Me.lb_points_01.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.ib_points_01.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lb_points_01.Location = New System.Drawing.Point(4, 4)
-        Me.lb_points_01.Name = "lb_points_01"
-        Me.lb_points_01.Size = New System.Drawing.Size(640, 480)
-        Me.lb_points_01.TabIndex = 12
-        Me.lb_points_01.TabStop = False
+        Me.ib_points_01.Location = New System.Drawing.Point(4, 4)
+        Me.ib_points_01.Name = "ib_points_01"
+        Me.ib_points_01.Size = New System.Drawing.Size(640, 480)
+        Me.ib_points_01.TabIndex = 12
+        Me.ib_points_01.TabStop = False
         '
         'GroupBox3
         '
@@ -779,6 +795,8 @@ Partial Class Form_Main
         '
         'GroupBox10
         '
+        Me.GroupBox10.Controls.Add(Me.btn_LoadSearch)
+        Me.GroupBox10.Controls.Add(Me.btn_SaveSearch)
         Me.GroupBox10.Controls.Add(Me.Label17)
         Me.GroupBox10.Controls.Add(Me.Num_SearchToleranz)
         Me.GroupBox10.Controls.Add(Me.Label15)
@@ -1003,7 +1021,7 @@ Partial Class Form_Main
         Me.lb_SearchObjList.Location = New System.Drawing.Point(361, 21)
         Me.lb_SearchObjList.Name = "lb_SearchObjList"
         Me.lb_SearchObjList.ScrollAlwaysVisible = True
-        Me.lb_SearchObjList.Size = New System.Drawing.Size(280, 116)
+        Me.lb_SearchObjList.Size = New System.Drawing.Size(280, 84)
         Me.lb_SearchObjList.TabIndex = 0
         '
         'GroupBox9
@@ -1174,7 +1192,7 @@ Partial Class Form_Main
         Me.num_CamOffset.Name = "num_CamOffset"
         Me.num_CamOffset.Size = New System.Drawing.Size(120, 22)
         Me.num_CamOffset.TabIndex = 0
-        Me.num_CamOffset.Value = New Decimal(New Integer() {80, 0, 0, 0})
+        Me.num_CamOffset.Value = New Decimal(New Integer() {75, 0, 0, 0})
         '
         'GroupBox4
         '
@@ -1397,6 +1415,50 @@ Partial Class Form_Main
         Me.P4_Auswertung.TabIndex = 2
         Me.P4_Auswertung.Text = "Auswertung"
         Me.P4_Auswertung.UseVisualStyleBackColor = True
+        '
+        'GroupBox18
+        '
+        Me.GroupBox18.Controls.Add(Me.rb_Auswertung_Color)
+        Me.GroupBox18.Controls.Add(Me.rb_Auswertung_Kombi)
+        Me.GroupBox18.Controls.Add(Me.rb_Auswertung_Depth)
+        Me.GroupBox18.Location = New System.Drawing.Point(5, 10)
+        Me.GroupBox18.Name = "GroupBox18"
+        Me.GroupBox18.Size = New System.Drawing.Size(165, 150)
+        Me.GroupBox18.TabIndex = 24
+        Me.GroupBox18.TabStop = False
+        Me.GroupBox18.Text = "Auswertung"
+        '
+        'rb_Auswertung_Color
+        '
+        Me.rb_Auswertung_Color.AutoSize = True
+        Me.rb_Auswertung_Color.Location = New System.Drawing.Point(6, 28)
+        Me.rb_Auswertung_Color.Name = "rb_Auswertung_Color"
+        Me.rb_Auswertung_Color.Size = New System.Drawing.Size(136, 21)
+        Me.rb_Auswertung_Color.TabIndex = 21
+        Me.rb_Auswertung_Color.Text = "Farb Auswertung"
+        Me.rb_Auswertung_Color.UseVisualStyleBackColor = True
+        '
+        'rb_Auswertung_Kombi
+        '
+        Me.rb_Auswertung_Kombi.AutoSize = True
+        Me.rb_Auswertung_Kombi.Location = New System.Drawing.Point(6, 82)
+        Me.rb_Auswertung_Kombi.Name = "rb_Auswertung_Kombi"
+        Me.rb_Auswertung_Kombi.Size = New System.Drawing.Size(146, 21)
+        Me.rb_Auswertung_Kombi.TabIndex = 23
+        Me.rb_Auswertung_Kombi.Text = "Kombi Auswertung"
+        Me.rb_Auswertung_Kombi.UseVisualStyleBackColor = True
+        '
+        'rb_Auswertung_Depth
+        '
+        Me.rb_Auswertung_Depth.AutoSize = True
+        Me.rb_Auswertung_Depth.Checked = True
+        Me.rb_Auswertung_Depth.Location = New System.Drawing.Point(6, 55)
+        Me.rb_Auswertung_Depth.Name = "rb_Auswertung_Depth"
+        Me.rb_Auswertung_Depth.Size = New System.Drawing.Size(147, 21)
+        Me.rb_Auswertung_Depth.TabIndex = 22
+        Me.rb_Auswertung_Depth.TabStop = True
+        Me.rb_Auswertung_Depth.Text = "Tiefen Auswertung"
+        Me.rb_Auswertung_Depth.UseVisualStyleBackColor = True
         '
         'GroupBox5
         '
@@ -1696,30 +1758,6 @@ Partial Class Form_Main
         Me.btn_TestVerschieben.Text = "TestVeschieben"
         Me.btn_TestVerschieben.UseVisualStyleBackColor = True
         '
-        'LB_obj
-        '
-        Me.LB_obj.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.LB_obj.FormattingEnabled = True
-        Me.LB_obj.HorizontalScrollbar = True
-        Me.LB_obj.ItemHeight = 16
-        Me.LB_obj.Location = New System.Drawing.Point(6, 21)
-        Me.LB_obj.Name = "LB_obj"
-        Me.LB_obj.Size = New System.Drawing.Size(544, 516)
-        Me.LB_obj.TabIndex = 7
-        '
-        'GroupBox11
-        '
-        Me.GroupBox11.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GroupBox11.Controls.Add(Me.LB_obj)
-        Me.GroupBox11.Location = New System.Drawing.Point(1343, 194)
-        Me.GroupBox11.Name = "GroupBox11"
-        Me.GroupBox11.Size = New System.Drawing.Size(554, 545)
-        Me.GroupBox11.TabIndex = 21
-        Me.GroupBox11.TabStop = False
-        Me.GroupBox11.Text = "Objekte"
-        '
         'GroupBox8
         '
         Me.GroupBox8.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -1797,58 +1835,130 @@ Partial Class Form_Main
         Me.cb_refcTaken.Text = "Ref_C"
         Me.cb_refcTaken.UseVisualStyleBackColor = True
         '
-        'rb_Auswertung_Color
+        'P8_Sub_DistImg
         '
-        Me.rb_Auswertung_Color.AutoSize = True
-        Me.rb_Auswertung_Color.Location = New System.Drawing.Point(6, 28)
-        Me.rb_Auswertung_Color.Name = "rb_Auswertung_Color"
-        Me.rb_Auswertung_Color.Size = New System.Drawing.Size(136, 21)
-        Me.rb_Auswertung_Color.TabIndex = 21
-        Me.rb_Auswertung_Color.TabStop = True
-        Me.rb_Auswertung_Color.Text = "Farb Auswertung"
-        Me.rb_Auswertung_Color.UseVisualStyleBackColor = True
+        Me.P8_Sub_DistImg.Controls.Add(Me.ib_Dist02)
+        Me.P8_Sub_DistImg.Controls.Add(Me.ib_Dist01)
+        Me.P8_Sub_DistImg.Location = New System.Drawing.Point(4, 25)
+        Me.P8_Sub_DistImg.Name = "P8_Sub_DistImg"
+        Me.P8_Sub_DistImg.Size = New System.Drawing.Size(1296, 489)
+        Me.P8_Sub_DistImg.TabIndex = 9
+        Me.P8_Sub_DistImg.Text = "Sub_DistanceImg"
+        Me.P8_Sub_DistImg.UseVisualStyleBackColor = True
         '
-        'rb_Auswertung_Depth
+        'ib_Dist02
         '
-        Me.rb_Auswertung_Depth.AutoSize = True
-        Me.rb_Auswertung_Depth.Location = New System.Drawing.Point(6, 55)
-        Me.rb_Auswertung_Depth.Name = "rb_Auswertung_Depth"
-        Me.rb_Auswertung_Depth.Size = New System.Drawing.Size(147, 21)
-        Me.rb_Auswertung_Depth.TabIndex = 22
-        Me.rb_Auswertung_Depth.TabStop = True
-        Me.rb_Auswertung_Depth.Text = "Tiefen Auswertung"
-        Me.rb_Auswertung_Depth.UseVisualStyleBackColor = True
+        Me.ib_Dist02.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ib_Dist02.Location = New System.Drawing.Point(653, 4)
+        Me.ib_Dist02.Name = "ib_Dist02"
+        Me.ib_Dist02.Size = New System.Drawing.Size(640, 480)
+        Me.ib_Dist02.TabIndex = 11
+        Me.ib_Dist02.TabStop = False
         '
-        'rb_Auswertung_Kombi
+        'ib_Dist01
         '
-        Me.rb_Auswertung_Kombi.AutoSize = True
-        Me.rb_Auswertung_Kombi.Location = New System.Drawing.Point(6, 82)
-        Me.rb_Auswertung_Kombi.Name = "rb_Auswertung_Kombi"
-        Me.rb_Auswertung_Kombi.Size = New System.Drawing.Size(146, 21)
-        Me.rb_Auswertung_Kombi.TabIndex = 23
-        Me.rb_Auswertung_Kombi.TabStop = True
-        Me.rb_Auswertung_Kombi.Text = "Kombi Auswertung"
-        Me.rb_Auswertung_Kombi.UseVisualStyleBackColor = True
+        Me.ib_Dist01.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ib_Dist01.Location = New System.Drawing.Point(4, 4)
+        Me.ib_Dist01.Name = "ib_Dist01"
+        Me.ib_Dist01.Size = New System.Drawing.Size(640, 480)
+        Me.ib_Dist01.TabIndex = 10
+        Me.ib_Dist01.TabStop = False
         '
-        'GroupBox18
+        'TC3_ObjLists
         '
-        Me.GroupBox18.Controls.Add(Me.rb_Auswertung_Color)
-        Me.GroupBox18.Controls.Add(Me.rb_Auswertung_Kombi)
-        Me.GroupBox18.Controls.Add(Me.rb_Auswertung_Depth)
-        Me.GroupBox18.Location = New System.Drawing.Point(5, 10)
-        Me.GroupBox18.Name = "GroupBox18"
-        Me.GroupBox18.Size = New System.Drawing.Size(165, 150)
-        Me.GroupBox18.TabIndex = 24
-        Me.GroupBox18.TabStop = False
-        Me.GroupBox18.Text = "Auswertung"
+        Me.TC3_ObjLists.Controls.Add(Me.P1_All)
+        Me.TC3_ObjLists.Controls.Add(Me.P2_Found)
+        Me.TC3_ObjLists.Location = New System.Drawing.Point(1345, 194)
+        Me.TC3_ObjLists.Name = "TC3_ObjLists"
+        Me.TC3_ObjLists.SelectedIndex = 0
+        Me.TC3_ObjLists.Size = New System.Drawing.Size(548, 545)
+        Me.TC3_ObjLists.TabIndex = 23
+        '
+        'P1_All
+        '
+        Me.P1_All.Controls.Add(Me.LB_obj)
+        Me.P1_All.Location = New System.Drawing.Point(4, 25)
+        Me.P1_All.Name = "P1_All"
+        Me.P1_All.Padding = New System.Windows.Forms.Padding(3)
+        Me.P1_All.Size = New System.Drawing.Size(540, 516)
+        Me.P1_All.TabIndex = 0
+        Me.P1_All.Text = "Alle Objekte"
+        Me.P1_All.UseVisualStyleBackColor = True
+        '
+        'LB_obj
+        '
+        Me.LB_obj.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.LB_obj.FormattingEnabled = True
+        Me.LB_obj.HorizontalScrollbar = True
+        Me.LB_obj.ItemHeight = 16
+        Me.LB_obj.Location = New System.Drawing.Point(3, 3)
+        Me.LB_obj.Name = "LB_obj"
+        Me.LB_obj.Size = New System.Drawing.Size(534, 516)
+        Me.LB_obj.TabIndex = 7
+        '
+        'P2_Found
+        '
+        Me.P2_Found.Controls.Add(Me.lb_Found)
+        Me.P2_Found.Location = New System.Drawing.Point(4, 25)
+        Me.P2_Found.Name = "P2_Found"
+        Me.P2_Found.Padding = New System.Windows.Forms.Padding(3)
+        Me.P2_Found.Size = New System.Drawing.Size(540, 516)
+        Me.P2_Found.TabIndex = 1
+        Me.P2_Found.Text = "Passende Objekte"
+        Me.P2_Found.UseVisualStyleBackColor = True
+        '
+        'lb_Found
+        '
+        Me.lb_Found.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lb_Found.FormattingEnabled = True
+        Me.lb_Found.HorizontalScrollbar = True
+        Me.lb_Found.ItemHeight = 16
+        Me.lb_Found.Location = New System.Drawing.Point(3, 0)
+        Me.lb_Found.Name = "lb_Found"
+        Me.lb_Found.Size = New System.Drawing.Size(534, 516)
+        Me.lb_Found.TabIndex = 8
+        '
+        'btn_SaveSearch
+        '
+        Me.btn_SaveSearch.Location = New System.Drawing.Point(361, 111)
+        Me.btn_SaveSearch.Name = "btn_SaveSearch"
+        Me.btn_SaveSearch.Size = New System.Drawing.Size(114, 23)
+        Me.btn_SaveSearch.TabIndex = 12
+        Me.btn_SaveSearch.Text = "Speichern"
+        Me.btn_SaveSearch.UseVisualStyleBackColor = True
+        '
+        'btn_LoadSearch
+        '
+        Me.btn_LoadSearch.Location = New System.Drawing.Point(527, 111)
+        Me.btn_LoadSearch.Name = "btn_LoadSearch"
+        Me.btn_LoadSearch.Size = New System.Drawing.Size(114, 23)
+        Me.btn_LoadSearch.TabIndex = 13
+        Me.btn_LoadSearch.Text = "Laden"
+        Me.btn_LoadSearch.UseVisualStyleBackColor = True
+        '
+        'lbl_Prozent
+        '
+        Me.lbl_Prozent.Font = New System.Drawing.Font("Microsoft Sans Serif", 19.8!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_Prozent.Location = New System.Drawing.Point(266, 217)
+        Me.lbl_Prozent.Name = "lbl_Prozent"
+        Me.lbl_Prozent.Size = New System.Drawing.Size(100, 43)
+        Me.lbl_Prozent.TabIndex = 18
+        Me.lbl_Prozent.Text = "0%"
+        Me.lbl_Prozent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'Form_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1902, 803)
+        Me.Controls.Add(Me.TC3_ObjLists)
         Me.Controls.Add(Me.GroupBox8)
-        Me.Controls.Add(Me.GroupBox11)
         Me.Controls.Add(Me.TC1_Menue)
         Me.Controls.Add(Me.GroupBox3)
         Me.Controls.Add(Me.GroupBox1)
@@ -1867,21 +1977,21 @@ Partial Class Form_Main
         CType(Me.ib_rev_Color, System.ComponentModel.ISupportInitialize).EndInit()
         Me.P5_ResultSearchObj.ResumeLayout(False)
         Me.P5_ResultSearchObj.PerformLayout()
-        CType(Me.ImageBox1, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ib_Found, System.ComponentModel.ISupportInitialize).EndInit()
         Me.P4_DepthZ16.ResumeLayout(False)
         CType(Me.ib_depth_01, System.ComponentModel.ISupportInitialize).EndInit()
         Me.P6_Sub_IOI.ResumeLayout(False)
         CType(Me.ib_ImOfIn_02, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.ib_ImOfIn_01, System.ComponentModel.ISupportInitialize).EndInit()
         Me.P7_Sub_Laplace.ResumeLayout(False)
-        CType(Me.lb_laplace_02, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.lb_laplace_01, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.P8_Sub_Mask.ResumeLayout(False)
-        CType(Me.lb_mask_02, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.lb_mask_01, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.P9_Sub_Points.ResumeLayout(False)
-        CType(Me.lb_points_02, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.lb_points_01, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ib_laplace_02, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ib_laplace_01, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.P9_Sub_Mask.ResumeLayout(False)
+        CType(Me.ib_mask_02, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ib_mask_01, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.P10_Sub_Points.ResumeLayout(False)
+        CType(Me.ib_points_02, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ib_points_01, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox3.ResumeLayout(False)
         Me.GroupBox6.ResumeLayout(False)
         CType(Me.BindingSource1, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1915,6 +2025,8 @@ Partial Class Form_Main
         CType(Me.num_MaskH, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.num_MaskV, System.ComponentModel.ISupportInitialize).EndInit()
         Me.P4_Auswertung.ResumeLayout(False)
+        Me.GroupBox18.ResumeLayout(False)
+        Me.GroupBox18.PerformLayout()
         Me.GroupBox5.ResumeLayout(False)
         Me.GroupBox5.PerformLayout()
         CType(Me.num_ThreshTief, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1928,11 +2040,14 @@ Partial Class Form_Main
         Me.GroupBox16.PerformLayout()
         CType(Me.num_TCP_Port, System.ComponentModel.ISupportInitialize).EndInit()
         Me.P6_test.ResumeLayout(False)
-        Me.GroupBox11.ResumeLayout(False)
         Me.GroupBox8.ResumeLayout(False)
         Me.GroupBox8.PerformLayout()
-        Me.GroupBox18.ResumeLayout(False)
-        Me.GroupBox18.PerformLayout()
+        Me.P8_Sub_DistImg.ResumeLayout(False)
+        CType(Me.ib_Dist02, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ib_Dist01, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.TC3_ObjLists.ResumeLayout(False)
+        Me.P1_All.ResumeLayout(False)
+        Me.P2_Found.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -1988,8 +2103,6 @@ Partial Class Form_Main
     Friend WithEvents ib_res_01 As Emgu.CV.UI.ImageBox
     Friend WithEvents ib_rev_Depth As Emgu.CV.UI.ImageBox
     Friend WithEvents ib_rev_Color As Emgu.CV.UI.ImageBox
-    Friend WithEvents LB_obj As ListBox
-    Friend WithEvents GroupBox11 As GroupBox
     Friend WithEvents P4_DepthZ16 As TabPage
     Friend WithEvents ib_depth_01 As Emgu.CV.UI.ImageBox
     Friend WithEvents GroupBox8 As GroupBox
@@ -2047,7 +2160,7 @@ Partial Class Form_Main
     Friend WithEvents Label24 As Label
     Friend WithEvents lbl_FoundObj As Label
     Friend WithEvents Label22 As Label
-    Friend WithEvents ImageBox1 As Emgu.CV.UI.ImageBox
+    Friend WithEvents ib_Found As Emgu.CV.UI.ImageBox
     Friend WithEvents P5_Conection As TabPage
     Friend WithEvents GroupBox15 As GroupBox
     Friend WithEvents num_pixmmH_faktor As NumericUpDown
@@ -2077,16 +2190,27 @@ Partial Class Form_Main
     Friend WithEvents ib_ImOfIn_02 As Emgu.CV.UI.ImageBox
     Friend WithEvents ib_ImOfIn_01 As Emgu.CV.UI.ImageBox
     Friend WithEvents P7_Sub_Laplace As TabPage
-    Friend WithEvents lb_laplace_02 As Emgu.CV.UI.ImageBox
-    Friend WithEvents lb_laplace_01 As Emgu.CV.UI.ImageBox
-    Friend WithEvents P8_Sub_Mask As TabPage
-    Friend WithEvents lb_mask_02 As Emgu.CV.UI.ImageBox
-    Friend WithEvents lb_mask_01 As Emgu.CV.UI.ImageBox
-    Friend WithEvents P9_Sub_Points As TabPage
-    Friend WithEvents lb_points_02 As Emgu.CV.UI.ImageBox
-    Friend WithEvents lb_points_01 As Emgu.CV.UI.ImageBox
+    Friend WithEvents ib_laplace_02 As Emgu.CV.UI.ImageBox
+    Friend WithEvents ib_laplace_01 As Emgu.CV.UI.ImageBox
+    Friend WithEvents P9_Sub_Mask As TabPage
+    Friend WithEvents ib_mask_02 As Emgu.CV.UI.ImageBox
+    Friend WithEvents ib_mask_01 As Emgu.CV.UI.ImageBox
+    Friend WithEvents P10_Sub_Points As TabPage
+    Friend WithEvents ib_points_02 As Emgu.CV.UI.ImageBox
+    Friend WithEvents ib_points_01 As Emgu.CV.UI.ImageBox
     Friend WithEvents GroupBox18 As GroupBox
     Friend WithEvents rb_Auswertung_Color As RadioButton
     Friend WithEvents rb_Auswertung_Kombi As RadioButton
     Friend WithEvents rb_Auswertung_Depth As RadioButton
+    Friend WithEvents P8_Sub_DistImg As TabPage
+    Friend WithEvents ib_Dist02 As Emgu.CV.UI.ImageBox
+    Friend WithEvents ib_Dist01 As Emgu.CV.UI.ImageBox
+    Friend WithEvents TC3_ObjLists As TabControl
+    Friend WithEvents P1_All As TabPage
+    Friend WithEvents LB_obj As ListBox
+    Friend WithEvents P2_Found As TabPage
+    Friend WithEvents lb_Found As ListBox
+    Friend WithEvents btn_LoadSearch As Button
+    Friend WithEvents btn_SaveSearch As Button
+    Friend WithEvents lbl_Prozent As Label
 End Class

@@ -53,7 +53,32 @@
             _Color = value
         End Set
     End Property
-
+    Private _Breite As Int32
+    Public ReadOnly Property Breite() As Int32
+        Get
+            If Dist_X() > Dist_Y() Then
+                Return Dist_X()
+            Else
+                Return Dist_Y()
+            End If
+        End Get
+    End Property
+    Private _Höhe As Int32
+    Public ReadOnly Property Höhe() As Int32
+        Get
+            If Dist_X() < Dist_Y() Then
+                Return Dist_X()
+            Else
+                Return Dist_Y()
+            End If
+        End Get
+    End Property
+    Private _Fläche As Int32
+    Public ReadOnly Property Fläche() As Int32
+        Get
+            Return Dist_X() * Dist_Y()
+        End Get
+    End Property
     Private _Reverenzen As New List(Of MyPoint)
 
     Sub New()
@@ -77,6 +102,14 @@
         _Reverenzen.Add(point)
         CheckMinMax(point)
     End Sub
+    Public Function HasRef(x As Int32, y As Int32) As Boolean
+        For Each point In _Reverenzen
+            If point.X = x And point.Y = y Then
+                Return True
+            End If
+        Next
+        Return False
+    End Function
     Private Sub CheckMinMax(point As MyPoint)
         If _Reverenzen.Count <= 1 Then 'Erster Punkt
             _Max_X = point
@@ -123,15 +156,15 @@
         End If
     End Function
 
-    Public Function Passend(länge_mm As Int32, breit_mm As Int32, tiefe_mm As Int32, Optional toleranz_prozent As Int32 = 0) As Boolean
-        Dim länge_dif, breite_dif, tiefe_dif As Double
+    Public Function Passend(höhe_mm As Int32, breit_mm As Int32, tiefe_mm As Int32, Optional toleranz_prozent As Int32 = 0) As Boolean
+        Dim höhe_dif, breite_dif, tiefe_dif As Double
         If toleranz_prozent > 0 Then
-            länge_dif = (länge_mm / 100) * toleranz_prozent
+            höhe_dif = (höhe_mm / 100) * toleranz_prozent
             breite_dif = (breit_mm / 100) * toleranz_prozent
             tiefe_dif = (tiefe_mm / 100) * toleranz_prozent
-            Return (Vergleich(länge_mm - länge_dif, länge_mm + länge_dif, breit_mm - breite_dif, breit_mm + breite_dif, tiefe_mm - tiefe_dif, tiefe_mm + tiefe_dif) Or Vergleich(breit_mm - breite_dif, breit_mm + breite_dif, länge_mm - länge_dif, länge_mm + länge_dif, tiefe_mm - tiefe_dif, tiefe_mm + tiefe_dif) Or Vergleich(tiefe_mm - tiefe_dif, tiefe_mm + tiefe_dif, länge_mm - länge_dif, länge_mm + länge_dif, breit_mm - breite_dif, breit_mm + breite_dif))
+            Return (Vergleich(höhe_mm - höhe_dif, höhe_mm + höhe_dif, breit_mm - breite_dif, breit_mm + breite_dif, tiefe_mm - tiefe_dif, tiefe_mm + tiefe_dif) Or Vergleich(breit_mm - breite_dif, breit_mm + breite_dif, höhe_mm - höhe_dif, höhe_mm + höhe_dif, tiefe_mm - tiefe_dif, tiefe_mm + tiefe_dif) Or Vergleich(tiefe_mm - tiefe_dif, tiefe_mm + tiefe_dif, höhe_mm - höhe_dif, höhe_mm + höhe_dif, breit_mm - breite_dif, breit_mm + breite_dif))
         Else
-            Return (Vergleich(länge_mm, breit_mm, tiefe_mm) Or Vergleich(breit_mm, länge_mm, tiefe_mm) Or Vergleich(tiefe_mm, länge_mm, breit_mm))
+            Return (Vergleich(höhe_mm, breit_mm, tiefe_mm) Or Vergleich(breit_mm, höhe_mm, tiefe_mm) Or Vergleich(tiefe_mm, höhe_mm, breit_mm))
         End If
     End Function
 
@@ -141,6 +174,7 @@
     Private Function Vergleich(v_xmin As Double, v_xmax As Double, v_y1min As Double, v_y1max As Double, v_y2min As Double, v_y2max As Double) As Boolean
         Return (Dist_X() >= v_xmin And Dist_X() <= v_xmax) And ((Dist_Y() >= v_y1min And Dist_Y() <= v_y1max) Or (Dist_Y() >= v_y2min And Dist_Y() <= v_y2max))
     End Function
+
 
     Public Overrides Function ToString() As String
         Return ($"{_ID,3}: Xmin:{_Min_X.ToString()} ; Xdist:{Dist_X(),4} ; Ymin:{_Min_Y.ToString()} ; Ydist:{Dist_Y(),4} ; Z:{_Min_Z.ToString} - {_Max_Z.ToString}")
