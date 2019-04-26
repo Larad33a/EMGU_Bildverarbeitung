@@ -36,6 +36,16 @@
         _Y = y
         _Z = z
     End Sub
+    Sub New(point As Point, Optional z As Int32 = 0)
+        _X = point.X
+        _Y = point.Y
+        _Z = z
+    End Sub
+    Sub New(point As PointF, Optional z As Int32 = 0)
+        _X = CInt(Math.Round(point.X))
+        _Y = CInt(Math.Round(point.Y))
+        _Z = z
+    End Sub
 
     Public Overrides Function ToString() As String
         Return ($" {_X,4} | {_Y,4} | {_Z,4} ")

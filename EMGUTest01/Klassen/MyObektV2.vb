@@ -1,0 +1,346 @@
+﻿Imports Emgu.CV
+Imports Emgu.CV.Structure
+Imports Emgu.CV.Util
+
+Public Class MyObektV2
+    '--------------------------------------------------------------------------------------------------------------------------------------------------------
+    'Property
+    '--------------------------------------------------------------------------------------------------------------------------------------------------------
+    'ID------------------------------------------------------
+    Private _ID As Int32
+    Public Property ID() As Int32
+        Get
+            Return _ID
+        End Get
+        Set(ByVal value As Int32)
+            _ID = value
+        End Set
+    End Property
+
+    'Max & Min-----------------------------------------------
+    Private _Max_X As MyPoint = Nothing
+    Public ReadOnly Property Max_X() As MyPoint
+        Get
+            Return _Max_X
+        End Get
+    End Property
+    Private _Min_X As MyPoint = Nothing
+    Public ReadOnly Property Min_X() As MyPoint
+        Get
+            Return _Min_X
+        End Get
+    End Property
+    Private _Max_Y As MyPoint = Nothing
+    Public ReadOnly Property Max_Y() As MyPoint
+        Get
+            Return _Max_Y
+        End Get
+    End Property
+    Private _Min_Y As MyPoint = Nothing
+    Public ReadOnly Property Min_Y() As MyPoint
+        Get
+            Return _Min_Y
+        End Get
+    End Property
+    Private _Max_Z As MyPoint = Nothing
+    Public ReadOnly Property Max_Z() As MyPoint
+        Get
+            Return _Max_Z
+        End Get
+    End Property
+    Private _Min_Z As MyPoint = Nothing
+    Public ReadOnly Property Min_Z() As MyPoint
+        Get
+            Return _Min_Z
+        End Get
+    End Property
+
+    'Color---------------------------------------------------
+    Private _Color As Byte()
+    Public Property Color() As Byte()
+        Get
+            Return _Color
+        End Get
+        Set(ByVal value As Byte())
+            _Color = value
+        End Set
+    End Property
+
+
+    '--------------------------------------------------------------------------------------------------------------------------------------------------------
+    'Variablen
+    '--------------------------------------------------------------------------------------------------------------------------------------------------------
+    'Reverenz------------------------------------------------
+    'XY
+    Private _ReverenzenXY As New VectorOfPoint
+    'Z
+    Private _ReverenzenZ As New VectorOfInt
+
+    'MinAreaRec----------------------------------------------
+    Private _MinAreaRec As New RotatedRect
+
+    '--------------------------------------------------------------------------------------------------------------------------------------------------------
+    'Konstruktor
+    '--------------------------------------------------------------------------------------------------------------------------------------------------------
+    Sub New()
+
+    End Sub
+    Sub New(id As Int32)
+        _ID = id
+    End Sub
+    Sub New(id As Int32, color As Byte())
+        _ID = id
+        _Color = color
+    End Sub
+
+
+    '--------------------------------------------------------------------------------------------------------------------------------------------------------
+    'Subs
+    '--------------------------------------------------------------------------------------------------------------------------------------------------------
+    'Privat--------------------------------------------------
+    Private Sub CheckMinMax(point As MyPoint)
+        'x
+        If _Max_X Is Nothing Then
+            _Max_X = point
+        Else
+            If point.X > _Max_X.X Then
+                _Max_X = point
+            End If
+        End If
+        If _Min_X Is Nothing Then
+            _Min_X = point
+        Else
+            If point.X < _Min_X.X Then
+                _Min_X = point
+            End If
+        End If
+        'y
+        If _Max_Y Is Nothing Then
+            _Max_Y = point
+        Else
+            If point.Y > _Max_Y.Y Then
+                _Max_Y = point
+            End If
+        End If
+        If _Min_Y Is Nothing Then
+            _Min_Y = point
+        Else
+            If point.Y < _Min_Y.Y Then
+                _Min_Y = point
+            End If
+        End If
+        'z
+        If _Max_Z Is Nothing Then
+            _Max_Z = point
+        Else
+            If point.Z > _Max_Z.Z Then
+                _Max_Z = point
+            End If
+        End If
+        If _Min_Z Is Nothing Then
+            _Min_Z = point
+        Else
+            If point.Z < _Min_Z.Z Then
+                _Min_Z = point
+            End If
+        End If
+    End Sub
+
+
+    'Public--------------------------------------------------
+    'AddRef
+    Public Sub Add_Ref(x As Int32, y As Int32, z As Int32)
+        Dim tmpPoint As New Point(x, y)
+        Dim tmpPointArray(1) As Point
+        tmpPointArray(0) = tmpPoint
+        _ReverenzenXY.Push(tmpPointArray)
+        Dim tmpIntArray(1) As Int32
+        tmpIntArray(0) = z
+        _ReverenzenZ.Push(tmpIntArray)
+        CheckMinMax(New MyPoint(x, y, z))
+    End Sub
+    Public Sub Add_Ref(point As MyPoint)
+        Dim tmpPoint As New Point(point.X, point.Y)
+        Dim tmpPointArray(1) As Point
+        tmpPointArray(0) = tmpPoint
+        _ReverenzenXY.Push(tmpPointArray)
+        Dim tmpIntArray(1) As Int32
+        tmpIntArray(0) = point.Z
+        _ReverenzenZ.Push(tmpIntArray)
+        CheckMinMax(point)
+    End Sub
+    Public Sub Add_Ref(points As VectorOfPoint, höhen As Int32())
+        If points.Size = höhen.Length Then
+            _ReverenzenXY.Push(points)
+            _ReverenzenZ.Push(höhen)
+            For i = 0 To points.Size - 1
+                Dim tmpMypoint As New MyPoint(points(i).X, points(i).Y, höhen(i))
+                CheckMinMax(tmpMypoint)
+            Next
+        End If
+    End Sub
+    Public Sub Analyse()
+        _MinAreaRec = CvInvoke.MinAreaRect(_ReverenzenXY)
+    End Sub
+
+    '--------------------------------------------------------------------------------------------------------------------------------------------------------
+    'Funktionen
+    '--------------------------------------------------------------------------------------------------------------------------------------------------------
+    'Privat--------------------------------------------------
+    Private Function Vergleich(v_x As Int32, v_y1 As Int32, v_y2 As Int32) As Boolean
+        Return GetHöhe() = v_x And (GetBreite() = v_y1 Or GetBreite() = v_y2)
+    End Function
+    Private Function Vergleich(v_xmin As Double, v_xmax As Double, v_y1min As Double, v_y1max As Double, v_y2min As Double, v_y2max As Double) As Boolean
+        Return (GetHöhe() >= v_xmin And GetHöhe() <= v_xmax) And ((GetBreite() >= v_y1min And GetBreite() <= v_y1max) Or (GetBreite() >= v_y2min And GetBreite() <= v_y2max))
+    End Function
+    Private Function NormPoint(point As PointF) As Single
+        Return CSng(Math.Sqrt(point.X ^ 2 + point.Y ^ 2))
+    End Function
+
+    'Public--------------------------------------------------
+    Public Function HasRef(x As Int32, y As Int32) As Boolean
+        For i = 0 To _ReverenzenXY.Size - 1
+            If _ReverenzenXY(i).X = x And _ReverenzenXY(i).Y = y Then
+                Return True
+            End If
+        Next
+        Return False
+    End Function
+
+
+    Public Function Dist_X() As Int32
+        Return _Max_X.X - _Min_X.X
+    End Function
+    Public Function Dist_Y() As Int32
+        Return _Max_Y.Y - _Min_Y.Y
+    End Function
+    Public Function Dist_Z() As Int32
+        Return _Max_Z.Z - _Min_Z.Z
+    End Function
+    Public Function Dist_Max() As Int32
+        If Dist_X() >= Dist_Y() Then
+            Return Dist_X()
+        Else
+            Return Dist_Y()
+        End If
+    End Function
+
+    Public Function Passend(höhe_pix As Int32, breit_pix As Int32, tiefe_pix As Int32, Optional toleranz_prozent As Int32 = 0) As Boolean
+        Dim höhe_dif, breite_dif, tiefe_dif As Double
+        If toleranz_prozent > 0 Then
+            höhe_dif = (höhe_pix / 100) * toleranz_prozent
+            breite_dif = (breit_pix / 100) * toleranz_prozent
+            tiefe_dif = (tiefe_pix / 100) * toleranz_prozent
+            Return (Vergleich(höhe_pix - höhe_dif, höhe_pix + höhe_dif, breit_pix - breite_dif, breit_pix + breite_dif, tiefe_pix - tiefe_dif, tiefe_pix + tiefe_dif) Or Vergleich(breit_pix - breite_dif, breit_pix + breite_dif, höhe_pix - höhe_dif, höhe_pix + höhe_dif, tiefe_pix - tiefe_dif, tiefe_pix + tiefe_dif) Or Vergleich(tiefe_pix - tiefe_dif, tiefe_pix + tiefe_dif, höhe_pix - höhe_dif, höhe_pix + höhe_dif, breit_pix - breite_dif, breit_pix + breite_dif))
+        Else
+            Return (Vergleich(höhe_pix, breit_pix, tiefe_pix) Or Vergleich(breit_pix, höhe_pix, tiefe_pix) Or Vergleich(tiefe_pix, höhe_pix, breit_pix))
+        End If
+    End Function
+
+    'Maase
+    Public Function GetHöhe() As Int32
+        'Prüfen ob _MinAreaRec Angelegt
+        If _MinAreaRec.Size.IsEmpty Then
+            Analyse()
+        End If
+        If _MinAreaRec.Size.Height <= _MinAreaRec.Size.Width Then
+            Return CInt(Math.Round(_MinAreaRec.Size.Height))
+        Else
+            Return CInt(Math.Round(_MinAreaRec.Size.Width))
+        End If
+    End Function
+    Public Function GetBreite() As Int32
+        'Prüfen ob _MinAreaRec Angelegt
+        If _MinAreaRec.Size.IsEmpty Then
+            Analyse()
+        End If
+        If _MinAreaRec.Size.Height >= _MinAreaRec.Size.Width Then
+            Return CInt(Math.Round(_MinAreaRec.Size.Height))
+        Else
+            Return CInt(Math.Round(_MinAreaRec.Size.Width))
+        End If
+    End Function
+    Public Function GetFläche() As Int32
+        'Prüfen ob _MinAreaRec Angelegt
+        If _MinAreaRec.Size.IsEmpty Then
+            Analyse()
+        End If
+        Return CInt(Math.Round(_MinAreaRec.Size.Height + _MinAreaRec.Size.Width))
+    End Function
+    Public Function GetZentrumMyPoint(depthMat As Mat) As MyPoint
+        'Prüfen ob _MinAreaRec Angelegt
+        If _MinAreaRec.Size.IsEmpty Then
+            Analyse()
+        End If
+        Dim Z As Int32 = UmwandlungClass.GetInt16Value(depthMat, CInt(Math.Round(_MinAreaRec.Center.X)), CInt(Math.Round(_MinAreaRec.Center.Y)))
+        Return New MyPoint(_MinAreaRec.Center, Z)
+    End Function
+    Public Function GetZentrumPoint() As Point
+        'Prüfen ob _MinAreaRec Angelegt
+        If _MinAreaRec.Size.IsEmpty Then
+            Analyse()
+        End If
+        Dim tmpPoint As New Point(CInt(Math.Round(_MinAreaRec.Center.X)), CInt(Math.Round(_MinAreaRec.Center.Y)))
+        Return tmpPoint
+    End Function
+    Public Function GetZentrumPointF() As PointF
+        'Prüfen ob _MinAreaRec Angelegt
+        If _MinAreaRec.Size.IsEmpty Then
+            Analyse()
+        End If
+        Return _MinAreaRec.Center
+    End Function
+    Public Function GetWinkel() As Double
+        'Prüfen ob _MinAreaRec Angelegt
+        If _MinAreaRec.Size.IsEmpty Then
+            Analyse()
+        End If
+        'Winkel immer auf die Langeseite bezogen
+        Dim Punkte(4) As PointF
+        Punkte = _MinAreaRec.GetVertices
+
+        Dim Kante1 As New PointF(Punkte(1).X - Punkte(0).X, Punkte(1).Y - Punkte(0).Y)
+        Dim Kante2 As New PointF(Punkte(2).X - Punkte(1).X, Punkte(2).Y - Punkte(1).Y)
+        Dim use As PointF = Kante1
+        If NormPoint(Kante2) > NormPoint(Kante1) Then
+            use = Kante2
+        End If
+        Dim Referenc As New PointF(1, 0) 'Horizontaler Vektor
+
+        Return 180 / Math.PI * Math.Acos((Referenc.X * use.X + Referenc.Y + use.Y) / (NormPoint(Referenc) + NormPoint(use)))
+    End Function
+
+    Public Function GetContour() As VectorOfPoint
+        Return _ReverenzenXY
+    End Function
+
+    Public Function GetOuterPoints() As Point()
+        Dim tmpPoints(3) As Point
+        tmpPoints(0) = New Point(_Min_X.X, _Min_Y.Y)
+        tmpPoints(1) = New Point(_Max_X.X, _Min_Y.Y)
+        tmpPoints(2) = New Point(_Max_X.X, _Max_Y.Y)
+        tmpPoints(3) = New Point(_Min_X.X, _Max_Y.Y)
+        Return tmpPoints
+    End Function
+    Public Function GetMinAreaPoints() As Point()
+        Dim tmpPoints(3) As Point
+        Dim tmpPointf() As PointF
+        tmpPointf = _MinAreaRec.GetVertices
+        For i = 0 To 3
+            tmpPoints(i).X = CInt(Math.Round(tmpPointf(i).X))
+            tmpPoints(i).Y = CInt(Math.Round(tmpPointf(i).Y))
+        Next
+        Return tmpPoints
+    End Function
+    Public Function GetMinAreaPointFs() As PointF()
+        Return _MinAreaRec.GetVertices
+    End Function
+
+    '--------------------------------------------------------------------------------------------------------------------------------------------------------
+    'Overrides
+    '--------------------------------------------------------------------------------------------------------------------------------------------------------
+    Public Overrides Function ToString() As String
+        Return ($"{_ID,3}: Xmin:{_Min_X.ToString()} ; Xdist:{Dist_X(),4} ; Ymin:{_Min_Y.ToString()} ; Ydist:{Dist_Y(),4} ; Z:{_Min_Z.ToString} - {_Max_Z.ToString}")
+    End Function
+
+End Class

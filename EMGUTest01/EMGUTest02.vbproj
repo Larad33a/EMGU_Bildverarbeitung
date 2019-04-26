@@ -144,11 +144,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Klassen\MyMatchObj.vb" />
-    <Compile Include="Panels\Form1.vb">
+    <Compile Include="Klassen\MyObektV2.vb" />
+    <Compile Include="Panels\Form_Main.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Panels\Form1.Designer.vb">
-      <DependentUpon>Form1.vb</DependentUpon>
+    <Compile Include="Panels\Form_Main.Designer.vb">
+      <DependentUpon>Form_Main.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Klassen\IndexFläche.vb" />
@@ -175,8 +176,8 @@
     <Compile Include="Klassen\UmwandlungClass.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Panels\Form1.resx">
-      <DependentUpon>Form1.vb</DependentUpon>
+    <EmbeddedResource Include="Panels\Form_Main.resx">
+      <DependentUpon>Form_Main.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

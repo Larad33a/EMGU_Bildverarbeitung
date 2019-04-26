@@ -1,7 +1,6 @@
 ﻿Option Strict On
 
 Imports Intel.RealSense
-Imports System.Runtime.InteropServices
 Imports System.Threading 'Für Tasks zu beennden
 
 Imports Emgu.CV
@@ -25,7 +24,9 @@ Public Class Form_Main
     Const cMaxTrys = 3
     Const cMaxRestart = 3
 
-    Const cCamOffset = 70 '107
+    Const cCamOffset = 75 '107
+
+    Dim ColorCamOffset As Int32
 
     Const Versatz_Bild_Tiefe_X = 100
     Const Versatz_Bild_Tiefe_Y = 100
@@ -93,6 +94,7 @@ Public Class Form_Main
     Private _DisFound As New Mat
 
     Private _MatResult As New Mat
+    Private _MatPoints As New Mat
 
 
     '-----------------------------------------------------------------------------------------------------------------------
@@ -125,6 +127,52 @@ Public Class Form_Main
         KonfigPipe()
         ImgStatus()
         Autoreferenz()
+
+        ColorCamOffset = CInt(num_CamOffset.Value) - cCamOffset
+
+        Dim test As New MyObektV2(10, {255, 50, 255})
+        Dim Points(24) As Point
+        Dim z(24) As Int32
+        Dim höhe As Int16 = 10
+        Dim Anzahl As Int32 = 0
+        For i = 0 To 4
+            For j = 0 To 4
+                Points(Anzahl) = New Point(i, j)
+                z(Anzahl) = höhe
+                höhe += CShort(2)
+                Anzahl += 1
+            Next
+        Next
+        Dim testv As New VectorOfPoint
+        testv.Push(Points)
+        test.Add_Ref(testv, z)
+        Dim Objhöhe As Int32 = test.GetHöhe()
+        test.Add_Ref(5, 2, 100)
+        Objhöhe = test.GetHöhe()
+        Dim p As New MyPoint(2, 5, 0)
+        test.Add_Ref(p)
+        Dim Objbreite As Int32 = test.GetBreite()
+        Dim testmatc As New Mat
+        testmatc = Mat.Zeros(640, 480, DepthType.Cv8U, 3)
+        Dim testmato As New Mat
+        testmato = Mat.Zeros(640, 480, DepthType.Cv8U, 3)
+        CvInvoke.DrawContours(testmatc, test.GetContour, test.ID, New MCvScalar(test.Color(0), test.Color(0), test.Color(0)), 2)
+        CvInvoke.Imshow("Kontur", testmatc)
+        CvInvoke.DrawContours(testmato, test.GetContour, test.ID, New MCvScalar(test.Color(0), test.Color(0), test.Color(0)), -1)
+        CvInvoke.Imshow("Objekt", testmato)
+        Dim pout As Point()
+        pout = test.GetOuterPoints()
+
+        Dim pin As Point()
+        pin = test.GetMinAreaPoints()
+
+        'draw Boxes
+        For i = 0 To 3
+            CvInvoke.Line(testmato, pout(i), pout((i + 1) Mod 4), New MCvScalar(0, 255, 0), 2) 'out
+            CvInvoke.Line(testmato, pin(i), pin((i + 1) Mod 4), New MCvScalar(0, 0, 255), 2) 'min
+        Next
+        CvInvoke.PutText(testmatc, $"ID:{test.ID,2} Winkel:{test.GetWinkel.ToString("N2"),4}", test.GetZentrumPoint,)
+
         'AddHandler btn_StartStop.Click, New EventHandler(AddressOf Me.ProcessFrameAndUpdateGUI)
 
     End Sub
@@ -203,9 +251,9 @@ Public Class Form_Main
 
         '4. Gefundene Objekte vergleichen 
         'Mase von mm in pixel wandeln
-        Dim h As Int32 = CInt(AktSearch.Höhe * num_pixmmH_faktor.Value)
-        Dim b As Int32 = CInt(AktSearch.Beite * num_pixmmB_faktor.Value)
-        Dim t As Int32 = CInt(AktSearch.Tiefe * num_pixmmH_faktor.Value)
+        Dim h As Int32 = MilToPix(AktSearch.Höhe)
+        Dim b As Int32 = MilToPix(AktSearch.Beite)
+        Dim t As Int32 = MilToPix(AktSearch.Tiefe)
         lb_Info.Items.Insert(0, $"h:{h,4} b:{b,4} t:{t,4}")
         For Each obj As MyObekt In _MyObjekte
             If obj.Passend(h, b, t, CInt(Num_SearchToleranz.Value)) Then
@@ -340,13 +388,13 @@ Public Class Form_Main
     Private Sub btn_pos_Click(sender As Object, e As EventArgs) Handles btn_pos.Click
         If _MatColor Is Nothing Then
             If _MatRefC IsNot Nothing Then
-                _DisColor = Maskieren(_MatRefC, CInt(num_MaskH.Value), CInt(num_MaskV.Value))
+                _DisColor = Maskieren(_MatRefC, CInt(num_MaskH.Value), CInt(num_MaskV.Value), ColorCamOffset)
                 _DisDepth = Maskieren(_MatRefDc, CInt(num_MaskH.Value), CInt(num_MaskV.Value), CInt(num_CamOffset.Value))
             Else
                 lb_Info.Items.Insert(0, "Es existiert noch kein Bild, zum festlegen der Position")
             End If
         Else
-            _DisColor = Maskieren(_MatColor, CInt(num_MaskH.Value), CInt(num_MaskV.Value))
+            _DisColor = Maskieren(_MatColor, CInt(num_MaskH.Value), CInt(num_MaskV.Value), ColorCamOffset)
             _DisDepth = Maskieren(_MatDepthC, CInt(num_MaskH.Value), CInt(num_MaskV.Value), CInt(num_CamOffset.Value))
         End If
         'Anzeigen
@@ -366,6 +414,10 @@ Public Class Form_Main
 
     Private Sub btn_CamOffset_Reset_Click(sender As Object, e As EventArgs) Handles btn_CamOffset_Reset.Click
         num_CamOffset.Value = cCamOffset
+    End Sub
+
+    Private Sub num_CamOffset_ValueChanged(sender As Object, e As EventArgs) Handles num_CamOffset.ValueChanged
+        ColorCamOffset = CInt(num_CamOffset.Value) - cCamOffset
     End Sub
 
     Private Sub cb_colortaken_CheckedChanged(sender As Object, e As EventArgs)
@@ -574,56 +626,6 @@ Public Class Form_Main
         T2_CamBoot.Start()
     End Sub
 
-    Private oldPic As New Mat
-
-    Private Shared Sub DetectObject(detectionFrame As Mat, displayFrame As Mat)
-
-        Using contours As VectorOfVectorOfPoint = New VectorOfVectorOfPoint()
-            '-------------------------------
-            Dim testMat As New Mat
-            '--------------------------------
-            CvInvoke.FindContours(detectionFrame, contours, Nothing, RetrType.List, ChainApproxMethod.ChainApproxSimple)
-            If contours.Size > 0 Then
-                Form_Main.lb_Info.Items.Insert(0, $"{contours.Size} Konturen erkannt")
-                Dim IFL As New List(Of IndexFläche)
-                For j As Int32 = 0 To contours.Size - 1
-                    CvInvoke.Circle(displayFrame, contours(j).Item(0), 5, New MCvScalar(0, 255, 0), 3)
-                    'CvInvoke.Circle(displayFrame, contours(j).Item(contours(j).Size), 5, New MCvScalar(0, 255, 0))
-                Next
-                displayFrame.CopyTo(testMat)
-                CvInvoke.Imshow("test", testMat)
-                '    
-                'Next
-                For i As Integer = 0 To contours.Size - 1
-                    Dim contour As VectorOfPoint = contours(i)
-                    Dim area As Double = CvInvoke.ContourArea(contour)
-
-                    IFL.Add(New IndexFläche(i, area))
-                Next
-
-                Dim Sortiert = From el In IFL Order By el.fläche Descending
-                Form_Main.lb_Info.Items.Insert(0, $"{Sortiert.Count} Konturen sortiert")
-                'For i = 0 To System.Math.Min(Sortiert.Count - 1, 2)
-                '    MarkDetectedObject(displayFrame, contours(Sortiert(i).index), Sortiert(i).fläche)
-                'Next
-                'For i = 0 To Sortiert.Count - 1
-                '    MarkDetectedObject(displayFrame, contours(Sortiert(i).index), Sortiert(i).fläche)
-                'Next
-                'CvInvoke.Imshow("Final", displayFrame)
-            End If
-        End Using
-    End Sub
-
-    Private Shared drawingColor As MCvScalar = New Bgr(Color.Red).MCvScalar
-
-    Private Shared Sub MarkDetectedObject(ByVal frame As Mat, ByVal contour As VectorOfPoint, ByVal area As Double)
-        Dim box As Rectangle = CvInvoke.BoundingRectangle(contour)
-        CvInvoke.Polylines(frame, contour, True, drawingColor)
-        CvInvoke.Rectangle(frame, box, drawingColor)
-        Dim center As Point = New Point(box.X + box.Width \ 2, box.Y + box.Height \ 2)
-        Dim info = New String() {$"Area: {area}", $"Position: {center.X}, {center.Y}"}
-    End Sub
-
     Private Sub ImgOfInterest_Tiefe(resurce As Mat, result As Mat, MinDepth As Double, MaxDepth As Double)
         Dim dst As New Mat
         CvInvoke.Threshold(resurce, dst, MinDepth, 100, ThresholdType.ToZero)
@@ -669,9 +671,47 @@ Public Class Form_Main
     Private Sub _refreshDataGridView()
         dgv_TCPVariableViewer.DataSource = _TcpVariablen.GetGridViewDataSource
     End Sub
+
+    Private Sub ZeichneObjekte2(ByRef mask As Mat)
+        Dim tmp_mask As New Mat
+        tmp_mask = mask.Clone
+        Dim ZeichenMat3 = Mat.Zeros(tmp_mask.Rows, tmp_mask.Cols, DepthType.Cv8U, 3)
+        For Zeile = 0 To mask.Rows - 1
+
+            For Spalte = 0 To mask.Cols - 1
+                Dim Marke As Int32 = UmwandlungClass.GetInt32Value(mask, Zeile, Spalte)
+                For Each obj In _MyMatchObjekts
+                    If Marke = obj.Objekt.ID Then
+                        Dim color As Byte() = {obj.Objekt.Color(0), obj.Objekt.Color(1), obj.Objekt.Color(2)}
+                        If color IsNot Nothing Then
+                            UmwandlungClass.SetByteValues(ZeichenMat3, Zeile, Spalte, color)
+                        Else
+                            color = {255, 255, 255}
+                            UmwandlungClass.SetByteValues(ZeichenMat3, Zeile, Spalte, color)
+                        End If
+                    End If
+                Next
+            Next
+            Dim z As Int32 = Zeile
+            lbl_Prozent.Text = ((z / (ZeichenMat3.Rows - 1)) * 100).ToString()
+        Next
+        lbl_Prozent.Visible = False
+        _MatFound = ZeichenMat3.Clone
+        CvInvoke.Resize(_MatFound, _DisFound, New Size(640, 480))
+        ib_Found.Image = _DisFound.Clone
+    End Sub
+
     '-----------------------------------------------------------------------------------------------------------------------
     'Sonstige Funktionen
     '-----------------------------------------------------------------------------------------------------------------------
+
+    Private Function PixToMil(pixel As Int32) As Int32
+        Return CInt(Math.Round(pixel / ((num_pixmmB_faktor.Value + num_pixmmH_faktor.Value) / 2)))
+    End Function
+    Private Function MilToPix(milimeter As Int32) As Int32
+        Return CInt(Math.Round(milimeter * ((num_pixmmB_faktor.Value + num_pixmmH_faktor.Value) / 2)))
+    End Function
+
     Private Function TakePicture(ByRef color As Mat, ByRef depth As Mat, ByRef depthc As Mat) As Boolean
         Dim Mydata As FrameSet
         lb_Info.Items.Insert(0, $"---------------------------------")
@@ -744,7 +784,7 @@ Public Class Form_Main
                         Ergebnis = MyWatershedColor(_MatColor, _MatResult, _MatRefC, cb_debug.Checked)
                     End If
                     If rb_Auswertung_Depth.Checked Then
-                        Ergebnis = MyWatershedDepth(_MatDepth, _MatResult, _MatRefD, cb_debug.Checked)
+                        Ergebnis = MyWatershedDepth(_MatColor, _MatDepth, _MatResult, _MatRefD, cb_debug.Checked)
                     End If
                     If rb_Auswertung_Kombi.Checked Then
                         Ergebnis = MyWatershedBoth(_MatColor, _MatDepth, _MatResult, cb_debug.Checked)
@@ -996,229 +1036,119 @@ Public Class Form_Main
         Return True
     End Function
 
-    Private Function MyWatershedDepth(resurce As Mat, result As Mat, rev As Mat, Optional debug As Boolean = False) As Boolean
-        Dim ImgOfInterest As New Mat
-        Dim Laplace32F As Mat
-        Dim Result32F As Mat
-        Dim IMG32F As Mat
-        Dim Laplace16s As Mat
-        Dim Result16s As Mat
-        Dim Result8U As New Mat
-        Dim GrayImg As New Mat
-        Dim BinaerImg As New Mat
-        Dim DistImg As New Mat
-        Dim DistImgClear As New Mat
-        Dim DistImg8u As New Mat
-        Dim Markers As New Mat
-        Dim Mask As New Mat
-        Dim TmpResult As New Mat
-        Dim dst As New Mat
-        Dim Display As New Mat
+    Private Function MyWatershedDepth(ByRef resurceColor As Mat, ByRef resurceDepth As Mat, ByRef result As Mat, ByRef rev As Mat, Optional debug As Boolean = False) As Boolean
+        Dim Display1 As New Mat
+        Dim Display2 As New Mat
+
+        Dim Konturen As New VectorOfVectorOfPoint
+
+        Dim tmp_Verschoben As New Mat
+        Dim tmp_IOIColor As New Mat
+        Dim tmp_IOIDepth As New Mat
+        Dim tmp_LaplaceColor As New Mat
+        Dim tmp_LaplaceDepth As New Mat
+        Dim tmp_Binaer As New Mat
+        Dim tmp_DistObj As New Mat
+        Dim tmp_DistBack As New Mat
+        Dim tmp_Maske As New Mat
+        Dim tmp_Watershed As New Mat
+        Dim tmp_Points As New Mat
+
 
         Const cThreshhold1 = 10
         Const cThreshhold2 = 0.1 '0.3
+        Const cThreshhold3 = 0.2 '0.3
+        Dim cDisplaySize As New Size(640, 480)
 
-
+        '0. Farbbild verschieben damit Fabe und Tiefe Dekungsgleich sind
+        tmp_Verschoben = ImageVerschieben(resurceColor, CInt(num_CamOffset.Value))
 
         '1. Hintergrung Ausblenden über Tiefe dann Kiste Ausmaskieren
-        ' Über Tiefe und Treshold
-        ImgOfInterest_Tiefe(resurce, ImgOfInterest, CInt(num_ThreshHoch.Value), CInt(num_ThreshTief.Value))
-        'Maske
-        ImgOfInterest = Maskieren(ImgOfInterest, CInt(num_MaskH.Value), CInt(num_MaskV.Value), CInt(num_CamOffset.Value))
-        If debug Then
-            ImgOfInterest.ConvertTo(Display, DepthType.Cv8U)
-            Dim v2 As New ImageViewer
-            v2.Image = Display.Clone : v2.Text = "ImgOfInterest"
-            v2.Show()
+        'Depth
+        If Not WM_ImageOfInterest(resurceDepth, tmp_IOIDepth, rev, cb_ioi_Differenz.Checked, cb_ioi_Mask.Checked, cb_ioi_Depth.Checked, cb_ioi_Gaus.Checked, CInt(num_CamOffset.Value)) Then
+            lb_Info.Items.Insert(0, "Fehler bei: WM_ImageOfInterest")
+            Return False
         End If
-
+        'Color
+        If Not WM_ImageOfInterest(tmp_Verschoben, tmp_IOIColor,,, True,, True, CInt(num_CamOffset.Value)) Then
+            lb_Info.Items.Insert(0, "Fehler bei: WM_ImageOfInterest")
+            Return False
+        End If
+        CvInvoke.Resize(tmp_IOIColor, Display1, cDisplaySize)
+        CvInvoke.Resize(tmp_IOIDepth, Display2, cDisplaySize)
+        Display2.ConvertTo(Display2, DepthType.Cv8U)
+        ib_ImOfIn_01.Image = Display1.Clone
+        ib_ImOfIn_02.Image = Display2.Clone
 
         '2. Bild Aufbereiten (laplace)
-        Dim Kernel As New Matrix(Of Single)(New Single(,) {
-                                            {1, 1, 1},
-                                            {1, -8, 1},
-                                            {1, 1, 1}})
-        Laplace32F = New Mat(ImgOfInterest.Size, DepthType.Cv32F, ImgOfInterest.NumberOfChannels)
-        Result32F = New Mat(ImgOfInterest.Size, DepthType.Cv32F, ImgOfInterest.NumberOfChannels)
-        CvInvoke.Filter2D(ImgOfInterest, Laplace32F, Kernel, New Point(-1, -1))
-        IMG32F = New Mat : ImgOfInterest.ConvertTo(IMG32F, DepthType.Cv32F)
-        CvInvoke.Subtract(IMG32F, Laplace32F, Result32F)
-        'zurückwandeln
-        Laplace16s = New Mat
-        Result16s = New Mat
-        Laplace32F.ConvertTo(Laplace16s, DepthType.Cv16S)
-        Result32F.ConvertTo(Result16s, DepthType.Cv16S)
-        Result32F.ConvertTo(Result8U, DepthType.Cv8U)
-        If debug Then
-            CvInvoke.Imshow("Result32", Result32F)
-            CvInvoke.Imshow("Result16", Result16s)
-            CvInvoke.Imshow("Result8", Result8U)
+        'Depth
+        If Not WM_LaplaceFiltering(tmp_IOIDepth, tmp_LaplaceDepth) Then
+            lb_Info.Items.Insert(0, "Fehler bei: WM_LaplaceFiltering")
+            Return False
         End If
-        CvInvoke.GaussianBlur(Result16s, Result16s, New Drawing.Size(5, 5), 3)
-
+        'Color
+        If Not WM_LaplaceFiltering(tmp_IOIColor, tmp_LaplaceColor) Then
+            lb_Info.Items.Insert(0, "Fehler bei: WM_LaplaceFiltering")
+            Return False
+        End If
+        CvInvoke.Resize(tmp_LaplaceColor, Display1, cDisplaySize)
+        CvInvoke.Resize(tmp_LaplaceDepth, Display2, cDisplaySize)
+        Dim v1 As New ImageViewer
+        v1.Image = tmp_LaplaceColor.Clone : v1.Text = "LaplaceOrig"
+        v1.Show()
+        Display2.ConvertTo(Display2, DepthType.Cv8U)
+        ib_laplace_01.Image = Display1.Clone
+        ib_laplace_02.Image = Display2.Clone
 
         '3. Graustufen- & Binäresbild erzeugen
-        If Result16s.NumberOfChannels = 3 Then
-            CvInvoke.CvtColor(Result16s, GrayImg, ColorConversion.Bgr2Gray, 1)
-        Else
-            Result16s.CopyTo(GrayImg)
+        If Not WM_Graustufen_Binärbild(tmp_LaplaceDepth, tmp_Binaer, cThreshhold1) Then
+            lb_Info.Items.Insert(0, "Fehler bei: WM_Graustufen_Binärbild")
+            Return False
         End If
-        GrayImg.ConvertTo(Result8U, DepthType.Cv8U)
-
-        CvInvoke.Threshold(Result8U, BinaerImg, cThreshhold1, 255, ThresholdType.Binary Or ThresholdType.Otsu) 'benötigt cv8u
-        If debug Then
-            CvInvoke.Imshow("Result8", Result8U)
-            CvInvoke.Imshow("BinaerImg", BinaerImg)
-        End If
-
 
         '4. Distanc Funktion & normalize
-        CvInvoke.DistanceTransform(BinaerImg, DistImg, Nothing, DistType.L2, 3) 'Mask size muss 0 || 3 ||5 sein  'CvInvoke.DistanceTransform(BinaerImg, DistImg, Nothing, DistType.L2, 3)
-        CvInvoke.Normalize(DistImg, DistImg, 0, 1.0, NormType.MinMax)
-        If debug Then
-            CvInvoke.Imshow("DistImg", DistImg)
+        If Not WM_DistanceDetection(tmp_Binaer, tmp_DistObj, tmp_DistBack, cThreshhold2, cThreshhold3) Then
+            lb_Info.Items.Insert(0, "Fehler bei: WM_DistanceDetection")
+            Return False
+        End If
+        CvInvoke.Resize(tmp_DistObj, Display1, cDisplaySize)
+        CvInvoke.Resize(tmp_DistBack, Display2, cDisplaySize)
+        ib_Dist01.Image = Display1.Clone
+        ib_Dist02.Image = Display2.Clone
+
+        '5. Objekte bezeichnen
+        If Not WM_MarkObjects(tmp_DistObj, tmp_DistBack, tmp_Maske, Konturen) Then
+            lb_Info.Items.Insert(0, "Fehler bei: WM_MarkObjects")
+            Return False
+        End If
+        tmp_Maske.ConvertTo(Display2, DepthType.Cv8U)
+        CvInvoke.Resize(Display2, Display2, cDisplaySize)
+        ib_mask_01.Image = Display2.Clone
+
+        '6. Watershed zu objekt Auswertung  
+        If Not WM_Watershed_Objekterkennung(tmp_Maske, tmp_LaplaceDepth, tmp_Watershed, _MatWatershedMask, Konturen) Then
+            lb_Info.Items.Insert(0, "Fehler bei: WM_Watershed_Objekterkennung")
+            Return False
         End If
 
-
-        '5. Bild bereinigen (mit Treshold) und in CV8 wandeln
-        CvInvoke.Threshold(DistImg, DistImgClear, cThreshhold2, 1.0, ThresholdType.Binary) '0.3
-
-        Dim kernel1 = Mat.Ones(3, 3, DepthType.Cv8U, 1)
-        CvInvoke.Dilate(DistImgClear, DistImgClear, kernel1, New Point(-1, -1), 1, BorderType.Default, New MCvScalar(0))
-        If debug Then
-            CvInvoke.Imshow("DistImgClear", DistImgClear)
-        End If
-
-        CvInvoke.Normalize(DistImgClear, DistImg8u, 0, 255, NormType.MinMax, DepthType.Cv8U)
-
-        '6. Objekte bezeichnen
-        Dim Contours As New VectorOfVectorOfPoint
-        CvInvoke.FindContours(DistImg8u, Contours, Nothing, RetrType.List, ChainApproxMethod.ChainApproxSimple)
-        lb_Info.Items.Insert(0, $"Es wurden {Contours.Size} Kontuen Gefunden")
-        ' Create the marker image for the watershed algorithm
-        Markers = New Mat(resurce.Size, DepthType.Cv32S, 1) ' Zur Anzeige farbiger Bilder
-        Markers.SetTo(New MCvScalar(0)) ' AnzeigenBild auf schwarz setzen
-        For i = 0 To Contours.Size - 1
-            Dim Colo = New MCvScalar((i + 1) * 10) ' An 1 nummerieren. 0 ist ja der Hintergrund
-            CvInvoke.DrawContours(Markers, Contours, i, Colo, -1) ' -1 damit die contour ausgefüllt wird
-        Next
-        If debug Then
-            Dim Maskshow As New Mat
-            Markers.ConvertTo(Maskshow, DepthType.Cv8U)
-            CvInvoke.Imshow("markers32S1", Maskshow)
-        End If
-
-        CvInvoke.Circle(Markers, New Point(5, 5), 3, New MCvScalar(255), -1)
-        If debug Then
-            Dim Maskshow2 As New Mat
-            Markers.ConvertTo(Maskshow2, DepthType.Cv8U)
-            CvInvoke.Imshow("markers32S1_2", Maskshow2)
-        End If
-
-
-        '7. Watershed zu objekt Auswertung  Unklar ob Result8U oder DistImg8u
-        Dim imgWater8U3 As New Mat
-        If Result8U.NumberOfChannels = 3 Then
-
-            imgWater8U3 = Result8U
-        Else
-            CvInvoke.CvtColor(Result8U, imgWater8U3, ColorConversion.Gray2Bgr, 3)
-        End If
-
-        ' CvInvoke.WaitKey(0)
-        CvInvoke.Watershed(imgWater8U3, Markers)
-        Dim Maskshow3 As New Mat
-        Markers.ConvertTo(Maskshow3, DepthType.Cv8U)
-        CvInvoke.Imshow("Watershed", Maskshow3)
-
-
-        '8. Farbenvergeben
-        Dim Nc = Contours.Size ' Anzahl Contours = Anzahl an markierten Elementen
-        Dim Cols(Nc) As MCvScalar : Dim RND As New Random 'Dim Cols(Nc - 1) As MCvScalar : Dim RND As New Random
-        For i = 0 To Nc '- 1
-            Cols(i) = New Bgr(RND.Next(0, 256), RND.Next(0, 256), RND.Next(0, 256)).MCvScalar
-        Next
-
-        Dim ZeichenMat2 = Mat.Zeros(Markers.Rows, Markers.Cols, DepthType.Cv8U, 3)
-        For Zeile = 0 To Markers.Rows - 1
-            For Spalte = 0 To Markers.Cols - 1
-                Dim wert As Int32
-                Dim gefunden As Boolean = False
-                wert = UmwandlungClass.GetInt32Value(Markers, Zeile, Spalte)
-                If _MyObjekte.Count < 1 And wert > 0 And wert < 255 Then
-                    Dim tmpObjekt As New MyObekt(wert)
-                    Dim tiefe As Int32 = UmwandlungClass.GetInt16Value(_MatDepth, Zeile, Spalte)
-                    tmpObjekt.Add_Ref(Spalte, Zeile, tiefe)
-                    _MyObjekte.Add(tmpObjekt)
-                Else
-                    For Each ob As MyObekt In _MyObjekte
-                        If wert = ob.ID Then
-                            gefunden = True
-                            Dim tiefe As Int32 = UmwandlungClass.GetInt16Value(_MatDepth, Zeile, Spalte)
-                            ob.Add_Ref(Spalte, Zeile, tiefe)
-                        End If
-                    Next
-                    If Not gefunden And wert > 0 And wert < 255 Then
-                        Dim tmpObjekt As New MyObekt(wert)
-                        Dim tiefe As Int32 = UmwandlungClass.GetInt16Value(_MatDepth, Zeile, Spalte)
-                        tmpObjekt.Add_Ref(Spalte, Zeile, tiefe)
-                        _MyObjekte.Add(tmpObjekt)
-                    End If
-                End If
-                Dim Marke As Int32 = UmwandlungClass.GetInt32Value(Markers, Zeile, Spalte)
-                If Marke > 0 And Marke <= Nc * 10 Then
-                    Dim ByteWerte() As Byte = {CByte(Cols(Marke \ 10).V0), CByte(Cols(Marke \ 10).V1), CByte(Cols(Marke \ 10).V2)}
-                    UmwandlungClass.SetByteValues(ZeichenMat2, Zeile, Spalte, ByteWerte)
-                End If
-            Next
-        Next
-
-        For Each ob2 As MyObekt In _MyObjekte
-            LB_obj.Items.Add(ob2.ToString)
-        Next
-        _MatWatershedMask = Markers.Clone
-        ZeichenMat2.CopyTo(result)
-        If debug Then
-            CvInvoke.Imshow("Ergebnis", ZeichenMat2)
-        End If
-
-        '9. Draw Points
+        '7. Draw Points
         If cb_DrawPoint.Checked Then
-            For Each obj As MyObekt In _MyObjekte
-                'X min => Grün
-                CvInvoke.Circle(ZeichenMat2, New Point(obj.Min_X.X, obj.Min_X.Y), 6, New MCvScalar(255, 255, 255), 3)
-                CvInvoke.Circle(ZeichenMat2, New Point(obj.Min_X.X, obj.Min_X.Y), 1, New MCvScalar(0, 255, 0), 1) 'Gün
-                'X max => GrünRot
-                CvInvoke.Circle(ZeichenMat2, New Point(obj.Max_X.X, obj.Max_X.Y), 6, New MCvScalar(255, 255, 255), 3)
-                CvInvoke.Circle(ZeichenMat2, New Point(obj.Max_X.X, obj.Max_X.Y), 1, New MCvScalar(0, 255, 255), 1) 'Gün
-                'Y min => Blau
-                CvInvoke.Circle(ZeichenMat2, New Point(obj.Min_Y.X, obj.Min_Y.Y), 6, New MCvScalar(255, 255, 255), 3)
-                CvInvoke.Circle(ZeichenMat2, New Point(obj.Min_Y.X, obj.Min_Y.Y), 1, New MCvScalar(255, 0, 0), 1) 'Blau
-                'Y max => BlauRot
-                CvInvoke.Circle(ZeichenMat2, New Point(obj.Max_Y.X, obj.Max_Y.Y), 6, New MCvScalar(255, 255, 255), 3)
-                CvInvoke.Circle(ZeichenMat2, New Point(obj.Max_Y.X, obj.Max_Y.Y), 1, New MCvScalar(255, 0, 255), 1) 'Blau
-                'Virtueller Start => Rot
-                CvInvoke.Circle(ZeichenMat2, New Point(obj.Min_X.X, obj.Min_Y.Y), 6, New MCvScalar(255, 255, 255), 3)
-                CvInvoke.Circle(ZeichenMat2, New Point(obj.Min_X.X, obj.Min_Y.Y), 1, New MCvScalar(0, 0, 255), 1) 'Rot
-                'Virtuelles Ende => Rotgrünblau
-                CvInvoke.Circle(ZeichenMat2, New Point(obj.Max_X.X, obj.Max_Y.Y), 6, New MCvScalar(255, 255, 255), 3)
-                CvInvoke.Circle(ZeichenMat2, New Point(obj.Max_X.X, obj.Max_Y.Y), 1, New MCvScalar(125, 125, 255), 1) 'Rot
-            Next
-            Dim v4 As New ImageViewer
-            v4.Image = ZeichenMat2.Clone : v4.Text = "Ergbnis"
-            v4.Show()
+            If Not WM_DrawPoints(tmp_Watershed, tmp_Points) Then
+                lb_Info.Items.Insert(0, "Fehler bei: WM_DrawPoints")
+                Return False
+            End If
+            _MatPoints = tmp_Points.Clone
+            CvInvoke.Resize(tmp_Points, Display1, cDisplaySize)
+            ib_points_01.Image = Display1.Clone
         End If
+        result = tmp_Watershed.Clone
         Return True
     End Function
 
     Private Function MyWatershedBoth(ByRef resurceColor As Mat, ByRef resurceDepth As Mat, ByRef result As Mat, Optional debug As Boolean = False) As Boolean
-        'Dim tmp_ResultD As New Mat
-        'Dim tmp_ResultC As New Mat
         Dim Display1 As New Mat
         Dim Display2 As New Mat
-        'Dim MaskObj As New Mat
-        'Dim MaskBack As New Mat
-        'Dim Maske As New Mat
+
         Dim Konturen As New VectorOfVectorOfPoint
 
         Dim tmp_Verschoben As New Mat
@@ -1292,19 +1222,16 @@ Public Class Form_Main
             lb_Info.Items.Insert(0, "Fehler bei: WM_MarkObjects")
             Return False
         End If
-        Dim v1 As New ImageViewer
-        v1.Image = tmp_Maske.Clone : v1.Text = "test"
-        v1.Show()
         tmp_Maske.ConvertTo(Display2, DepthType.Cv8U)
         CvInvoke.Resize(Display2, Display2, cDisplaySize)
         ib_mask_01.Image = Display2.Clone
-        '7. Watershed zu objekt Auswertung  Unklar ob Result8U oder DistImg8u
+        '6. Watershed zu objekt Auswertung  Unklar ob Result8U oder DistImg8u
         If Not WM_Watershed_Objekterkennung(tmp_Maske, tmp_LaplaceColor, tmp_Watershed, _MatWatershedMask, Konturen) Then
             lb_Info.Items.Insert(0, "Fehler bei: WM_Watershed_Objekterkennung")
             Return False
         End If
 
-        '8. Draw Points
+        '7. Draw Points
         If cb_DrawPoint.Checked Then
             If Not WM_DrawPoints(tmp_Watershed, tmp_Points) Then
                 lb_Info.Items.Insert(0, "Fehler bei: WM_DrawPoints")
@@ -1456,6 +1383,9 @@ Public Class Form_Main
         Dim imgWater8U3 As New Mat
 
         'Watershed zu objekt Auswertung  Unklar ob Result8U oder DistImg8u
+        If resurceBild.Depth <> DepthType.Cv8U Then
+            resurceBild.ConvertTo(resurceBild, DepthType.Cv8U)
+        End If
         If resurceBild.NumberOfChannels = 3 Then
 
             imgWater8U3 = resurceBild
@@ -1508,8 +1438,42 @@ Public Class Form_Main
                 End If
             Next
         Next
+        lb_Info.Items.Insert(0, $"Es wurden {_MyObjekte.Count,3} Objekte erkannt")
+        'Filtern
+        If cb_Watershed_Filter.Checked Then
+            Dim MinFlächeMM, MinFlächePix As Int32
+            'Kürzeste Kanten finden und Kleinste Fläche berechnen
+            If num_WTS_MinB.Value > num_WTS_MinH.Value Then
+                If num_WTS_MinB.Value > num_WTS_MinT.Value Then
+                    MinFlächeMM = CInt(num_WTS_MinH.Value * num_WTS_MinT.Value)
+                Else
+                    MinFlächeMM = CInt(num_WTS_MinH.Value * num_WTS_MinB.Value)
+                End If
+            Else
+                If num_WTS_MinH.Value > num_WTS_MinT.Value Then
+                    MinFlächeMM = CInt(num_WTS_MinB.Value * num_WTS_MinT.Value)
+                Else
+                    MinFlächeMM = CInt(num_WTS_MinB.Value * num_WTS_MinH.Value)
+                End If
+            End If
+            MinFlächePix = MilToPix(MinFlächeMM)
+            lb_Info.Items.Insert(0, $"Min Flävhe: {MinFlächeMM}mm² bzw. {MinFlächePix}pixel ")
+            Dim entf As Int32 = 0
+            Dim zulöschen As New List(Of MyObekt)
+            For Each obj As MyObekt In _MyObjekte
+                If obj.Fläche < MinFlächePix Then
+                    zulöschen.Add(obj)
+                    entf += 1
+                End If
+            Next
+            For Each obj As MyObekt In zulöschen
+                _MyObjekte.Remove(obj)
+            Next
+            lb_Info.Items.Insert(0, $"Es wurden {entf,3} Objekte gefiltert")
+            lb_Info.Items.Insert(0, $"Es gibt {_MyObjekte.Count,3} interesante Objekte")
+        End If
 
-
+        'Eintagen
         For Each ob2 As MyObekt In _MyObjekte
             LB_obj.ForeColor = Color.FromArgb(0, ob2.Color(2), ob2.Color(1), ob2.Color(0)) 'ob2.color ist bgr Farbe form arg erwartet argb Farbe
             LB_obj.Items.Add(ob2.ToString)
@@ -1546,64 +1510,158 @@ Public Class Form_Main
             'Virtuelles Ende => Rotgrünblau
             CvInvoke.Circle(tmp_Mat, New Point(obj.Max_X.X, obj.Max_Y.Y), 6, New MCvScalar(255, 255, 255), 3)
             CvInvoke.Circle(tmp_Mat, New Point(obj.Max_X.X, obj.Max_Y.Y), 1, New MCvScalar(125, 125, 255), 1) 'Rot
+            'Virtuelle Ecke3 => Rot
+            CvInvoke.Circle(tmp_Mat, New Point(obj.Max_X.X, obj.Min_Y.Y), 6, New MCvScalar(255, 255, 255), 3)
+            CvInvoke.Circle(tmp_Mat, New Point(obj.Max_X.X, obj.Min_Y.Y), 1, New MCvScalar(0, 0, 255), 1) 'Rot
+            'Virtuelle Ecke4 => Rotgrünblau
+            CvInvoke.Circle(tmp_Mat, New Point(obj.Min_X.X, obj.Max_Y.Y), 6, New MCvScalar(255, 255, 255), 3)
+            CvInvoke.Circle(tmp_Mat, New Point(obj.Min_X.X, obj.Max_Y.Y), 1, New MCvScalar(125, 125, 255), 1) 'Rot
+
+            'MaxKontur zeichnen
+            CvInvoke.Line(tmp_Mat, New Point(obj.Min_X.X, obj.Min_Y.Y), New Point(obj.Max_X.X, obj.Min_Y.Y), New MCvScalar(0, 255, 0), 2)
+            CvInvoke.Line(tmp_Mat, New Point(obj.Max_X.X, obj.Min_Y.Y), New Point(obj.Max_X.X, obj.Max_Y.Y), New MCvScalar(0, 255, 0), 2)
+            CvInvoke.Line(tmp_Mat, New Point(obj.Max_X.X, obj.Max_Y.Y), New Point(obj.Min_X.X, obj.Max_Y.Y), New MCvScalar(0, 255, 0), 2)
+            CvInvoke.Line(tmp_Mat, New Point(obj.Min_X.X, obj.Max_Y.Y), New Point(obj.Min_X.X, obj.Min_Y.Y), New MCvScalar(0, 255, 0), 2)
+
         Next
         result = tmp_Mat.Clone
         Return True
     End Function
 
-    Private Async Sub ZeichneObjekte(mask As Mat)
-        Await Task.Run(Sub()
-                           Dim ZeichenMat3 As New Mat
-                           ZeichenMat3 = Mat.Zeros(mask.Rows, mask.Cols, DepthType.Cv8U, 3)
-                           For Zeile = 0 To mask.Rows - 1
-                               For Spalte = 0 To mask.Cols - 1
-                                   Dim Marke As Int32 = UmwandlungClass.GetInt32Value(mask, Zeile, Spalte)
-                                   For Each obj In _MyMatchObjekts
-                                       If Marke = obj.Objekt.ID Then
-                                           UmwandlungClass.SetByteValues(ZeichenMat3, Zeile, Spalte, obj.Objekt.Color)
-                                       End If
-                                   Next
-                               Next
-                               Dim z As Int32 = Zeile
-                               lbl_Prozent.Invoke(Sub()
-                                                      lbl_Prozent.Text = ((z \ (ZeichenMat3.Rows - 1)) * 100).ToString("N0")
-                                                      'Me.Refresh()
-                                                  End Sub)
-                           Next
-                           lbl_Prozent.Invoke(Sub()
-                                                  lbl_Prozent.Visible = False
-                                              End Sub)
-                           ib_Found.Invoke(Sub()
-                                               ib_Found.Image = ZeichenMat3.Clone
-                                           End Sub)
+    Private Function KantenFinden(ByRef resurceMask As Mat, ByRef resurceImg As Mat) As Boolean
+        Dim tmp_Mat As New Mat
+        tmp_Mat = resurceMask.Clone
+        Dim tmp_Img As New Mat
+        tmp_Img = resurceImg.Clone
+        tmp_Mat.ConvertTo(tmp_Mat, DepthType.Cv8U)
+        CvInvoke.CvtColor(tmp_Mat, tmp_Mat, ColorConversion.Gray2Bgr, 3)
+        CvInvoke.Imshow("t1", tmp_Mat)
+        CvInvoke.Threshold(tmp_Mat, tmp_Mat, 250, 255, ThresholdType.BinaryInv)
+        CvInvoke.CvtColor(tmp_Mat, tmp_Mat, ColorConversion.Bgr2Gray, 1)
+        CvInvoke.Imshow("t2", tmp_Mat)
+        Dim mycontures As New VectorOfVectorOfPoint
+        CvInvoke.FindContours(tmp_Mat, mycontures, Nothing, RetrType.List, ChainApproxMethod.ChainApproxSimple)
+        CvInvoke.Imshow("t3", tmp_Mat)
 
-                       End Sub)
-    End Sub
-    Private Sub ZeichneObjekte2(ByRef mask As Mat)
-        Dim tmp_mask As New Mat
-        tmp_mask = mask.Clone
-        Dim ZeichenMat3 = Mat.Zeros(tmp_mask.Rows, tmp_mask.Cols, DepthType.Cv8U, 3)
-        For Zeile = 0 To mask.Rows - 1
-            For Spalte = 0 To mask.Cols - 1
-                Dim Marke As Int32 = UmwandlungClass.GetInt32Value(mask, Zeile, Spalte)
-                For Each obj In _MyMatchObjekts
-                    If Marke = obj.Objekt.ID Then
-                        Dim color As Byte() = obj.Objekt.Color
-                        If color IsNot Nothing Then
-                            UmwandlungClass.SetByteValues(ZeichenMat3, Zeile, Spalte, color)
-                        Else
-                            color = {255, 255, 255}
-                            UmwandlungClass.SetByteValues(ZeichenMat3, Zeile, Spalte, color)
-                        End If
-                    End If
+        'Filtern
+        Dim MinFlächeMM, MinFlächePix As Int32
+        If cb_Watershed_Filter.Checked Then
+            'Kürzeste Kanten finden und Kleinste Fläche berechnen
+            If num_WTS_MinB.Value > num_WTS_MinH.Value Then
+                If num_WTS_MinB.Value > num_WTS_MinT.Value Then
+                    MinFlächeMM = CInt(num_WTS_MinH.Value * num_WTS_MinT.Value)
+                Else
+                    MinFlächeMM = CInt(num_WTS_MinH.Value * num_WTS_MinB.Value)
+                End If
+            Else
+                If num_WTS_MinH.Value > num_WTS_MinT.Value Then
+                    MinFlächeMM = CInt(num_WTS_MinB.Value * num_WTS_MinT.Value)
+                Else
+                    MinFlächeMM = CInt(num_WTS_MinB.Value * num_WTS_MinH.Value)
+                End If
+            End If
+            MinFlächePix = MilToPix(MinFlächeMM)
+            lb_Info.Items.Insert(0, $"Min Flävhe: {MinFlächeMM}mm² bzw. {MinFlächePix}pixel ")
+        Else
+            MinFlächePix = 0
+        End If
+
+
+        For i = 0 To mycontures.Size - 1
+            Dim myFinalRec As New RotatedRect
+
+            myFinalRec = CvInvoke.MinAreaRect(mycontures(i))
+
+            'Dim wert As Int32 = UmwandlungClass.GetInt32Value(resurceMask, CInt(myFinalRec.Center.X), CInt(myFinalRec.Center.Y))
+            Dim wert As Double = myFinalRec.Angle
+            myFinalRec.GetVertices()
+            Dim punkte() As PointF = myFinalRec.GetVertices()
+                Dim HöhePix As Int32 = CInt(Math.Round(Math.Sqrt((punkte(1).X - punkte(0).X) ^ 2 + (punkte(1).Y - punkte(0).Y) ^ 2)))
+                Dim BreitePix As Int32 = CInt(Math.Round(Math.Sqrt((punkte(2).X - punkte(1).X) ^ 2 + (punkte(2).Y - punkte(1).Y) ^ 2)))
+                Dim fläche As Int32 = HöhePix * BreitePix
+
+            lb_Info.Items.Insert(0, $"MinAreaRec: {i,3} H:{HöhePix,4} B:{BreitePix,4} F:{fläche,4}")
+            If fläche >= MinFlächePix Then
+                lb_Info.Items.Insert(0, $"MinAreaRec: {i,3} OK")
+                CvInvoke.PutText(tmp_Img, wert.ToString("N2"), New Point(CInt(myFinalRec.Center.X), CInt(myFinalRec.Center.Y)), FontFace.HersheyComplex, 1, New MCvScalar(255, 255, 255))
+                For j = 0 To 3
+                    CvInvoke.Line(tmp_Img, New Point(CInt(punkte(j).X), CInt(punkte(j).Y)), New Point(CInt(punkte((j + 1) Mod 4).X), CInt(punkte((j + 1) Mod 4).Y)), New MCvScalar(0, 0, 255))
                 Next
-            Next
-            Dim z As Int32 = Zeile
-            lbl_Prozent.Text = ((z / (ZeichenMat3.Rows - 1)) * 100).ToString()
+            Else
+                lb_Info.Items.Insert(0, $"MinAreaRec: {i,3} ZU KLEIN")
+            End If
+
+
         Next
-        lbl_Prozent.Visible = False
-        _MatFound = ZeichenMat3.Clone
-        CvInvoke.Resize(_MatFound, _DisFound, New Size(640, 480))
-        ib_Found.Image = _DisFound.Clone
+        CvInvoke.Imshow("minAreaRec", tmp_Img)
+
+
+        'Dim Mat2, mat3 As New Mat
+        'Dim GrayImg As New Mat
+        'If tmp_Mat.NumberOfChannels = 3 Then
+        '    CvInvoke.CvtColor(tmp_Mat, GrayImg, ColorConversion.Bgr2Gray, 1)
+        'End If
+        'GrayImg.ConvertTo(GrayImg, DepthType.Cv8U)
+
+
+        'CvInvoke.Canny(tmp_Mat, Mat2, 50, 200)
+        'CvInvoke.Imshow("canny", Mat2)
+        ''CvInvoke.CvtColor(Mat2, mat3, ColorConversion.Gray2Bgr)
+        'Dim Lines As New VectorOfVectorOfPointF
+        ''CvInvoke.HoughLines(Mat2, Lines, 1, Math.PI / 180, 50, 0, 0)
+
+        'Dim listVecs() As LineSegment2D
+        'listVecs = CvInvoke.HoughLinesP(Mat2, 1, Math.PI / 180, 25, 25, 20)
+        'lb_Info.Items.Insert(0, $"Es wurden {listVecs.Length} Kanten gezeichnet")
+        'For i = 0 To listVecs.Length - 1
+        '    Dim segment As LineSegment2D = listVecs(i)
+
+        '    Dim Marke(8) As Int32
+        '    Dim Objekt As Int32 = 0
+        '    Dim j As Int32 = 0
+        '    'Um Punktherum suchen 
+        '    For x = segment.P1.X - 2 To segment.P1.X + 2
+        '        For y = segment.P1.Y - 2 To segment.P1.Y + 2
+        '            If x > 0 And x <= resurceMask.Cols And y > 0 And y <= resurceMask.Rows Then
+        '                Try
+        '                    Marke(j) = UmwandlungClass.GetInt32Value(resurceMask, x, y)
+        '                Catch ex As Exception
+
+        '                End Try
+
+        '            End If
+        '            j += 1
+        '        Next
+        '    Next
+
+        '    For k = 0 To 8
+        '        If Marke(k) <> 0 And Marke(k) <> 255 Then
+        '            If Objekt = 0 Or Objekt = Marke(k) Then
+        '                Objekt = Marke(k)
+        '            Else
+        '                lb_Info.Items.Insert(0, $"Linie: {i,3} Objekt mismatch  {Objekt,3} und {Marke(k),3}")
+        '                Objekt = Marke(k)
+        '            End If
+        '        End If
+        '    Next
+        '    Dim gefunden As Boolean = False
+        '    For Each obj As MyObekt In _MyObjekte
+        '        If Objekt = obj.ID Then
+        '            gefunden = True
+        '            lb_Info.Items.Insert(0, $"Linie: {i,3} gehört zu Objekt {obj.ID,3}")
+        '        End If
+        '    Next
+        '    If Not gefunden Then
+        '        lb_Info.Items.Insert(0, $"Linie: {i,3} passt zu keinem Objekt")
+        '    End If
+        '    CvInvoke.Line(tmp_Mat, segment.P1, segment.P2, New MCvScalar(0, 0, 255))
+        'Next
+        'Dim v2 As New ImageViewer
+        'v2.Image = tmp_Mat.Clone : v2.Text = "Line" : v2.Show()
+
+    End Function
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        KantenFinden(_MatWatershedMask, _MatPoints)
     End Sub
 End Class 'Form1
