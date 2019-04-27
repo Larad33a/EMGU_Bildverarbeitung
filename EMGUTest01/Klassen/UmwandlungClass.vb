@@ -72,7 +72,7 @@ Public Class UmwandlungClass
         Return value
     End Function
 
-    Public Shadows Function GetAreaValue_Byte(ByVal mat As Mat, ByVal row As Integer, ByVal col As Integer, Area As AreaTyp, typ As ValueTyp) As Byte()
+    Public Shared Function GetAreaValue_Byte(ByVal mat As Mat, ByVal row As Integer, ByVal col As Integer, Area As AreaTyp, typ As ValueTyp) As Byte()
         Dim num As Int32 = 0
         Dim mymid As Int32() = {0, 0, 0}
         Dim mymin As Byte() = {255, 255, 255}
@@ -117,9 +117,9 @@ Public Class UmwandlungClass
         End If
         Return wert
     End Function
-    Public Shadows Function GetAreaValue_Singel(ByVal mat As Mat, ByVal row As Integer, ByVal col As Integer, Area As AreaTyp, typ As ValueTyp) As Single
+    Public Shared Function GetAreaValue_Singel(ByVal mat As Mat, ByVal row As Integer, ByVal col As Integer, Area As AreaTyp, typ As ValueTyp) As Single
         Dim num As Int32 = 0
-        Dim mymid As Int64 = 0
+        Dim mymid As Double = 0
         Dim mymin As Single = Single.MaxValue
         Dim mymax As Single = Single.MinValue
         Dim wert As Single = 0
@@ -138,7 +138,7 @@ Public Class UmwandlungClass
                             mymin = wert
                         End If
                         'Middel
-                        mymid = mymid + CLng(wert)
+                        mymid = mymid + wert
                     Catch ex As Exception
                         num -= 1
                     End Try
@@ -157,7 +157,7 @@ Public Class UmwandlungClass
         End If
         Return wert
     End Function
-    Public Shadows Function GetAreaValue_Int16(ByVal mat As Mat, ByVal row As Integer, ByVal col As Integer, Area As AreaTyp, typ As ValueTyp) As Int16
+    Public Shared Function GetAreaValue_Int16(ByVal mat As Mat, ByVal row As Integer, ByVal col As Integer, Area As AreaTyp, typ As ValueTyp) As Int16
         Dim num As Int32 = 0
         Dim mymid As Int64 = 0
         Dim mymin As Int16 = Int16.MaxValue
@@ -178,7 +178,7 @@ Public Class UmwandlungClass
                             mymin = wert
                         End If
                         'Middel
-                        mymid = mymid + CLng(wert)
+                        mymid = mymid + wert
                     Catch ex As Exception
                         num -= 1
                     End Try
@@ -197,7 +197,7 @@ Public Class UmwandlungClass
         End If
         Return wert
     End Function
-    Public Shadows Function GetAreaValue_Int32(ByVal mat As Mat, ByVal row As Integer, ByVal col As Integer, Area As AreaTyp, typ As ValueTyp) As Int32
+    Public Shared Function GetAreaValue_Int32(ByVal mat As Mat, ByVal row As Integer, ByVal col As Integer, Area As AreaTyp, typ As ValueTyp) As Int32
         Dim num As Int32 = 0
         Dim mymid As Int64 = 0
         Dim mymin As Int32 = Int32.MaxValue
@@ -218,7 +218,7 @@ Public Class UmwandlungClass
                             mymin = wert
                         End If
                         'Middel
-                        mymid = mymid + CLng(wert)
+                        mymid = mymid + wert
                     Catch ex As Exception
                         num -= 1
                     End Try

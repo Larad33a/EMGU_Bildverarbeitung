@@ -144,7 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Klassen\MyMatchObj.vb" />
-    <Compile Include="Klassen\MyObektV2.vb" />
+    <Compile Include="Klassen\MyObjektV2.vb" />
     <Compile Include="Panels\Form_Main.vb">
       <SubType>Form</SubType>
     </Compile>

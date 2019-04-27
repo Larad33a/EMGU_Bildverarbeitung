@@ -2,7 +2,7 @@
 Imports Emgu.CV.Structure
 Imports Emgu.CV.Util
 
-Public Class MyObektV2
+Public Class MyObjektV2
     '--------------------------------------------------------------------------------------------------------------------------------------------------------
     'Property
     '--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -151,7 +151,7 @@ Public Class MyObektV2
     'AddRef
     Public Sub Add_Ref(x As Int32, y As Int32, z As Int32)
         Dim tmpPoint As New Point(x, y)
-        Dim tmpPointArray(1) As Point
+        Dim tmpPointArray(0) As Point
         tmpPointArray(0) = tmpPoint
         _ReverenzenXY.Push(tmpPointArray)
         Dim tmpIntArray(1) As Int32
@@ -161,7 +161,7 @@ Public Class MyObektV2
     End Sub
     Public Sub Add_Ref(point As MyPoint)
         Dim tmpPoint As New Point(point.X, point.Y)
-        Dim tmpPointArray(1) As Point
+        Dim tmpPointArray(0) As Point
         tmpPointArray(0) = tmpPoint
         _ReverenzenXY.Push(tmpPointArray)
         Dim tmpIntArray(1) As Int32
@@ -179,6 +179,7 @@ Public Class MyObektV2
             Next
         End If
     End Sub
+
     Public Sub Analyse()
         _MinAreaRec = CvInvoke.MinAreaRect(_ReverenzenXY)
     End Sub
@@ -265,14 +266,14 @@ Public Class MyObektV2
         If _MinAreaRec.Size.IsEmpty Then
             Analyse()
         End If
-        Return CInt(Math.Round(_MinAreaRec.Size.Height + _MinAreaRec.Size.Width))
+        Return CInt(Math.Round(_MinAreaRec.Size.Height * _MinAreaRec.Size.Width))
     End Function
     Public Function GetZentrumMyPoint(depthMat As Mat) As MyPoint
         'Prüfen ob _MinAreaRec Angelegt
         If _MinAreaRec.Size.IsEmpty Then
             Analyse()
         End If
-        Dim Z As Int32 = UmwandlungClass.GetInt16Value(depthMat, CInt(Math.Round(_MinAreaRec.Center.X)), CInt(Math.Round(_MinAreaRec.Center.Y)))
+        Dim Z As Int32 = UmwandlungClass.GetAreaValue_Int16(depthMat, CInt(Math.Round(_MinAreaRec.Center.X)), CInt(Math.Round(_MinAreaRec.Center.Y)), UmwandlungClass.AreaTyp.Area_3X3, UmwandlungClass.ValueTyp.Midel)
         Return New MyPoint(_MinAreaRec.Center, Z)
     End Function
     Public Function GetZentrumPoint() As Point
@@ -313,6 +314,11 @@ Public Class MyObektV2
     Public Function GetContour() As VectorOfPoint
         Return _ReverenzenXY
     End Function
+    Public Function GetContours() As VectorOfVectorOfPoint
+        Dim tmpV As New VectorOfVectorOfPoint
+        tmpV.Push(_ReverenzenXY)
+        Return tmpV
+    End Function
 
     Public Function GetOuterPoints() As Point()
         Dim tmpPoints(3) As Point
@@ -340,7 +346,7 @@ Public Class MyObektV2
     'Overrides
     '--------------------------------------------------------------------------------------------------------------------------------------------------------
     Public Overrides Function ToString() As String
-        Return ($"{_ID,3}: Xmin:{_Min_X.ToString()} ; Xdist:{Dist_X(),4} ; Ymin:{_Min_Y.ToString()} ; Ydist:{Dist_Y(),4} ; Z:{_Min_Z.ToString} - {_Max_Z.ToString}")
+        Return ($"{_ID,3}:Zentrum:{GetZentrumPoint.ToString()} ; Höhe:{GetHöhe(),4} ; Breite: {GetBreite(),4} ; Fläche:{GetFläche(),4} ; Winkel: {GetWinkel.ToString("N2"),6}")
     End Function
 
 End Class

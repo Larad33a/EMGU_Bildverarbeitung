@@ -10,12 +10,12 @@ Public Class MyMatchObj
             _Prozent = Prozent
         End Set
     End Property
-    Private _Objekt As MyObekt
-    Public Property Objekt() As MyObekt
+    Private _Objekt As MyObjektV2
+    Public Property Objekt() As MyObjektV2
         Get
             Return _Objekt
         End Get
-        Set(ByVal Objekt As MyObekt)
+        Set(ByVal Objekt As MyObjektV2)
             _Objekt = Objekt
         End Set
     End Property
@@ -28,7 +28,7 @@ Public Class MyMatchObj
             _Ausrichtung = value
         End Set
     End Property
-    Sub New(prozent As Double, ausrichtung As String, objekt As MyObekt)
+    Sub New(prozent As Double, ausrichtung As String, objekt As MyObjektV2)
         _Prozent = prozent
         _Ausrichtung = ausrichtung
         _Objekt = objekt
