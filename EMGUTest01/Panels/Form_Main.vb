@@ -1020,7 +1020,6 @@ Public Class Form_Main
         Return True
     End Function
 
-
     Private Function Search() As Boolean
         '1. Objektprüfen und Holen
         Dim AktSearch As SearchObj
@@ -1055,29 +1054,29 @@ Public Class Form_Main
         For Each obj As MyObjektV2 In _MyObjekte
             If obj.Passend(h, b, t, CInt(Num_SearchToleranz.Value)) Then
                 Dim Ausrichtung As String
-                Dim Fläche_HB, Fläche_BT, Fläche_HT, Prozent As Double
+                Dim Fläche_HB, Fläche_BT, Fläche_HT, Abweichung As Double
                 Fläche_HB = h * b
                 Fläche_BT = b * t
                 Fläche_HT = h * t
-
-                If (Fläche_HB / 100) * obj.GetFläche > (Fläche_BT / 100) * obj.GetFläche Then
-                    If (Fläche_HB / 100) * obj.GetFläche > (Fläche_HT / 100) * obj.GetFläche Then
-                        Prozent = (Fläche_HB / 100) * obj.GetFläche
+                'Prüfung zu welcher Fläche die Abweichung am gerinsten ist
+                If (100 - ((Fläche_HB / 100) * obj.GetFläche)) < (100 - ((Fläche_BT / 100) * obj.GetFläche)) Then
+                    If (100 - ((Fläche_HB / 100) * obj.GetFläche)) < (100 - ((Fläche_HT / 100) * obj.GetFläche)) Then
+                        Abweichung = (100 - ((Fläche_HB / 100) * obj.GetFläche))
                         Ausrichtung = "HB"
                     Else
-                        Prozent = (Fläche_HT / 100) * obj.GetFläche
+                        Abweichung = (100 - ((Fläche_HT / 100) * obj.GetFläche))
                         Ausrichtung = "HT"
                     End If
                 Else
-                    If (Fläche_BT / 100) * obj.GetFläche > (Fläche_HT / 100) * obj.GetFläche Then
-                        Prozent = (Fläche_BT / 100) * obj.GetFläche
+                    If (100 - ((Fläche_BT / 100) * obj.GetFläche)) > (100 - ((Fläche_HT / 100) * obj.GetFläche)) Then
+                        Abweichung = (100 - ((Fläche_BT / 100) * obj.GetFläche))
                         Ausrichtung = "BT"
                     Else
-                        Prozent = (Fläche_HT / 100) * obj.GetFläche
+                        Abweichung = (100 - ((Fläche_HT / 100) * obj.GetFläche))
                         Ausrichtung = "HT"
                     End If
                 End If
-                _MyMatchObjekts.Add(New MyMatchObj(Prozent, Ausrichtung, obj))
+                _MyMatchObjekts.Add(New MyMatchObj(Abweichung, Ausrichtung, obj))
             End If
         Next
 
@@ -1118,6 +1117,7 @@ Public Class Form_Main
         '###
         Return True
     End Function
+
     '----------------------------------------------------------------------------------------------------------------------------
     'Watershed Module
     '----------------------------------------------------------------------------------------------------------------------------
@@ -1412,6 +1412,10 @@ Public Class Form_Main
         Return True
     End Function
 
+
+    '----------------------------------------------------------------------------------------------------------------------------
+    'LÖschen Tests
+    '----------------------------------------------------------------------------------------------------------------------------
     Private Function KantenFinden(ByRef resurceMask As Mat, ByRef resurceImg As Mat) As Boolean
         Dim tmp_Mat As New Mat
         tmp_Mat = resurceMask.Clone
@@ -1544,10 +1548,6 @@ Public Class Form_Main
         'v2.Image = tmp_Mat.Clone : v2.Text = "Line" : v2.Show()
 
     End Function
-
-    '----------------------------------------------------------------------------------------------------------------------------
-    'LÖschen Tests
-    '----------------------------------------------------------------------------------------------------------------------------
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         KantenFinden(_MatWatershedMask, _MatPoints)
