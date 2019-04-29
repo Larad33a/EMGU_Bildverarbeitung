@@ -148,6 +148,28 @@ Public Class Form_Main
     End Sub
 
     Private Sub Form1_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
+        'Steuerung
+        My.Settings.Steur_Tolreanz = CInt(Num_SearchToleranz.Value)
+
+        'Konfiguration
+        My.Settings.Konf_MaskeH = CInt(num_MaskH.Value)
+        My.Settings.Konf_MaskeV = CInt(num_MaskV.Value)
+        My.Settings.Konf_KameraOffset = CInt(num_CamOffset.Value)
+        My.Settings.Konf_KameraColorOffset = ColorCamOffset
+        My.Settings.Konv_FaktorPixMilH = num_pixmmH_faktor.Value
+        My.Settings.Konv_FaktorPixMilB = num_pixmmB_faktor.Value
+        My.Settings.Konv_RoboOffsetX = num_RoboOffsetX.Value
+        My.Settings.Konv_RoboOffsetY = num_RoboOffsety.Value
+        'Auswertung
+        My.Settings.Ausw_TiefsteReg = CInt(num_ThreshTief.Value)
+        My.Settings.Ausw_HöchsteReg = CInt(num_ThreshHoch.Value)
+        My.Settings.Ausw_MindestObjH = CInt(num_WTS_MinH.Value)
+        My.Settings.Ausw_MindestObjB = CInt(num_WTS_MinB.Value)
+        My.Settings.Ausw_MindestObjT = CInt(num_WTS_MinT.Value)
+        'TCP
+        My.Settings.TCP_Host = tb_TCP_HOST.Text
+        My.Settings.TCP_Port = CInt(num_TCP_Port.Value)
+        My.Settings.Save()
 
     End Sub
 
@@ -423,74 +445,8 @@ Public Class Form_Main
     '-----------------------------------------------------------------------------------------------------------------------
     'Einstelungen
     '-----------------------------------------------------------------------------------------------------------------------
-    Private Sub Num_SearchToleranz_ValueChanged(sender As Object, e As EventArgs) Handles Num_SearchToleranz.ValueChanged
-        My.Settings.Steur_Tolreanz = CInt(Num_SearchToleranz.Value)
-        My.Settings.Save()
-    End Sub
-
-    Private Sub num_MaskH_ValueChanged(sender As Object, e As EventArgs) Handles num_MaskH.ValueChanged
-        My.Settings.Konf_MaskeH = CInt(num_MaskH.Value)
-        My.Settings.Save()
-    End Sub
-    Private Sub num_MaskV_ValueChanged(sender As Object, e As EventArgs) Handles num_MaskV.ValueChanged
-        My.Settings.Konf_MaskeV = CInt(num_MaskV.Value)
-        My.Settings.Save()
-    End Sub
-
     Private Sub num_CamOffset_ValueChanged(sender As Object, e As EventArgs) Handles num_CamOffset.ValueChanged
         ColorCamOffset = CInt(num_CamOffset.Value) - cCamOffset
-        My.Settings.Konf_KameraOffset = CInt(num_CamOffset.Value)
-        My.Settings.Konf_KameraColorOffset = ColorCamOffset
-        My.Settings.Save()
-    End Sub
-
-    Private Sub num_pixmmH_faktor_ValueChanged(sender As Object, e As EventArgs) Handles num_pixmmH_faktor.ValueChanged
-        My.Settings.Konv_FaktorPixMilH = num_pixmmH_faktor.Value
-        My.Settings.Save()
-    End Sub
-    Private Sub num_pixmmB_faktor_ValueChanged(sender As Object, e As EventArgs) Handles num_pixmmB_faktor.ValueChanged
-        My.Settings.Konv_FaktorPixMilB = num_pixmmB_faktor.Value
-        My.Settings.Save()
-    End Sub
-
-    Private Sub num_RoboOffsetX_ValueChanged(sender As Object, e As EventArgs) Handles num_RoboOffsetX.ValueChanged
-        My.Settings.Konv_RoboOffsetX = num_RoboOffsetX.Value
-        My.Settings.Save()
-    End Sub
-    Private Sub num_RoboOffsety_ValueChanged(sender As Object, e As EventArgs) Handles num_RoboOffsety.ValueChanged
-        My.Settings.Konv_RoboOffsetY = num_RoboOffsety.Value
-        My.Settings.Save()
-    End Sub
-
-    Private Sub num_ThreshTief_ValueChanged(sender As Object, e As EventArgs) Handles num_ThreshTief.ValueChanged
-        My.Settings.Ausw_TiefsteReg = CInt(num_ThreshTief.Value)
-        My.Settings.Save()
-    End Sub
-    Private Sub num_ThreshHoch_ValueChanged(sender As Object, e As EventArgs) Handles num_ThreshHoch.ValueChanged
-        My.Settings.Ausw_HöchsteReg = CInt(num_ThreshHoch.Value)
-        My.Settings.Save()
-    End Sub
-
-    Private Sub num_WTS_MinH_ValueChanged(sender As Object, e As EventArgs) Handles num_WTS_MinH.ValueChanged
-        My.Settings.Ausw_MindestObjH = CInt(num_WTS_MinH.Value)
-        My.Settings.Save()
-    End Sub
-    Private Sub num_WTS_MinB_ValueChanged(sender As Object, e As EventArgs) Handles num_WTS_MinB.ValueChanged
-        My.Settings.Ausw_MindestObjB = CInt(num_WTS_MinB.Value)
-        My.Settings.Save()
-    End Sub
-    Private Sub num_WTS_MinT_ValueChanged(sender As Object, e As EventArgs) Handles num_WTS_MinT.ValueChanged
-        My.Settings.Ausw_MindestObjT = CInt(num_WTS_MinT.Value)
-        My.Settings.Save()
-    End Sub
-
-    Private Sub tb_TCP_HOST_TextChanged(sender As Object, e As EventArgs) Handles tb_TCP_HOST.TextChanged
-        My.Settings.TCP_Host = tb_TCP_HOST.Text
-        My.Settings.Save()
-    End Sub
-    Private Sub num_TCP_Port_ValueChanged(sender As Object, e As EventArgs) Handles num_TCP_Port.ValueChanged
-        My.Settings.TCP_Port = CInt(num_TCP_Port.Value)
-        My.Settings.Save()
     End Sub
 
     Private Sub LoadSettings()
