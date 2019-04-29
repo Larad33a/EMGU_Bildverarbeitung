@@ -9,6 +9,8 @@ Imports Emgu.CV.Structure
 Imports Emgu.CV.UI
 Imports Emgu.CV.Util
 
+Imports System.IO
+
 'Infos:
 'Emgu.CV.CvInvoke. zugriff auf alle openCV befehle
 
@@ -82,7 +84,6 @@ Public Class Form_Main
     Private _MatRefC As Mat
     Private _MatRefD As Mat
     Private _MatRefDc As Mat
-    Private _MatDepthOffset As New Mat
     Private _MatWatershedMask As New Mat
     Private _MatFound As New Mat
     Private _DisColor As New Mat
@@ -237,11 +238,48 @@ Public Class Form_Main
     End Sub
 
     Private Sub btn_SaveSearch_Click(sender As Object, e As EventArgs) Handles btn_SaveSearch.Click
+        Using SaveStreamerFile As New FileStream("SearchData.dat", FileMode.Create)
+            Using SaveStreamWriter = New StreamWriter(SaveStreamerFile)
+                For Each obj In _MySearchObjekte
+                    'Write a line of text.
+                    SaveStreamWriter.WriteLine(obj.GetSaveData())
+                Next
+                'Close the file.
+                SaveStreamWriter.Close()
+            End Using
+        End Using
 
     End Sub
 
     Private Sub btn_LoadSearch_Click(sender As Object, e As EventArgs) Handles btn_LoadSearch.Click
+        lb_SearchObjList.Items.Clear()
+        _MySearchObjekte.Clear()
 
+        Try
+            Using SaveStreamReader As New StreamReader("SearchData.dat")
+                Dim sZeile As String
+
+                sZeile = SaveStreamReader.ReadLine
+
+                'Continue to read until you reach the end of the file.
+                Do While Not sZeile Is Nothing
+                    Dim Strings() As String
+                    Strings = sZeile.Split(CChar(";"))
+
+                    Dim tmpSearchObj As New SearchObj(Convert.ToInt32(Strings(0)), Strings(1), Convert.ToInt32(Strings(2)), Convert.ToInt32(Strings(3)), Convert.ToInt32(Strings(4)))
+                    _MySearchObjekte.Add(tmpSearchObj)
+                    sZeile = SaveStreamReader.ReadLine
+                Loop
+                'Close the file.
+                SaveStreamReader.Close()
+            End Using
+
+            For Each obj In _MySearchObjekte
+                lb_SearchObjList.Items.Add(obj.ToString())
+            Next
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     'TCP_Variablen
@@ -534,13 +572,13 @@ Public Class Form_Main
         Try
             'Color Konfig
             If typ = Enum_Format.color Then
-                _MyCFG.EnableStream(Stream.Color, widht, height, format, fps)
+                _MyCFG.EnableStream(Intel.RealSense.Stream.Color, widht, height, format, fps)
                 lb_Info.Items.Insert(0, "RGB_Konfig added")
             End If
 
             'Depth Konfig
             If typ = Enum_Format.depth Then
-                _MyCFG.EnableStream(Stream.Depth, widht, height, format, fps)
+                _MyCFG.EnableStream(Intel.RealSense.Stream.Depth, widht, height, format, fps)
                 lb_Info.Items.Insert(0, "Depth_Konfig added")
             End If
 
@@ -556,11 +594,11 @@ Public Class Form_Main
         Try
             'Color Konfig
 
-            _MyCFG.EnableStream(Stream.Color, cWidht, cHeight, Format.Bgr8, cfpsColor)
+            _MyCFG.EnableStream(Intel.RealSense.Stream.Color, cWidht, cHeight, Format.Bgr8, cfpsColor)
             lb_Info.Items.Insert(0, "RGB_Konfig added")
             'Depth Konfig
 
-            _MyCFG.EnableStream(Stream.Depth, cWidht, cHeight, Format.Z16, cfpsDepth)
+            _MyCFG.EnableStream(Intel.RealSense.Stream.Depth, cWidht, cHeight, Format.Z16, cfpsDepth)
             lb_Info.Items.Insert(0, "Depth_Konfig added")
 
             RestartCam()

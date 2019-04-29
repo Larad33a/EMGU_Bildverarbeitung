@@ -66,9 +66,11 @@ Public Class SearchObj : Implements IXmlSerializable
     Public Function Maase() As String
         Return $"H|B|T: {_Höhe,4} | {_Breite,4} | {_Tiefe,4}"
     End Function
-
+    Public Function GetSaveData() As String
+        Return $"{_ID};{_Name};{_Höhe};{_Breite};{_Tiefe}"
+    End Function
     Public Overrides Function ToString() As String
-        Return $"{_ID,3}: {_Name} [{_Höhe,4} | {_Breite,4} | {_Tiefe,4}]"
+        Return $"{_ID,3} {_Name} [{_Höhe,4} | {_Breite,4} | {_Tiefe,4}]"
     End Function
 
     Public Function GetSchema() As XmlSchema Implements IXmlSerializable.GetSchema
