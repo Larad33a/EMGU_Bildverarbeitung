@@ -35,6 +35,8 @@ Partial Class Form_Main
         Me.ib_rev_Depth = New Emgu.CV.UI.ImageBox()
         Me.ib_rev_Color = New Emgu.CV.UI.ImageBox()
         Me.P5_ResultSearchObj = New System.Windows.Forms.TabPage()
+        Me.lbl_Found_Depth = New System.Windows.Forms.Label()
+        Me.Label40 = New System.Windows.Forms.Label()
         Me.lbl_FoundWidth = New System.Windows.Forms.Label()
         Me.Label28 = New System.Windows.Forms.Label()
         Me.lbl_Found_Rot = New System.Windows.Forms.Label()
@@ -76,6 +78,7 @@ Partial Class Form_Main
         Me.T2_CamBoot = New System.Windows.Forms.Timer(Me.components)
         Me.TC1_Menue = New System.Windows.Forms.TabControl()
         Me.P1_Steuerung = New System.Windows.Forms.TabPage()
+        Me.btn_depthOffset = New System.Windows.Forms.Button()
         Me.GroupBox10 = New System.Windows.Forms.GroupBox()
         Me.btn_LoadSearch = New System.Windows.Forms.Button()
         Me.btn_SaveSearch = New System.Windows.Forms.Button()
@@ -109,6 +112,11 @@ Partial Class Form_Main
         Me.btn_Analyse = New System.Windows.Forms.Button()
         Me.btn_RefImg = New System.Windows.Forms.Button()
         Me.P2_Konfig = New System.Windows.Forms.TabPage()
+        Me.GroupBox19 = New System.Windows.Forms.GroupBox()
+        Me.Label41 = New System.Windows.Forms.Label()
+        Me.Label39 = New System.Windows.Forms.Label()
+        Me.num_RoboOffsety = New System.Windows.Forms.NumericUpDown()
+        Me.num_RoboOffsetX = New System.Windows.Forms.NumericUpDown()
         Me.GroupBox15 = New System.Windows.Forms.GroupBox()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.num_pixmmB_faktor = New System.Windows.Forms.NumericUpDown()
@@ -196,14 +204,6 @@ Partial Class Form_Main
         Me.LB_obj = New System.Windows.Forms.ListBox()
         Me.P2_Found = New System.Windows.Forms.TabPage()
         Me.lb_Found = New System.Windows.Forms.ListBox()
-        Me.btn_depthOffset = New System.Windows.Forms.Button()
-        Me.lbl_Found_Depth = New System.Windows.Forms.Label()
-        Me.Label40 = New System.Windows.Forms.Label()
-        Me.GroupBox19 = New System.Windows.Forms.GroupBox()
-        Me.num_RoboOffsetX = New System.Windows.Forms.NumericUpDown()
-        Me.num_RoboOffsety = New System.Windows.Forms.NumericUpDown()
-        Me.Label39 = New System.Windows.Forms.Label()
-        Me.Label41 = New System.Windows.Forms.Label()
         Me.GroupBox1.SuspendLayout()
         Me.TC2_Bilder.SuspendLayout()
         Me.P1_NewImg.SuspendLayout()
@@ -249,6 +249,9 @@ Partial Class Form_Main
         CType(Me.num_SearchObj, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox9.SuspendLayout()
         Me.P2_Konfig.SuspendLayout()
+        Me.GroupBox19.SuspendLayout()
+        CType(Me.num_RoboOffsety, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.num_RoboOffsetX, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox15.SuspendLayout()
         CType(Me.num_pixmmB_faktor, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.num_pixmmH_faktor, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -279,9 +282,6 @@ Partial Class Form_Main
         Me.TC3_ObjLists.SuspendLayout()
         Me.P1_All.SuspendLayout()
         Me.P2_Found.SuspendLayout()
-        Me.GroupBox19.SuspendLayout()
-        CType(Me.num_RoboOffsetX, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.num_RoboOffsety, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'GroupBox1
@@ -435,6 +435,24 @@ Partial Class Form_Main
         Me.P5_ResultSearchObj.TabIndex = 4
         Me.P5_ResultSearchObj.Text = "Gefundene Objekte"
         Me.P5_ResultSearchObj.UseVisualStyleBackColor = True
+        '
+        'lbl_Found_Depth
+        '
+        Me.lbl_Found_Depth.AutoSize = True
+        Me.lbl_Found_Depth.Location = New System.Drawing.Point(780, 226)
+        Me.lbl_Found_Depth.Name = "lbl_Found_Depth"
+        Me.lbl_Found_Depth.Size = New System.Drawing.Size(13, 17)
+        Me.lbl_Found_Depth.TabIndex = 19
+        Me.lbl_Found_Depth.Text = "-"
+        '
+        'Label40
+        '
+        Me.Label40.Location = New System.Drawing.Point(670, 226)
+        Me.Label40.Name = "Label40"
+        Me.Label40.Size = New System.Drawing.Size(100, 17)
+        Me.Label40.TabIndex = 18
+        Me.Label40.Text = "Tiefe:"
+        Me.Label40.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
         'lbl_FoundWidth
         '
@@ -854,6 +872,15 @@ Partial Class Form_Main
         Me.P1_Steuerung.Text = "Steuerung"
         Me.P1_Steuerung.UseVisualStyleBackColor = True
         '
+        'btn_depthOffset
+        '
+        Me.btn_depthOffset.Location = New System.Drawing.Point(318, 81)
+        Me.btn_depthOffset.Name = "btn_depthOffset"
+        Me.btn_depthOffset.Size = New System.Drawing.Size(150, 62)
+        Me.btn_depthOffset.TabIndex = 10
+        Me.btn_depthOffset.Text = "Tiefen Offset"
+        Me.btn_depthOffset.UseVisualStyleBackColor = True
+        '
         'GroupBox10
         '
         Me.GroupBox10.Controls.Add(Me.btn_LoadSearch)
@@ -1192,6 +1219,59 @@ Partial Class Form_Main
         Me.P2_Konfig.TabIndex = 1
         Me.P2_Konfig.Text = "Konfiguration"
         Me.P2_Konfig.UseVisualStyleBackColor = True
+        '
+        'GroupBox19
+        '
+        Me.GroupBox19.Controls.Add(Me.Label41)
+        Me.GroupBox19.Controls.Add(Me.Label39)
+        Me.GroupBox19.Controls.Add(Me.num_RoboOffsety)
+        Me.GroupBox19.Controls.Add(Me.num_RoboOffsetX)
+        Me.GroupBox19.Location = New System.Drawing.Point(1437, 6)
+        Me.GroupBox19.Name = "GroupBox19"
+        Me.GroupBox19.Size = New System.Drawing.Size(193, 147)
+        Me.GroupBox19.TabIndex = 14
+        Me.GroupBox19.TabStop = False
+        Me.GroupBox19.Text = "Robo Offsets"
+        '
+        'Label41
+        '
+        Me.Label41.AutoSize = True
+        Me.Label41.Location = New System.Drawing.Point(10, 62)
+        Me.Label41.Name = "Label41"
+        Me.Label41.Size = New System.Drawing.Size(21, 17)
+        Me.Label41.TabIndex = 3
+        Me.Label41.Text = "Y:"
+        '
+        'Label39
+        '
+        Me.Label39.AutoSize = True
+        Me.Label39.Location = New System.Drawing.Point(10, 22)
+        Me.Label39.Name = "Label39"
+        Me.Label39.Size = New System.Drawing.Size(21, 17)
+        Me.Label39.TabIndex = 2
+        Me.Label39.Text = "X:"
+        '
+        'num_RoboOffsety
+        '
+        Me.num_RoboOffsety.DecimalPlaces = 2
+        Me.num_RoboOffsety.Location = New System.Drawing.Point(34, 60)
+        Me.num_RoboOffsety.Maximum = New Decimal(New Integer() {10, 0, 0, 0})
+        Me.num_RoboOffsety.Minimum = New Decimal(New Integer() {10, 0, 0, -2147483648})
+        Me.num_RoboOffsety.Name = "num_RoboOffsety"
+        Me.num_RoboOffsety.Size = New System.Drawing.Size(120, 22)
+        Me.num_RoboOffsety.TabIndex = 1
+        Me.num_RoboOffsety.Value = New Decimal(New Integer() {105, 0, 0, 131072})
+        '
+        'num_RoboOffsetX
+        '
+        Me.num_RoboOffsetX.DecimalPlaces = 2
+        Me.num_RoboOffsetX.Location = New System.Drawing.Point(34, 21)
+        Me.num_RoboOffsetX.Maximum = New Decimal(New Integer() {10, 0, 0, 0})
+        Me.num_RoboOffsetX.Minimum = New Decimal(New Integer() {10, 0, 0, -2147483648})
+        Me.num_RoboOffsetX.Name = "num_RoboOffsetX"
+        Me.num_RoboOffsetX.Size = New System.Drawing.Size(120, 22)
+        Me.num_RoboOffsetX.TabIndex = 0
+        Me.num_RoboOffsetX.Value = New Decimal(New Integer() {95, 0, 0, 131072})
         '
         'GroupBox15
         '
@@ -2100,86 +2180,6 @@ Partial Class Form_Main
         Me.lb_Found.Size = New System.Drawing.Size(534, 516)
         Me.lb_Found.TabIndex = 8
         '
-        'btn_depthOffset
-        '
-        Me.btn_depthOffset.Location = New System.Drawing.Point(318, 81)
-        Me.btn_depthOffset.Name = "btn_depthOffset"
-        Me.btn_depthOffset.Size = New System.Drawing.Size(150, 62)
-        Me.btn_depthOffset.TabIndex = 10
-        Me.btn_depthOffset.Text = "Tiefen Offset"
-        Me.btn_depthOffset.UseVisualStyleBackColor = True
-        '
-        'lbl_Found_Depth
-        '
-        Me.lbl_Found_Depth.AutoSize = True
-        Me.lbl_Found_Depth.Location = New System.Drawing.Point(780, 226)
-        Me.lbl_Found_Depth.Name = "lbl_Found_Depth"
-        Me.lbl_Found_Depth.Size = New System.Drawing.Size(13, 17)
-        Me.lbl_Found_Depth.TabIndex = 19
-        Me.lbl_Found_Depth.Text = "-"
-        '
-        'Label40
-        '
-        Me.Label40.Location = New System.Drawing.Point(670, 226)
-        Me.Label40.Name = "Label40"
-        Me.Label40.Size = New System.Drawing.Size(100, 17)
-        Me.Label40.TabIndex = 18
-        Me.Label40.Text = "Tiefe:"
-        Me.Label40.TextAlign = System.Drawing.ContentAlignment.TopRight
-        '
-        'GroupBox19
-        '
-        Me.GroupBox19.Controls.Add(Me.Label41)
-        Me.GroupBox19.Controls.Add(Me.Label39)
-        Me.GroupBox19.Controls.Add(Me.num_RoboOffsety)
-        Me.GroupBox19.Controls.Add(Me.num_RoboOffsetX)
-        Me.GroupBox19.Location = New System.Drawing.Point(1437, 6)
-        Me.GroupBox19.Name = "GroupBox19"
-        Me.GroupBox19.Size = New System.Drawing.Size(193, 147)
-        Me.GroupBox19.TabIndex = 14
-        Me.GroupBox19.TabStop = False
-        Me.GroupBox19.Text = "Robo Offsets"
-        '
-        'num_RoboOffsetX
-        '
-        Me.num_RoboOffsetX.DecimalPlaces = 2
-        Me.num_RoboOffsetX.Location = New System.Drawing.Point(34, 21)
-        Me.num_RoboOffsetX.Maximum = New Decimal(New Integer() {10, 0, 0, 0})
-        Me.num_RoboOffsetX.Minimum = New Decimal(New Integer() {10, 0, 0, -2147483648})
-        Me.num_RoboOffsetX.Name = "num_RoboOffsetX"
-        Me.num_RoboOffsetX.Size = New System.Drawing.Size(120, 22)
-        Me.num_RoboOffsetX.TabIndex = 0
-        Me.num_RoboOffsetX.Value = New Decimal(New Integer() {95, 0, 0, 131072})
-        '
-        'num_RoboOffsety
-        '
-        Me.num_RoboOffsety.DecimalPlaces = 2
-        Me.num_RoboOffsety.Location = New System.Drawing.Point(34, 60)
-        Me.num_RoboOffsety.Maximum = New Decimal(New Integer() {10, 0, 0, 0})
-        Me.num_RoboOffsety.Minimum = New Decimal(New Integer() {10, 0, 0, -2147483648})
-        Me.num_RoboOffsety.Name = "num_RoboOffsety"
-        Me.num_RoboOffsety.Size = New System.Drawing.Size(120, 22)
-        Me.num_RoboOffsety.TabIndex = 1
-        Me.num_RoboOffsety.Value = New Decimal(New Integer() {105, 0, 0, 131072})
-        '
-        'Label39
-        '
-        Me.Label39.AutoSize = True
-        Me.Label39.Location = New System.Drawing.Point(10, 22)
-        Me.Label39.Name = "Label39"
-        Me.Label39.Size = New System.Drawing.Size(21, 17)
-        Me.Label39.TabIndex = 2
-        Me.Label39.Text = "X:"
-        '
-        'Label41
-        '
-        Me.Label41.AutoSize = True
-        Me.Label41.Location = New System.Drawing.Point(10, 62)
-        Me.Label41.Name = "Label41"
-        Me.Label41.Size = New System.Drawing.Size(21, 17)
-        Me.Label41.TabIndex = 3
-        Me.Label41.Text = "Y:"
-        '
         'Form_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
@@ -2242,6 +2242,10 @@ Partial Class Form_Main
         Me.GroupBox9.ResumeLayout(False)
         Me.GroupBox9.PerformLayout()
         Me.P2_Konfig.ResumeLayout(False)
+        Me.GroupBox19.ResumeLayout(False)
+        Me.GroupBox19.PerformLayout()
+        CType(Me.num_RoboOffsety, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.num_RoboOffsetX, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox15.ResumeLayout(False)
         Me.GroupBox15.PerformLayout()
         CType(Me.num_pixmmB_faktor, System.ComponentModel.ISupportInitialize).EndInit()
@@ -2281,10 +2285,6 @@ Partial Class Form_Main
         Me.TC3_ObjLists.ResumeLayout(False)
         Me.P1_All.ResumeLayout(False)
         Me.P2_Found.ResumeLayout(False)
-        Me.GroupBox19.ResumeLayout(False)
-        Me.GroupBox19.PerformLayout()
-        CType(Me.num_RoboOffsetX, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.num_RoboOffsety, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
