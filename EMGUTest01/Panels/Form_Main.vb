@@ -82,6 +82,7 @@ Public Class Form_Main
     Private _MatRefC As Mat
     Private _MatRefD As Mat
     Private _MatRefDc As Mat
+    Private _MatDepthOffset As New Mat
     Private _MatWatershedMask As New Mat
     Private _MatFound As New Mat
     Private _DisColor As New Mat
@@ -130,6 +131,17 @@ Public Class Form_Main
 
         ColorCamOffset = CInt(num_CamOffset.Value) - cCamOffset
 
+        'TCPVariablen anlegen
+        _TcpVariablen.AddVariable("x")
+        _TcpVariablen.AddVariable("y")
+        _TcpVariablen.AddVariable("z")
+        _TcpVariablen.AddVariable("h")
+        _TcpVariablen.AddVariable("b")
+        _TcpVariablen.AddVariable("t")
+        _TcpVariablen.AddVariable("a")
+        _TcpVariablen.AddVariable("pic")
+        _TcpVariablen.AddVariable("rdy")
+        _refreshDataGridView()
         'AddHandler btn_StartStop.Click, New EventHandler(AddressOf Me.ProcessFrameAndUpdateGUI)
 
     End Sub
@@ -178,6 +190,12 @@ Public Class Form_Main
 
     Private Sub btn_Analyse_Click(sender As Object, e As EventArgs) Handles btn_Analyse.Click
         ImgageAnalyse()
+    End Sub
+
+    Private Sub btn_depthOffset_Click(sender As Object, e As EventArgs) Handles btn_depthOffset.Click
+
+        TakePicture(_MatColor, _MatDepth, _MatDepthC)
+
     End Sub
 
     'Obj Search
@@ -383,7 +401,7 @@ Public Class Form_Main
         Me.Invoke(Sub() Disconect())
     End Sub
 
-    Private Sub _TcpVariablen_VariableChanged(name As String, val As Integer) Handles _TcpVariablen.VariableChanged
+    Private Sub _TcpVariablen_VariableChanged(name As String, val As Double) Handles _TcpVariablen.VariableChanged
         Me.Invoke(Sub() VaribleChange(name, val))
 
     End Sub
@@ -393,9 +411,15 @@ Public Class Form_Main
         lbl_TCP_Status.Text = "Getrennt"
     End Sub
 
-    Sub VaribleChange(name As String, val As Int32)
-        _refreshDataGridView()
-        lb_Info.Items.Insert(0, $"Variabel wurde geändert {name} {val}")
+    Sub VaribleChange(name As String, val As Double)
+        If name = "pic" And val > 0 Then
+            _TcpVariablen.SetVariable("pic", 0)
+            Dim rdy As Double = Auto()
+            _TcpVariablen.SetVariable("rdy", rdy)
+        Else
+            _refreshDataGridView()
+            lb_Info.Items.Insert(0, $"Variabel wurde geändert {name} {val}")
+        End If
     End Sub
 
     '-----------------------------------------------------------------------------------------------------------------------
@@ -569,9 +593,7 @@ Public Class Form_Main
                 Next
             Next
             Dim z As Int32 = Zeile
-            lbl_Prozent.Text = ((z / (ZeichenMat3.Rows - 1)) * 100).ToString()
         Next
-        lbl_Prozent.Visible = False
         _MatFound = ZeichenMat3.Clone
         CvInvoke.Resize(_MatFound, _DisFound, New Size(640, 480))
         ib_Found.Image = _DisFound.Clone
@@ -1023,6 +1045,8 @@ Public Class Form_Main
     Private Function Search() As Boolean
         '1. Objektprüfen und Holen
         Dim AktSearch As SearchObj
+        lb_Found.Items.Clear()
+        _MyMatchObjekts.Clear()
 
         Try
             AktSearch = _MySearchObjekte.ElementAt(CInt(num_SearchObj.Value - 1))
@@ -1052,32 +1076,35 @@ Public Class Form_Main
         Dim t As Int32 = MilToPix(AktSearch.Tiefe)
         lb_Info.Items.Insert(0, $"h:{h,4} b:{b,4} t:{t,4}")
         For Each obj As MyObjektV2 In _MyObjekte
-            If obj.Passend(h, b, t, CInt(Num_SearchToleranz.Value)) Then
-                Dim Ausrichtung As String
-                Dim Fläche_HB, Fläche_BT, Fläche_HT, Abweichung As Double
-                Fläche_HB = h * b
-                Fläche_BT = b * t
-                Fläche_HT = h * t
+            'If obj.Passend(h, b, t, CInt(Num_SearchToleranz.Value)) Then
+            Dim Ausrichtung As String
+            Dim Fläche_HB, Fläche_BT, Fläche_HT, Abweichung, Toleranz As Double
+            Fläche_HB = h * b
+            Fläche_BT = b * t
+            Fläche_HT = h * t
+            lb_Info.Items.Insert(0, $"Gesuchte Flächen: HB{Fläche_HB,3} BT{Fläche_BT,3} HT{Fläche_HT,3}")
+            If obj.PassendFläche(Fläche_HB, Fläche_BT, Fläche_HT, CInt(Num_SearchToleranz.Value)) Then
                 'Prüfung zu welcher Fläche die Abweichung am gerinsten ist
-                If (100 - ((Fläche_HB / 100) * obj.GetFläche)) < (100 - ((Fläche_BT / 100) * obj.GetFläche)) Then
-                    If (100 - ((Fläche_HB / 100) * obj.GetFläche)) < (100 - ((Fläche_HT / 100) * obj.GetFläche)) Then
-                        Abweichung = (100 - ((Fläche_HB / 100) * obj.GetFläche))
+                If Math.Abs(100 - ((100 / Fläche_HB) * obj.GetFläche)) < Math.Abs(100 - ((100 / Fläche_BT) * obj.GetFläche)) Then
+                    If Math.Abs(100 - ((100 / Fläche_HB) * obj.GetFläche)) < Math.Abs(100 - ((100 / Fläche_HT) * obj.GetFläche)) Then
+                        Abweichung = Math.Abs(100 - ((100 / Fläche_HB) * obj.GetFläche))
                         Ausrichtung = "HB"
                     Else
-                        Abweichung = (100 - ((Fläche_HT / 100) * obj.GetFläche))
+                        Abweichung = Math.Abs(100 - ((100 / Fläche_HT) * obj.GetFläche))
                         Ausrichtung = "HT"
                     End If
                 Else
-                    If (100 - ((Fläche_BT / 100) * obj.GetFläche)) > (100 - ((Fläche_HT / 100) * obj.GetFläche)) Then
-                        Abweichung = (100 - ((Fläche_BT / 100) * obj.GetFläche))
+                    If Math.Abs(100 - ((100 / Fläche_BT) * obj.GetFläche)) < Math.Abs(100 - ((100 / Fläche_HT) * obj.GetFläche)) Then
+                        Abweichung = Math.Abs(100 - ((100 / Fläche_BT) * obj.GetFläche))
                         Ausrichtung = "BT"
                     Else
-                        Abweichung = (100 - ((Fläche_HT / 100) * obj.GetFläche))
+                        Abweichung = Math.Abs(100 - ((100 / Fläche_HT) * obj.GetFläche))
                         Ausrichtung = "HT"
                     End If
                 End If
                 _MyMatchObjekts.Add(New MyMatchObj(Abweichung, Ausrichtung, obj))
             End If
+            'End If
         Next
 
         '5. Passendes Objekt Anzeigen
@@ -1093,8 +1120,9 @@ Public Class Form_Main
         lbl_FoundObj.Text = _MyMatchObjekts(0).Objekt.ToString
         Dim mm As Int32 = CInt(_MyMatchObjekts(0).Objekt.Dist_Max() / num_pixmmH_faktor.Value)
         lbl_FoundWidth.Text = $"{_MyMatchObjekts(0).Objekt.Dist_Max(),4} pixel = {mm,4} mm"
-        lbl_FoundZent.Text = "####"
-        lbl_Found_Rot.Text = "###"
+        lbl_FoundZent.Text = $"{_MyMatchObjekts(0).Objekt.GetZentrumPoint.ToString()}"
+        lbl_Found_Rot.Text = $"{_MyMatchObjekts(0).Objekt.GetWinkel2.ToString()}"
+        lbl_Found_Depth.Text = _MyMatchObjekts(0).Objekt.GetDepthStr()
         TC2_Bilder.SelectedTab = P5_ResultSearchObj
         TC3_ObjLists.SelectedTab = P2_Found
         '6. Zeichnen
@@ -1105,19 +1133,90 @@ Public Class Form_Main
             CvInvoke.DrawContours(ZeichenMat3, o.GetContours, 0, New MCvScalar(o.Color(0), o.Color(1), o.Color(2)), -1)
             Dim pin As Point()
             pin = o.GetMinAreaPoints()
+            CvInvoke.Circle(ZeichenMat3, pin(0), 3, New MCvScalar(255, 0, 0), 3)
             'draw Boxes
-            For i = 0 To 3
-                CvInvoke.Line(ZeichenMat3, pin(i), pin((i + 1) Mod 4), New MCvScalar(0, 0, 255), 2) 'min
+            For i = 0 To 2
+                CvInvoke.Line(ZeichenMat3, pin(i), pin((i + 1)), New MCvScalar(0, 0, 255), 2) 'min
+                'Grundlinie
+                CvInvoke.Line(ZeichenMat3, pin(3), pin((0)), New MCvScalar(255, 255, 255), 2) 'min
             Next
-            CvInvoke.PutText(ZeichenMat3, $"ID:{o.ID,2} Winkel:{o.GetWinkel.ToString("N2"),4}", o.GetZentrumPoint, FontFace.HersheyComplex, 1, New MCvScalar(255, 255, 255))
+            CvInvoke.PutText(ZeichenMat3, $"ID:{o.ID,2} Winkel:{o.GetWinkel2,4:n2}", o.GetZentrumPoint, FontFace.HersheyComplex, 1, New MCvScalar(255, 255, 255))
         Next
+        CvInvoke.Resize(ZeichenMat3, ZeichenMat3, New Drawing.Size(640, 480))
         ib_Found.Image = ZeichenMat3.Clone
 
         '7. werte senden
-        '###
+        Dim Mobj As MyMatchObj = _MyMatchObjekts(0)
+        Dim Point As MyPoint = Mobj.Objekt.GetZentrumMyPoint(_MatDepth)
+        Dim Winkel As Double = Mobj.Objekt.GetWinkel2()
+        Dim depth As Double = Mobj.Objekt.GetDepthVal
+        'Pos
+        If _TcpVariablen.Exists("x") Then
+            _TcpVariablen.SetVariable("x", PixToMil(Point.X) * num_RoboOffsetX.Value)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""x"" existiert nicht")
+        End If
+        If _TcpVariablen.Exists("y") Then
+            _TcpVariablen.SetVariable("y", PixToMil(Point.Y) + num_RoboOffsety.Value)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""y"" existiert nicht")
+        End If
+        If _TcpVariablen.Exists("z") Then
+            _TcpVariablen.SetVariable("z", depth)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""z"" existiert nicht")
+        End If
+        'Höhe Tiefe
+        If _TcpVariablen.Exists("h") Then
+            If Mobj.Ausrichtung = "HB" Then
+                _TcpVariablen.SetVariable("h", AktSearch.Tiefe)
+            Else
+                If Mobj.Ausrichtung = "HT" Then
+                    _TcpVariablen.SetVariable("h", AktSearch.Beite)
+                Else
+                    _TcpVariablen.SetVariable("h", AktSearch.Höhe)
+                End If
+            End If
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""h"" existiert nicht")
+        End If
+
+        If _TcpVariablen.Exists("b") Then
+            If Mobj.Ausrichtung = "HB" Or Mobj.Ausrichtung = "BT" Then
+                _TcpVariablen.SetVariable("b", AktSearch.Beite)
+            Else
+                _TcpVariablen.SetVariable("b", AktSearch.Höhe)
+            End If
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""b"" existiert nicht")
+        End If
+        If _TcpVariablen.Exists("t") Then
+            If Mobj.Ausrichtung = "BT" Or Mobj.Ausrichtung = "HT" Then
+                _TcpVariablen.SetVariable("t", AktSearch.Tiefe)
+            Else
+                _TcpVariablen.SetVariable("t", AktSearch.Höhe)
+
+            End If
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""t"" existiert nicht")
+        End If
+        'Winkel
+        If _TcpVariablen.Exists("a") Then
+            _TcpVariablen.SetVariable("a", Winkel)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""a"" existiert nicht")
+        End If
         Return True
     End Function
 
+    Private Function Auto() As Double
+        If TakePicture(_MatColor, _MatDepth, _MatDepthC) Then
+            If Search() Then
+                Return 1
+            End If
+        End If
+        Return -1
+    End Function
     '----------------------------------------------------------------------------------------------------------------------------
     'Watershed Module
     '----------------------------------------------------------------------------------------------------------------------------
@@ -1269,7 +1368,6 @@ Public Class Form_Main
 
         ' CvInvoke.WaitKey(0)
         CvInvoke.Watershed(imgWater8U3, tmp_Markers)
-        Dim v0 As New ImageViewer : v0.Image = tmp_Markers.Clone : v0.Text = "Watershed" : v0.Show()
         'Farbenvergeben
         Dim Nc = objKonturen.Size ' Anzahl Contours = Anzahl an markierten Elementen
         Dim Cols(Nc) As MCvScalar : Dim RND As New Random 'Dim Cols(Nc - 1) As MCvScalar : Dim RND As New Random
@@ -1350,15 +1448,19 @@ Public Class Form_Main
         'Eintagen
         For Each ob2 As MyObjektV2 In _MyObjekte
             LB_obj.Items.Add(ob2.ToString)
+            'Zentrum
             CvInvoke.Circle(ZeichenMat2, ob2.GetZentrumPoint, 5, New MCvScalar(255, 255, 255), 2)
             CvInvoke.Circle(ZeichenMat2, ob2.GetZentrumPoint, 1, New MCvScalar(255, 0, 255), 1)
+
             Dim pin As Point()
             pin = ob2.GetMinAreaPoints()
+            '0-Punkt
+            CvInvoke.Circle(ZeichenMat2, pin(0), 3, New MCvScalar(255, 255, 0), 2)
             'draw Boxes
             For i = 0 To 3
                 CvInvoke.Line(ZeichenMat2, pin(i), pin((i + 1) Mod 4), New MCvScalar(0, 0, 255), 2) 'min
             Next
-            CvInvoke.PutText(ZeichenMat2, $"ID:{ob2.ID,2} Winkel:{ob2.GetWinkel,4:n2}", ob2.GetZentrumPoint, FontFace.HersheyComplex, 1, New MCvScalar(255, 255, 255))
+            CvInvoke.PutText(ZeichenMat2, $"ID:{ob2.ID,2}", ob2.GetZentrumPoint, FontFace.HersheyComplex, 1, New MCvScalar(255, 255, 255), 2)
 
 
         Next
@@ -1550,7 +1652,12 @@ Public Class Form_Main
     End Function
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        KantenFinden(_MatWatershedMask, _MatPoints)
+
+        CvInvoke.Circle(_MatColor, New Point(5, 5), 5, New MCvScalar(255, 0, 0), 2)
+        CvInvoke.Circle(_MatColor, New Point(5, 5), 1, New MCvScalar(255, 0, 0), 1)
+        Dim v1 As New ImageViewer : v1.Image = _MatColor.Clone : v1.Text = "1" : v1.Show()
+        Dim v2 As New ImageViewer : v2.Image = _MatDepthC.Clone : v2.Text = "1" : v2.Show()
+        'KantenFinden(_MatWatershedMask, _MatPoints)
 
         'Dim test As New MyObektV2(10, {255, 50, 255})
         'Dim Points(24) As Point
@@ -1598,4 +1705,6 @@ Public Class Form_Main
         'CvInvoke.PutText(testmato, $"ID:{test.ID,2} Winkel:{test.GetWinkel.ToString("N2"),4}", test.GetZentrumPoint, FontFace.HersheyComplex, 1, New MCvScalar(255, 255, 255))
         'CvInvoke.Imshow("t", testmato)
     End Sub
+
+
 End Class 'Form1

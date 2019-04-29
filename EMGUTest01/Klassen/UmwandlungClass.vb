@@ -185,7 +185,12 @@ Public Class UmwandlungClass
                 End If
             Next
         Next
-        Dim result As Int16 = CShort(Math.Round(mymid / num))
+        Dim result As Int16
+        If mymid <> 0 And num <> 0 Then
+            result = CShort(Math.Round(mymid / num))
+        Else
+            result = mymax
+        End If
         If typ = ValueTyp.Max Then
             Return mymax
         End If

@@ -1,6 +1,6 @@
 ﻿
-Public Class MyMatchObj
-    Implements IComparable(Of MyMatchObj)
+Public Class MyMatchObj : Implements IComparable(Of MyMatchObj)
+
     Private _Abweichung As Double
     Public Property Abweichung() As Double
         Get
@@ -39,6 +39,6 @@ Public Class MyMatchObj
         Return _Abweichung.CompareTo(obj.Abweichung)
     End Function
     Public Overrides Function ToString() As String
-        Return $"{_Abweichung,3} | {_Ausrichtung} | ID: {_Objekt.ID}"
+        Return $"{_Abweichung,3:n2}% | {_Ausrichtung} | ID: {_Objekt.ID}"
     End Function
 End Class

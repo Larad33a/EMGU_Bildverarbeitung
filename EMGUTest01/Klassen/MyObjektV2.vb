@@ -154,7 +154,7 @@ Public Class MyObjektV2
         Dim tmpPointArray(0) As Point
         tmpPointArray(0) = tmpPoint
         _ReverenzenXY.Push(tmpPointArray)
-        Dim tmpIntArray(1) As Int32
+        Dim tmpIntArray(0) As Int32
         tmpIntArray(0) = z
         _ReverenzenZ.Push(tmpIntArray)
         CheckMinMax(New MyPoint(x, y, z))
@@ -164,7 +164,7 @@ Public Class MyObjektV2
         Dim tmpPointArray(0) As Point
         tmpPointArray(0) = tmpPoint
         _ReverenzenXY.Push(tmpPointArray)
-        Dim tmpIntArray(1) As Int32
+        Dim tmpIntArray(0) As Int32
         tmpIntArray(0) = point.Z
         _ReverenzenZ.Push(tmpIntArray)
         CheckMinMax(point)
@@ -193,6 +193,14 @@ Public Class MyObjektV2
     End Function
     Private Function Vergleich(v_xmin As Double, v_xmax As Double, v_y1min As Double, v_y1max As Double, v_y2min As Double, v_y2max As Double) As Boolean
         Return (GetHöhe() >= v_xmin And GetHöhe() <= v_xmax) And ((GetBreite() >= v_y1min And GetBreite() <= v_y1max) Or (GetBreite() >= v_y2min And GetBreite() <= v_y2max))
+    End Function
+    Private Function VergleichF(HBF As Double, BTF As Double, HTF As Double) As Boolean
+        Dim f As Double = GetFläche()
+        Return f = HBF Or f = BTF Or f = HTF
+    End Function
+    Private Function VergleichF(HBF_xmin As Double, HBF_xmax As Double, BTF_min As Double, BTF_max As Double, HTF_min As Double, HTF_max As Double) As Boolean
+        Dim f As Double = GetFläche()
+        Return (f >= HBF_xmin And f <= HBF_xmax) Or (f >= BTF_min And f <= BTF_max) Or (f >= HTF_min And f <= HTF_max)
     End Function
     Private Function NormPoint(point As PointF) As Single
         Return CSng(Math.Sqrt(point.X ^ 2 + point.Y ^ 2))
@@ -237,28 +245,39 @@ Public Class MyObjektV2
             Return (Vergleich(höhe_pix, breit_pix, tiefe_pix) Or Vergleich(breit_pix, höhe_pix, tiefe_pix) Or Vergleich(tiefe_pix, höhe_pix, breit_pix))
         End If
     End Function
+    Public Function PassendFläche(HBFläche_pix As Double, BTFläche_pix As Double, HTFläche_pix As Double, Optional toleranz_prozent As Int32 = 0) As Boolean
+        Dim HBF_dif, BTF_dif, HTF_dif As Double
+        If toleranz_prozent > 0 Then
+            HBF_dif = (HBFläche_pix / 100) * toleranz_prozent
+            BTF_dif = (BTFläche_pix / 100) * toleranz_prozent
+            HTF_dif = (HTFläche_pix / 100) * toleranz_prozent
+            Return VergleichF(HBFläche_pix - HBF_dif, HBFläche_pix + HBF_dif, BTFläche_pix - BTF_dif, BTFläche_pix + BTF_dif, HTFläche_pix - HTF_dif, HTFläche_pix + HTF_dif)
+        Else
+            Return VergleichF(HBFläche_pix, BTFläche_pix, HTFläche_pix)
+        End If
+    End Function
 
     'Maase
-    Public Function GetHöhe() As Int32
+    Public Function GetHöhe() As Double
         'Prüfen ob _MinAreaRec Angelegt
         If _MinAreaRec.Size.IsEmpty Then
             Analyse()
         End If
         If _MinAreaRec.Size.Height <= _MinAreaRec.Size.Width Then
-            Return CInt(Math.Round(_MinAreaRec.Size.Height))
+            Return _MinAreaRec.Size.Height
         Else
-            Return CInt(Math.Round(_MinAreaRec.Size.Width))
+            Return _MinAreaRec.Size.Width
         End If
     End Function
-    Public Function GetBreite() As Int32
+    Public Function GetBreite() As Double
         'Prüfen ob _MinAreaRec Angelegt
         If _MinAreaRec.Size.IsEmpty Then
             Analyse()
         End If
         If _MinAreaRec.Size.Height >= _MinAreaRec.Size.Width Then
-            Return CInt(Math.Round(_MinAreaRec.Size.Height))
+            Return _MinAreaRec.Size.Height
         Else
-            Return CInt(Math.Round(_MinAreaRec.Size.Width))
+            Return _MinAreaRec.Size.Width
         End If
     End Function
     Public Function GetFläche() As Int32
@@ -302,14 +321,76 @@ Public Class MyObjektV2
 
         Dim Kante1 As New PointF(Punkte(1).X - Punkte(0).X, Punkte(1).Y - Punkte(0).Y)
         Dim Kante2 As New PointF(Punkte(2).X - Punkte(1).X, Punkte(2).Y - Punkte(1).Y)
+        Dim Norm1 As Single = NormPoint(Kante1)
+        Dim Norm2 As Single = NormPoint(Kante2)
         Dim use As PointF = Kante1
-        If NormPoint(Kante2) > NormPoint(Kante1) Then
+        If Norm2 > Norm1 Then
             use = Kante2
         End If
         Dim Referenc As New PointF(1, 0) 'Horizontaler Vektor
-
-        Return 180 / Math.PI * Math.Acos((Referenc.X * use.X + Referenc.Y + use.Y) / (NormPoint(Referenc) + NormPoint(use)))
+        Norm1 = NormPoint(Referenc)
+        Norm2 = NormPoint(use)
+        Dim Vector As Double = Referenc.X * use.X + Referenc.Y + use.Y
+        Dim Wert As Double = Vector / (Norm1 * Norm2)
+        If Wert > 1 Then
+            Wert = Wert - 1
+        End If
+        If Wert < -1 Then
+            Wert = Wert + 1
+        End If
+        Dim WinkelRad = Math.Acos(Wert)
+        Dim Winkel As Double = 180 / Math.PI * WinkelRad
+        Return Winkel
     End Function
+    Public Function GetWinkel2() As Double
+        'Prüfen ob _MinAreaRec Angelegt
+        If _MinAreaRec.Size.IsEmpty Then
+            Analyse()
+        End If
+        'Winkel immer auf die Langeseite bezogen
+        Dim Punkte(4) As PointF
+        Punkte = _MinAreaRec.GetVertices
+        'Winkel von Seite P0 zu P3 zur Horizontalen
+        'Prüfen ob seite P0 zu P3 die lange seite (Breite ist)
+        Dim Kante03 As New PointF(Punkte(3).X - Punkte(0).X, Punkte(3).Y - Punkte(0).Y)
+        Dim LängeKante03 As Double = NormPoint(Kante03)
+
+        Return If(LängeKante03 < GetBreite(), _MinAreaRec.Angle, _MinAreaRec.Angle + 90)
+    End Function
+
+    Public Function GetDepthStr() As String
+        Dim sum As Int64
+        Dim min As Int32 = Int32.MaxValue
+        Dim max As Int32 = Int32.MinValue
+        For i = 0 To _ReverenzenZ.Size - 1
+            If _ReverenzenZ(i) > max Then
+                max = _ReverenzenZ(i)
+            End If
+            If _ReverenzenZ(i) < min Then
+                min = _ReverenzenZ(i)
+            End If
+            sum += _ReverenzenZ(i)
+        Next
+        Dim midel As Int32 = CInt(Math.Round(sum / _ReverenzenZ.Size))
+        Return $"Min:{min} Max:{max} Midel:{midel}"
+    End Function
+    Public Function GetDepthVal() As Double
+        Dim sum As Int64
+        Dim min As Int32 = Int32.MaxValue
+        Dim max As Int32 = Int32.MinValue
+        For i = 0 To _ReverenzenZ.Size - 1
+            If _ReverenzenZ(i) > max Then
+                max = _ReverenzenZ(i)
+            End If
+            If _ReverenzenZ(i) < min Then
+                min = _ReverenzenZ(i)
+            End If
+            sum += _ReverenzenZ(i)
+        Next
+        Dim midel As Int32 = CInt(Math.Round(sum / _ReverenzenZ.Size))
+        Return midel
+    End Function
+
 
     Public Function GetContour() As VectorOfPoint
         Return _ReverenzenXY
@@ -346,7 +427,7 @@ Public Class MyObjektV2
     'Overrides
     '--------------------------------------------------------------------------------------------------------------------------------------------------------
     Public Overrides Function ToString() As String
-        Return ($"{_ID,3}:Zentrum:{GetZentrumPoint.ToString()} ; Höhe:{GetHöhe(),4} ; Breite: {GetBreite(),4} ; Fläche:{GetFläche(),4} ; Winkel: {GetWinkel.ToString("N2"),6}")
+        Return ($"{_ID,3}:Zentrum:{GetZentrumPoint.ToString()} ; Höhe:{GetHöhe(),4:n2} ; Breite: {GetBreite(),4:n2} ; Fläche:{GetFläche(),4} ; Winkel: {GetWinkel.ToString("N2"),6}")
     End Function
 
 End Class

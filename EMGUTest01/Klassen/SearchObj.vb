@@ -1,4 +1,8 @@
-﻿Public Class SearchObj
+﻿Imports System.Xml
+Imports System.Xml.Schema
+Imports System.Xml.Serialization
+
+Public Class SearchObj : Implements IXmlSerializable
 
     Private _Name As String
     Public Property Name() As String
@@ -46,6 +50,11 @@
         End Set
     End Property
 
+
+    Sub New()
+
+    End Sub
+
     Sub New(id As Int32, name As String, h As Int32, b As Int32, t As Int32)
         _ID = id
         _Name = name
@@ -61,4 +70,16 @@
     Public Overrides Function ToString() As String
         Return $"{_ID,3}: {_Name} [{_Höhe,4} | {_Breite,4} | {_Tiefe,4}]"
     End Function
+
+    Public Function GetSchema() As XmlSchema Implements IXmlSerializable.GetSchema
+        Throw New NotImplementedException()
+    End Function
+
+    Public Sub ReadXml(reader As XmlReader) Implements IXmlSerializable.ReadXml
+        Throw New NotImplementedException()
+    End Sub
+
+    Public Sub WriteXml(writer As XmlWriter) Implements IXmlSerializable.WriteXml
+        Throw New NotImplementedException()
+    End Sub
 End Class
