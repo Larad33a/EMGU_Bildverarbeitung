@@ -354,8 +354,8 @@ Public Class MyObjektV2
         'Prüfen ob seite P0 zu P3 die lange seite (Breite ist)
         Dim Kante03 As New PointF(Punkte(3).X - Punkte(0).X, Punkte(3).Y - Punkte(0).Y)
         Dim LängeKante03 As Double = NormPoint(Kante03)
-
-        Return If(LängeKante03 < GetBreite(), _MinAreaRec.Angle, _MinAreaRec.Angle + 90)
+        'Return If(LängeKante03 < GetBreite(), _MinAreaRec.Angle, _MinAreaRec.Angle + 90)
+        Return If(LängeKante03 < GetBreite(), _MinAreaRec.Angle - 90, _MinAreaRec.Angle)
     End Function
 
     Public Function GetDepthStr() As String
@@ -427,7 +427,7 @@ Public Class MyObjektV2
     'Overrides
     '--------------------------------------------------------------------------------------------------------------------------------------------------------
     Public Overrides Function ToString() As String
-        Return ($"{_ID,3}:Zentrum:{GetZentrumPoint.ToString()} ; Höhe:{GetHöhe(),4:n2} ; Breite: {GetBreite(),4:n2} ; Fläche:{GetFläche(),4} ; Winkel: {GetWinkel.ToString("N2"),6}")
+        Return ($"{_ID,3}:Zentrum:{GetZentrumPoint.ToString()} ; Höhe:{GetHöhe(),4:n2} ; Breite: {GetBreite(),4:n2} ; Fläche:{GetFläche(),4} ; Winkel: {GetWinkel2.ToString("N2"),6} | {_MinAreaRec.Angle,6:n2}")
     End Function
 
 End Class

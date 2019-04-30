@@ -187,7 +187,7 @@ Public Class Form_Main
             ib_new_Depth.Image = _DisDepth.ToImage(Of Bgr, Byte)
             TC2_Bilder.SelectedTab = P1_NewImg
 
-            TC2_Bilder.TabPages(3).Text = "Z16 Tiefenbild"
+            TC2_Bilder.TabPages(5).Text = "Z16 Tiefenbild"
             ib_depth_01.Image = _MatDepth
         End If
     End Sub
@@ -202,7 +202,7 @@ Public Class Form_Main
             ib_rev_Depth.Image = _DisRefD.ToImage(Of Bgr, Byte)
             TC2_Bilder.SelectedTab = P3_Rev
 
-            TC2_Bilder.TabPages(4).Text = "Z16 Tiefenbild"
+            TC2_Bilder.TabPages(5).Text = "Z16 Tiefenbild"
             ib_depth_01.Image = _MatDepth
         End If
     End Sub
@@ -876,7 +876,7 @@ Public Class Form_Main
                 End If
             Next
         Next
-        TC2_Bilder.TabPages(4).Text = "Maske"
+        TC2_Bilder.TabPages(5).Text = "Maske"
         ib_depth_01.Image = Maske
         CvInvoke.Multiply(resurce, Maske, Ergebnis)
         Return Ergebnis
@@ -1180,6 +1180,8 @@ Public Class Form_Main
             ib_points_01.Image = Display1.Clone
         End If
         result = tmp_Watershed.Clone
+        TC2_Bilder.SelectedTab = P2_Result
+        TC3_ObjLists.SelectedTab = P1_All
         Return True
     End Function
 
@@ -1197,6 +1199,8 @@ Public Class Form_Main
                 num_SearchObj.Value = _MySearchObjekte.IndexOf(_MySearchObjekte.Last) + 1
             Catch ex1 As Exception
                 lb_Info.Items.Insert(0, "Keine objekte Gefunden")
+                TC2_Bilder.SelectedTab = P2_Result
+                TC3_ObjLists.SelectedTab = P1_All
                 Return False
             End Try
         End Try
@@ -1251,6 +1255,8 @@ Public Class Form_Main
         '5. Passendes Objekt Anzeigen
         If _MyMatchObjekts.Count <= 0 Then
             lb_Info.Items.Insert(0, "Es wurde kein passendes Objekt gefunden.")
+            TC2_Bilder.SelectedTab = P2_Result
+            TC3_ObjLists.SelectedTab = P1_All
             Return False
         End If
         lb_Info.Items.Insert(0, $"Es wurde {_MyMatchObjekts.Count,3} passendes Objekt gefunden.")
@@ -1598,9 +1604,10 @@ Public Class Form_Main
             '0-Punkt
             CvInvoke.Circle(ZeichenMat2, pin(0), 3, New MCvScalar(255, 255, 0), 2)
             'draw Boxes
-            For i = 0 To 3
-                CvInvoke.Line(ZeichenMat2, pin(i), pin((i + 1) Mod 4), New MCvScalar(0, 0, 255), 2) 'min
+            For i = 0 To 2
+                CvInvoke.Line(ZeichenMat2, pin(i), pin((i + 1)), New MCvScalar(0, 0, 255), 2) 'min
             Next
+            CvInvoke.Line(ZeichenMat2, pin(3), pin(0), New MCvScalar(255, 255, 255), 2) 'Grundlinie
             CvInvoke.PutText(ZeichenMat2, $"ID:{ob2.ID,2}", ob2.GetZentrumPoint, FontFace.HersheyComplex, 1, New MCvScalar(255, 255, 255), 2)
 
 
