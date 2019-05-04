@@ -596,7 +596,6 @@ Public Class Form_Main
             _MyCFG.EnableStream(Intel.RealSense.Stream.Color, cWidht, cHeight, Format.Bgr8, cfpsColor)
             lb_Info.Items.Insert(0, "RGB_Konfig added")
             'Depth Konfig
-
             _MyCFG.EnableStream(Intel.RealSense.Stream.Depth, cWidht, cHeight, Format.Z16, cfpsDepth)
             lb_Info.Items.Insert(0, "Depth_Konfig added")
 
