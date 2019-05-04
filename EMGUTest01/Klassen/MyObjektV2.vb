@@ -352,10 +352,12 @@ Public Class MyObjektV2
         Punkte = _MinAreaRec.GetVertices
         'Winkel von Seite P0 zu P3 zur Horizontalen
         'Prüfen ob seite P0 zu P3 die lange seite (Breite ist)
+        Dim Kante01 As New PointF(Punkte(1).X - Punkte(0).X, Punkte(1).Y - Punkte(0).Y)
         Dim Kante03 As New PointF(Punkte(3).X - Punkte(0).X, Punkte(3).Y - Punkte(0).Y)
         Dim LängeKante03 As Double = NormPoint(Kante03)
+        Dim LängeKante01 As Double = NormPoint(Kante01)
         'Return If(LängeKante03 < GetBreite(), _MinAreaRec.Angle, _MinAreaRec.Angle + 90)
-        Return If(LängeKante03 < GetBreite(), _MinAreaRec.Angle - 90, _MinAreaRec.Angle)
+        Return If(LängeKante03 <= LängeKante01, _MinAreaRec.Angle, _MinAreaRec.Angle + 90)
     End Function
 
     Public Function GetDepthStr() As String

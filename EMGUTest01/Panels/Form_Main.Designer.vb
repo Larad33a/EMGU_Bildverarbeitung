@@ -78,7 +78,6 @@ Partial Class Form_Main
         Me.T2_CamBoot = New System.Windows.Forms.Timer(Me.components)
         Me.TC1_Menue = New System.Windows.Forms.TabControl()
         Me.P1_Steuerung = New System.Windows.Forms.TabPage()
-        Me.btn_depthOffset = New System.Windows.Forms.Button()
         Me.GroupBox10 = New System.Windows.Forms.GroupBox()
         Me.btn_LoadSearch = New System.Windows.Forms.Button()
         Me.btn_SaveSearch = New System.Windows.Forms.Button()
@@ -804,7 +803,7 @@ Partial Class Form_Main
         'comb_Konf_Col_Auflösung
         '
         Me.comb_Konf_Col_Auflösung.FormattingEnabled = True
-        Me.comb_Konf_Col_Auflösung.Items.AddRange(New Object() {"424x240;424;240", "640x360", "640x480", "848x480", "1280x720", "1920x1080"})
+        Me.comb_Konf_Col_Auflösung.Items.AddRange(New Object() {"424x240", "640x360", "640x480", "848x480", "1280x720", "1920x1080"})
         Me.comb_Konf_Col_Auflösung.Location = New System.Drawing.Point(87, 78)
         Me.comb_Konf_Col_Auflösung.MaxDropDownItems = 4
         Me.comb_Konf_Col_Auflösung.Name = "comb_Konf_Col_Auflösung"
@@ -857,7 +856,6 @@ Partial Class Form_Main
         '
         'P1_Steuerung
         '
-        Me.P1_Steuerung.Controls.Add(Me.btn_depthOffset)
         Me.P1_Steuerung.Controls.Add(Me.GroupBox10)
         Me.P1_Steuerung.Controls.Add(Me.GroupBox9)
         Me.P1_Steuerung.Controls.Add(Me.btn_NewImg)
@@ -871,15 +869,6 @@ Partial Class Form_Main
         Me.P1_Steuerung.TabIndex = 0
         Me.P1_Steuerung.Text = "Steuerung"
         Me.P1_Steuerung.UseVisualStyleBackColor = True
-        '
-        'btn_depthOffset
-        '
-        Me.btn_depthOffset.Location = New System.Drawing.Point(318, 81)
-        Me.btn_depthOffset.Name = "btn_depthOffset"
-        Me.btn_depthOffset.Size = New System.Drawing.Size(150, 62)
-        Me.btn_depthOffset.TabIndex = 10
-        Me.btn_depthOffset.Text = "Tiefen Offset"
-        Me.btn_depthOffset.UseVisualStyleBackColor = True
         '
         'GroupBox10
         '
@@ -1200,7 +1189,7 @@ Partial Class Form_Main
         Me.btn_RefImg.Name = "btn_RefImg"
         Me.btn_RefImg.Size = New System.Drawing.Size(150, 62)
         Me.btn_RefImg.TabIndex = 4
-        Me.btn_RefImg.Text = "Reference Bild"
+        Me.btn_RefImg.Text = "Referenz Bild"
         Me.btn_RefImg.UseVisualStyleBackColor = True
         '
         'P2_Konfig
@@ -1333,7 +1322,7 @@ Partial Class Form_Main
         Me.GroupBox12.Size = New System.Drawing.Size(134, 147)
         Me.GroupBox12.TabIndex = 13
         Me.GroupBox12.TabStop = False
-        Me.GroupBox12.Text = "Kamera Offset"
+        Me.GroupBox12.Text = "Mask Offset"
         '
         'btn_CamOffset_Reset
         '
@@ -1455,6 +1444,8 @@ Partial Class Form_Main
         'cb_Tiefe_aktMaske
         '
         Me.cb_Tiefe_aktMaske.AutoSize = True
+        Me.cb_Tiefe_aktMaske.Checked = True
+        Me.cb_Tiefe_aktMaske.CheckState = System.Windows.Forms.CheckState.Checked
         Me.cb_Tiefe_aktMaske.Location = New System.Drawing.Point(184, 38)
         Me.cb_Tiefe_aktMaske.Name = "cb_Tiefe_aktMaske"
         Me.cb_Tiefe_aktMaske.Size = New System.Drawing.Size(93, 21)

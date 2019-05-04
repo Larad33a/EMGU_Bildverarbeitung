@@ -117,14 +117,14 @@ Public Class Form_Main
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'Konfiguration vorbelegen
         'Farbe
-        comb_Konf_Col_FPS.SelectedItem = 6
-        comb_Konf_Col_Format.SelectedItem = Format.Bgr8
-        comb_Konf_Col_Auflösung.SelectedItem = "640x420"
+        comb_Konf_Col_FPS.SelectedItem = "6" '6 Frames
+        comb_Konf_Col_Format.SelectedItem = "BGR8" ' Format.Bgr8
+        comb_Konf_Col_Auflösung.SelectedItem = "1280x720" '1280x720"
 
         'Tiefe
-        comb_Konf_Col_FPS.SelectedItem = 6
-        comb_Konf_Col_Format.SelectedItem = Format.Z16
-        comb_Konf_Col_Auflösung.SelectedItem = "640x420"
+        comb_Konf_Dep_FPS.SelectedItem = "6" '6 Frames
+        comb_Konf_Dep_Format.SelectedItem = "Z16" 'Format.Z16
+        comb_Konf_Dep_Auflösung.SelectedItem = "1280x720" '1280x720"
 
         KonfigPipe()
         ImgStatus()
@@ -216,7 +216,7 @@ Public Class Form_Main
         ImgageAnalyse()
     End Sub
 
-    Private Sub btn_depthOffset_Click(sender As Object, e As EventArgs) Handles btn_depthOffset.Click
+    Private Sub btn_depthOffset_Click(sender As Object, e As EventArgs)
 
         TakePicture(_MatColor, _MatDepth, _MatDepthC)
 
@@ -317,26 +317,22 @@ Public Class Form_Main
         Dim MatResurce As New Mat
         If _MatDepth Is Nothing Then
             If _MatRefD IsNot Nothing Then
-                If cb_Tiefe_aktMaske.Checked Then
-                    MatResurce = Maskieren(_MatRefD, CInt(num_MaskH.Value), CInt(num_MaskV.Value), CInt(num_CamOffset.Value))
-                Else
-                    MatResurce = _MatRefD
-                End If
-                Tiefentest(MatResurce, _MatColor)
+                MatResurce = _MatRefD
+                Tiefentest(MatResurce, _MatColor, cb_Tiefe_aktMaske.Checked)
             Else
                 lb_Info.Items.Insert(0, "Es existiert noch kein Tiefenbild, das Analysiert werden kann")
             End If
         Else
-            If cb_Tiefe_aktMaske.Checked Then
-                MatResurce = Maskieren(_MatDepth, CInt(num_MaskH.Value), CInt(num_MaskV.Value), CInt(num_CamOffset.Value))
-            Else
-                MatResurce = _MatDepth
-            End If
-            Tiefentest(MatResurce, _MatColor)
+            MatResurce = _MatDepth
+            Tiefentest(MatResurce, _MatColor, cb_Tiefe_aktMaske.Checked)
         End If
+        Dim v1 As New ImageViewer : v1.Image = _MatColor.Clone : v1.Text = "Tiefe" : v1.Show()
         _MatColor.CopyTo(_DisColor)
+        _MatDepthC.CopyTo(_DisDepthC)
         CvInvoke.Resize(_DisColor, _DisColor, New Size(640, 480))
+        CvInvoke.Resize(_DisDepthC, _DisDepthC, New Size(640, 480))
         ib_res_02.Image = _DisColor.ToImage(Of Bgr, Byte)
+        ib_res_01.Image = _DisDepthC.ToImage(Of Bgr, Byte)
         TC2_Bilder.SelectedTab = P2_Result
     End Sub
 
@@ -361,10 +357,13 @@ Public Class Form_Main
     End Sub
 
     Private Sub btn_Konf_Col_Click(sender As Object, e As EventArgs) Handles btn_Konf_Col.Click
-        KonfigPipe(Enum_Format.color, cWidht, cHeight, Format.Bgr8, CInt(comb_Konf_Col_FPS.SelectedItem))
+        'KonfigPipe(Enum_Format.color, cWidht, cHeight, Format.Bgr8, CInt(comb_Konf_Col_FPS.SelectedItem))
+        lb_Info.Items.Insert(0, $"{comb_Konf_Col_FPS.SelectedItem};{comb_Konf_Col_Format.SelectedItem};{comb_Konf_Col_Auflösung.SelectedItem}")
+
     End Sub
     Private Sub btn_Konf_Depth_Click(sender As Object, e As EventArgs) Handles btn_Konf_Depth.Click
-        KonfigPipe(Enum_Format.depth, cWidht, cHeight, Format.Z16, CInt(comb_Konf_Dep_FPS.SelectedItem))
+        'KonfigPipe(Enum_Format.depth, cWidht, cHeight, Format.Z16, CInt(comb_Konf_Dep_FPS.SelectedItem))
+        lb_Info.Items.Insert(0, $"{comb_Konf_Dep_FPS.SelectedItem};{comb_Konf_Dep_Format.SelectedItem};{comb_Konf_Dep_Auflösung.SelectedItem}")
     End Sub
 
     Private Sub btn_CamOffset_Reset_Click(sender As Object, e As EventArgs) Handles btn_CamOffset_Reset.Click
@@ -611,12 +610,14 @@ Public Class Form_Main
     Private Sub RestartCam()
         If _MyPipelineAktiv Then
             _MyPipelineAktiv = False
-            btn_NewImg.Enabled = False
-            btn_RefImg.Enabled = False
             _MyPipeline.Stop()
             '_MyPipeline.Release()
             '_MyPipeline.Dispose()
         End If
+        btn_NewImg.Enabled = False
+        btn_RefImg.Enabled = False
+        btn_Analyse.Enabled = False
+        btn_SearchObj.Enabled = False
         Thread.Sleep(50)
         Try
             _MyPipeline.Start(_MyCFG)
@@ -628,9 +629,14 @@ Public Class Form_Main
             _MyPipelineAktiv = False
         End Try
         Thread.Sleep(50)
-        btn_NewImg.Enabled = True
-        btn_RefImg.Enabled = True
-        lb_Info.Items.Insert(0, $"Cam_Ready")
+        If _MyPipelineAktiv Then
+            btn_NewImg.Enabled = True
+            btn_RefImg.Enabled = True
+            btn_Analyse.Enabled = True
+            btn_SearchObj.Enabled = True
+            lb_Info.Items.Insert(0, $"Cam_Ready")
+        End If
+
     End Sub
 
     Private Sub ImgStatus()
@@ -655,6 +661,7 @@ Public Class Form_Main
         cb_refcTaken.Checked = _RefCImgTaken
         cb_refdcTaken.Checked = _RefDImgTaken
         cb_refdTaken.Checked = _RefDImgTaken
+
         btn_tiefe.Enabled = _DepthImgTaken Or _RefDImgTaken
         btn_pos.Enabled = _ColorImgTaken Or _RefCImgTaken
     End Sub
@@ -677,36 +684,57 @@ Public Class Form_Main
         CvInvoke.AbsDiff(resurce, rev, result)
     End Sub
 
-    Private Sub Tiefentest(resurce As Mat, result As Mat)
+    Private Sub Tiefentest(resurce As Mat, result As Mat, mask As Boolean)
         Dim PointMin As MyPoint
         Dim PointMax As MyPoint
         Dim wert As Int16
+        Dim StartZeile, EndZeile, StartSpalte, Endspalte As Int32
+        If mask Then
+            StartSpalte = CInt(num_MaskV.Value - num_CamOffset.Value)
+            Endspalte = CInt(resurce.Cols - (num_MaskV.Value - num_CamOffset.Value) + 1)
+            StartZeile = CInt(num_MaskH.Value)
+            EndZeile = CInt(resurce.Rows - (num_MaskH.Value + 1))
+        Else
+            StartZeile = 0
+            EndZeile = resurce.Rows - 1
+            StartSpalte = 0
+            Endspalte = resurce.Cols - 1
+        End If
         wert = UmwandlungClass.GetInt16Value(resurce, 0, 0)
         PointMax = New MyPoint(0, 0, 0)
         PointMin = New MyPoint(0, 0, Int16.MaxValue)
-        For Zeile = 1 To resurce.Rows - 1
-            For Spalte = 1 To resurce.Cols - 1
-                wert = UmwandlungClass.GetInt16Value(resurce, Zeile, Spalte)
-                If wert <> 0 Then
-                    If PointMax.Z < wert Then
-                        PointMax.X = Spalte
-                        PointMax.Y = Zeile
-                        PointMax.Z = wert
+        For Zeile = StartZeile To EndZeile
+            For Spalte = StartSpalte To Endspalte
+                Try
+                    wert = UmwandlungClass.GetInt16Value(resurce, Zeile, Spalte)
+                    If wert <> 0 Then
+                        If PointMax.Z < wert Then
+                            PointMax.X = Spalte
+                            PointMax.Y = Zeile
+                            PointMax.Z = wert
+                        End If
+                        If PointMin.Z > wert Then
+                            PointMin.X = Spalte
+                            PointMin.Y = Zeile
+                            PointMin.Z = wert
+                        End If
                     End If
-                    If PointMin.Z > wert Then
-                        PointMin.X = Spalte
-                        PointMin.Y = Zeile
-                        PointMin.Z = wert
-                    End If
-                End If
+                Catch ex As Exception
+                    lb_Info.Items.Insert(0, $"Wert bei x:{Spalte,4} y:{Zeile,4} nicht gültig")
+                End Try
+
             Next
         Next
-        lbl_pointMax.Text = PointMax.ToString
-        lbl_pointMin.Text = PointMin.ToString
-        CvInvoke.Circle(result, New Point(PointMin.X, PointMin.Y), 6, New MCvScalar(255, 255, 255), 3)
-        CvInvoke.Circle(result, New Point(PointMin.X, PointMin.Y), 1, New MCvScalar(0, 255, 0), 1)
-        CvInvoke.Circle(result, New Point(PointMax.X, PointMax.Y), 6, New MCvScalar(255, 255, 255), 3)
-        CvInvoke.Circle(result, New Point(PointMax.X, PointMax.Y), 1, New MCvScalar(255, 0, 0), 1)
+        lbl_pointMin.ForeColor = Color.Blue
+        lbl_pointMin.Text = PointMax.ToString
+        lbl_pointMax.ForeColor = Color.Green
+        lbl_pointMax.Text = PointMin.ToString
+        CvInvoke.Circle(result, New Point(PointMin.X - ColorCamOffset, PointMin.Y), 12, New MCvScalar(127, 255, 127), 2)
+        CvInvoke.Circle(result, New Point(PointMin.X - ColorCamOffset, PointMin.Y), 8, New MCvScalar(127, 255, 127), 3)
+        CvInvoke.Circle(result, New Point(PointMin.X - ColorCamOffset, PointMin.Y), 2, New MCvScalar(0, 255, 0), 1)
+        CvInvoke.Circle(result, New Point(PointMax.X - ColorCamOffset, PointMax.Y), 12, New MCvScalar(255, 127, 127), 2)
+        CvInvoke.Circle(result, New Point(PointMax.X - ColorCamOffset, PointMax.Y), 8, New MCvScalar(255, 127, 127), 3)
+        CvInvoke.Circle(result, New Point(PointMax.X - ColorCamOffset, PointMax.Y), 2, New MCvScalar(255, 0, 0), 1)
     End Sub
 
     Private Sub _refreshDataGridView()
@@ -777,9 +805,6 @@ Public Class Form_Main
                 RestartCam()
                 Return False
             End If
-        End If
-        If _ColorImgTaken And _DepthImgTaken Then
-            btn_Analyse.Enabled = True
         End If
         ImgStatus()
         Return True
@@ -1023,8 +1048,8 @@ Public Class Form_Main
 
         '8. Farbenvergeben
         Dim Nc = Contours.Size ' Anzahl Contours = Anzahl an markierten Elementen
-        Dim Cols(Nc - 1) As MCvScalar : Dim RND As New Random
-        For i = 0 To Nc - 1
+        Dim Cols(Nc) As MCvScalar : Dim RND As New Random
+        For i = 0 To Nc '- 1
             Cols(i) = New Bgr(RND.Next(0, 256), RND.Next(0, 256), RND.Next(0, 256)).MCvScalar
         Next
 
@@ -1037,32 +1062,48 @@ Public Class Form_Main
                 If _MyObjekte.Count < 1 And wert > 0 Then
                     Dim tmpObjekt As New MyObjektV2(wert)
                     Dim tiefe As Int32 = UmwandlungClass.GetInt32Value(_MatDepth, Zeile, Spalte)
-                    tmpObjekt.Add_Ref(Zeile, Spalte, tiefe)
+                    tmpObjekt.Add_Ref(Spalte, Zeile, tiefe)
                     _MyObjekte.Add(tmpObjekt)
                 Else
                     For Each ob As MyObjektV2 In _MyObjekte
                         If wert = ob.ID Then
                             gefunden = True
                             Dim tiefe As Int32 = UmwandlungClass.GetInt32Value(_MatDepth, Zeile, Spalte)
-                            ob.Add_Ref(Zeile, Spalte, tiefe)
+                            ob.Add_Ref(Spalte, Zeile, tiefe)
                         End If
                     Next
                     If Not gefunden And wert > 0 Then
                         Dim tmpObjekt As New MyObjektV2(wert)
                         Dim tiefe As Int32 = UmwandlungClass.GetInt32Value(_MatDepth, Zeile, Spalte)
-                        tmpObjekt.Add_Ref(Zeile, Spalte, tiefe)
+                        tmpObjekt.Add_Ref(Spalte, Zeile, tiefe)
                         _MyObjekte.Add(tmpObjekt)
                     End If
                 End If
                 Dim Marke As Int32 = UmwandlungClass.GetInt32Value(Markers, Zeile, Spalte)
-                If Marke > 0 And Marke < Nc Then
-                    Dim ByteWerte() As Byte = {CByte(Cols(Marke).V0), CByte(Cols(Marke).V1), CByte(Cols(Marke).V2)}
+                If Marke > 0 And Marke <= Nc * 10 Then
+                    Dim ByteWerte() As Byte = {CByte(Cols(Marke \ 10).V0), CByte(Cols(Marke \ 10).V1), CByte(Cols(Marke \ 10).V2)}
                     UmwandlungClass.SetByteValues(ZeichenMat2, Zeile, Spalte, ByteWerte)
                 End If
             Next
         Next
         For Each ob2 As MyObjektV2 In _MyObjekte
             LB_obj.Items.Add(ob2.ToString)
+            'Zentrum
+            CvInvoke.Circle(ZeichenMat2, ob2.GetZentrumPoint, 5, New MCvScalar(255, 255, 255), 2)
+            CvInvoke.Circle(ZeichenMat2, ob2.GetZentrumPoint, 1, New MCvScalar(255, 0, 255), 1)
+
+            Dim pin As Point()
+            pin = ob2.GetMinAreaPoints()
+            '0-Punkt
+            CvInvoke.Circle(ZeichenMat2, pin(0), 3, New MCvScalar(255, 255, 0), 2)
+            'draw Boxes
+            For i = 0 To 2
+                CvInvoke.Line(ZeichenMat2, pin(i), pin((i + 1)), New MCvScalar(0, 0, 255), 2) 'min
+            Next
+            CvInvoke.Line(ZeichenMat2, pin(3), pin(0), New MCvScalar(255, 255, 255), 2) 'Grundlinie
+            CvInvoke.PutText(ZeichenMat2, $"ID:{ob2.ID,2}", ob2.GetZentrumPoint, FontFace.HersheyComplex, 1, New MCvScalar(255, 255, 255), 2)
+
+
         Next
         ZeichenMat2.CopyTo(result)
         If debug Then
