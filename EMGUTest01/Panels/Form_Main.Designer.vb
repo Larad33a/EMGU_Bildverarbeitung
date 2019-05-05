@@ -203,6 +203,7 @@ Partial Class Form_Main
         Me.LB_obj = New System.Windows.Forms.ListBox()
         Me.P2_Found = New System.Windows.Forms.TabPage()
         Me.lb_Found = New System.Windows.Forms.ListBox()
+        Me.btn_Canny = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
         Me.TC2_Bilder.SuspendLayout()
         Me.P1_NewImg.SuspendLayout()
@@ -2011,6 +2012,7 @@ Partial Class Form_Main
         '
         'P6_test
         '
+        Me.P6_test.Controls.Add(Me.btn_Canny)
         Me.P6_test.Controls.Add(Me.Button1)
         Me.P6_test.Controls.Add(Me.btn_TestVerschieben)
         Me.P6_test.Location = New System.Drawing.Point(4, 25)
@@ -2170,6 +2172,15 @@ Partial Class Form_Main
         Me.lb_Found.Name = "lb_Found"
         Me.lb_Found.Size = New System.Drawing.Size(534, 516)
         Me.lb_Found.TabIndex = 8
+        '
+        'btn_Canny
+        '
+        Me.btn_Canny.Location = New System.Drawing.Point(47, 97)
+        Me.btn_Canny.Name = "btn_Canny"
+        Me.btn_Canny.Size = New System.Drawing.Size(75, 23)
+        Me.btn_Canny.TabIndex = 2
+        Me.btn_Canny.Text = "Canny"
+        Me.btn_Canny.UseVisualStyleBackColor = True
         '
         'Form_Main
         '
@@ -2460,4 +2471,5 @@ Partial Class Form_Main
     Friend WithEvents Label39 As Label
     Friend WithEvents num_RoboOffsety As NumericUpDown
     Friend WithEvents num_RoboOffsetX As NumericUpDown
+    Friend WithEvents btn_Canny As Button
 End Class

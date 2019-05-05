@@ -782,29 +782,27 @@ Public Class Form_Main
         Dim Mydata As FrameSet
         lb_Info.Items.Insert(0, $"---------------------------------")
         lb_Info.Items.Insert(0, $"TakePicture: Neues Bild")
-
         'Bildvorhanden zurücksetzen
-
         If _MyPipeline.PollForFrames(Mydata) Then
-            If Mydata IsNot Nothing Then
-                color = ToMat(Mydata.ColorFrame).Clone
-                depth = ToMat(Mydata.DepthFrame, DepthType.Cv16S).Clone
-                depthc = ToMat(_MyColorMap.Colorize(Mydata.DepthFrame)).Clone
+                If Mydata IsNot Nothing Then
+                    color = ToMat(Mydata.ColorFrame).Clone
+                    depth = ToMat(Mydata.DepthFrame, DepthType.Cv16S).Clone
+                    depthc = ToMat(_MyColorMap.Colorize(Mydata.DepthFrame)).Clone
+                Else
+                    lb_Info.Items.Insert(0, "TakePicture: Fehler PollForFrames gab keine Daten zurück")
+                End If
             Else
-                lb_Info.Items.Insert(0, "TakePicture: Fehler PollForFrames gab keine Daten zurück")
+                lb_Info.Items.Insert(0, $"TakePicture: Fehler bei PollForFrames [{_trys,2}]")
+                If _trys < cMaxTrys Then
+                    _trys += 1
+                    Return False
+                Else
+                    _trys = 0
+                    lb_Info.Items.Insert(0, "TakePicture: Auto Restart")
+                    RestartCam()
+                    Return False
+                End If
             End If
-        Else
-            lb_Info.Items.Insert(0, $"TakePicture: Fehler bei PollForFrames [{_trys,2}]")
-            If _trys < cMaxTrys Then
-                _trys += 1
-                Return False
-            Else
-                _trys = 0
-                lb_Info.Items.Insert(0, "TakePicture: Auto Restart")
-                RestartCam()
-                Return False
-            End If
-        End If
         ImgStatus()
         Return True
     End Function
@@ -818,7 +816,6 @@ Public Class Form_Main
         Else
             NrChanels = Source.BitsPerPixel \ 8
         End If
-
         Return New Mat(New Size(cWidht, cHeight), Depth, NrChanels, Source.Data, Source.Stride)
     End Function
 
@@ -1438,7 +1435,7 @@ Public Class Form_Main
         Return Ergebnis
     End Function
 
-    Private Function WM_LaplaceFiltering(ByRef resurce As Mat, ByRef result As Mat, Optional UseGaus As Boolean = False) As Boolean
+    Private Function WM_LaplaceFiltering(ByRef resurce As Mat, ByRef result As Mat) As Boolean
         Dim tmp_Mat As New Mat
         tmp_Mat = resurce.Clone
         Dim tmpResul As New Mat
@@ -1454,9 +1451,6 @@ Public Class Form_Main
 
         'zurückwandeln
         Result32F.ConvertTo(tmpResul, resurce.Depth)
-        If UseGaus Then
-            CvInvoke.GaussianBlur(tmpResul, tmpResul, New Drawing.Size(5, 5), 3)
-        End If
         result = tmpResul.Clone
         Return True
     End Function
@@ -1839,4 +1833,10 @@ Public Class Form_Main
 
     End Function
 
+    Private Sub btn_Canny_Click(sender As Object, e As EventArgs) Handles btn_Canny.Click
+        CvInvoke.Canny(_MatColor, _MatResult, 100, 200)
+        ib_res_01.Image = _MatColor.Clone
+        ib_res_02.Image = _MatResult.Clone
+        TC2_Bilder.SelectedTab = P2_Result
+    End Sub
 End Class 'Form1
