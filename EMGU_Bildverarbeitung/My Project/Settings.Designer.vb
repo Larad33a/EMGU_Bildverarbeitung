@@ -282,12 +282,12 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
-        Public Property Einstellung() As Double
+        Public Property Rever_FaktorZ() As Double
             Get
-                Return CType(Me("Einstellung"),Double)
+                Return CType(Me("Rever_FaktorZ"),Double)
             End Get
             Set
-                Me("Einstellung") = value
+                Me("Rever_FaktorZ") = value
             End Set
         End Property
     End Class

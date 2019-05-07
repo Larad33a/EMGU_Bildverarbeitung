@@ -173,14 +173,16 @@ Public Class Form_Main
         'TCP
         My.Settings.TCP_Host = tb_TCP_HOST.Text
         My.Settings.TCP_Port = CInt(num_TCP_Port.Value)
-        My.Settings.Save()
 
         'Referenzierung
         My.Settings.Rever_FaktorX = num_RefXY_FaktX.Value
         My.Settings.Rever_FaktorY = num_RefXY_FaktY.Value
         My.Settings.Rever_OffsetX = num_RefXY_OffsX.Value
         My.Settings.Rever_OffsetY = num_RefXY_OffsY.Value
+        My.Settings.Rever_FaktorZ = num_RefZ_FaktZ.Value
 
+
+        My.Settings.Save()
     End Sub
 
     '-----------------------------------------------------------------------------------------------------------------------
@@ -425,8 +427,31 @@ Public Class Form_Main
     End Sub
 
     Private Sub btn_RefXY_Calc_Click(sender As Object, e As EventArgs) Handles btn_RefXY_Calc.Click
-
+        If Not Referenzierung.RefCalcXY(_MyRefXY_List, CDec(num_RefXY_FaktX.Value), CDec(num_RefXY_OffsX.Value), CDec(num_RefXY_FaktY.Value), CDec(num_RefXY_OffsY.Value)) Then
+            lb_Info.Items.Insert(0, "FEHLER :Fehker bei der Automatischen Referenzierung")
+        End If
     End Sub
+
+    Private Sub btn_RefZ_Add_Click(sender As Object, e As EventArgs) Handles btn_RefZ_Add.Click
+        If num_RefZ_FaktZ.Value > 0 Then
+            Dim tmp_Refobj As New MyRefObjekt(CInt(num_RefZ_OZ.Value))
+            _MyRefZ_List.Add(tmp_Refobj)
+            _RefreshListbox(lb_RefZ_Values, _MyRefZ_List)
+            lbl_RefZ_RefCount.Text = _MyRefZ_List.Count.ToString()
+        End If
+    End Sub
+
+    Private Sub btn_RefZ_Clear_Click(sender As Object, e As EventArgs) Handles btn_RefZ_Clear.Click
+        _ClearList(_MyRefZ_List, lb_RefZ_Values)
+        lbl_RefZ_RefCount.Text = _MyRefZ_List.Count.ToString()
+    End Sub
+
+    Private Sub btn_RefZ_Calc_Click(sender As Object, e As EventArgs) Handles btn_RefZ_Calc.Click
+        If _MyObjekte.Count > 0 Then
+            Referenzierung.RefCalcZ(_MyObjekte, _MyRefZ_List, CDec(num_RefZ_FaktZ.Value))
+        End If
+    End Sub
+
     'Test
     Private Sub btn_TestVerschieben_Click(sender As Object, e As EventArgs) Handles btn_TestVerschieben.Click
         Dim test As New Mat
@@ -537,6 +562,7 @@ Public Class Form_Main
         num_RefXY_FaktY.Value = CDec(My.Settings.Rever_FaktorY)
         num_RefXY_OffsX.Value = CDec(My.Settings.Rever_FaktorY)
         num_RefXY_OffsY.Value = CDec(My.Settings.Rever_FaktorY)
+        num_RefZ_FaktZ.Value = CDec(My.Settings.Rever_FaktorZ)
 
     End Sub
 
@@ -1447,7 +1473,6 @@ Public Class Form_Main
     '----------------------------------------------------------------------------------------------------------------------------
     'Watershed Module
     '----------------------------------------------------------------------------------------------------------------------------
-
     Private Function WM_ImageOfInterest(ByRef resurce As Mat, ByRef result As Mat, Optional rev As Mat = Nothing, Optional dif As Boolean = False, Optional mask As Boolean = False, Optional depth As Boolean = False, Optional gaus As Boolean = False, Optional offset As Int32 = 0) As Boolean
         Dim Ergebnis As Boolean = True
         Dim tmp_Mat As New Mat
@@ -1739,6 +1764,10 @@ Public Class Form_Main
         Return True
     End Function
 
+    '----------------------------------------------------------------------------------------------------------------------------
+    'Search Module
+    '----------------------------------------------------------------------------------------------------------------------------
+
 
     '----------------------------------------------------------------------------------------------------------------------------
     'LÖschen Tests
@@ -1882,5 +1911,6 @@ Public Class Form_Main
         ib_res_02.Image = _MatResult.Clone
         TC2_Bilder.SelectedTab = P2_Result
     End Sub
+
 
 End Class 'Form1
