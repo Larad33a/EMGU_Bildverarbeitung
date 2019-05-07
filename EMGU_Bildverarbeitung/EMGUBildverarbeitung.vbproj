@@ -6,9 +6,9 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D865F7D9-12C8-4F56-BF0A-FAA85ACC7F06}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>EMGUTest02.My.MyApplication</StartupObject>
-    <RootNamespace>EMGUTest02</RootNamespace>
-    <AssemblyName>EMGUTest02</AssemblyName>
+    <StartupObject>EMGUBildverarbeitung.My.MyApplication</StartupObject>
+    <RootNamespace>EMGUBildverarbeitung</RootNamespace>
+    <AssemblyName>EMGUBildverarbeitung</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -39,7 +39,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>EMGUTest02.xml</DocumentationFile>
+    <DocumentationFile>EMGUBildverarbeitung.xml</DocumentationFile>
     <NoWarn>
     </NoWarn>
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
@@ -51,7 +51,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>EMGUTest02.xml</DocumentationFile>
+    <DocumentationFile>EMGUBildverarbeitung.xml</DocumentationFile>
     <NoWarn>
     </NoWarn>
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
@@ -73,7 +73,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DocumentationFile>EMGUTest02.xml</DocumentationFile>
+    <DocumentationFile>EMGUBildverarbeitung.xml</DocumentationFile>
     <NoWarn>
     </NoWarn>
     <DebugType>full</DebugType>
@@ -85,7 +85,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\x64\Release\</OutputPath>
-    <DocumentationFile>EMGUTest02.xml</DocumentationFile>
+    <DocumentationFile>EMGUBildverarbeitung.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <NoWarn>
     </NoWarn>
