@@ -191,6 +191,7 @@ Partial Class Form_Main
         Me.P6_Reverenzieren = New System.Windows.Forms.TabPage()
         Me.GroupBox21 = New System.Windows.Forms.GroupBox()
         Me.GroupBox20 = New System.Windows.Forms.GroupBox()
+        Me.btn_RefXY_Clear = New System.Windows.Forms.Button()
         Me.lb_RefXY_Values = New System.Windows.Forms.ListBox()
         Me.GroupBox22 = New System.Windows.Forms.GroupBox()
         Me.btn_RefXY_Add = New System.Windows.Forms.Button()
@@ -223,7 +224,6 @@ Partial Class Form_Main
         Me.LB_obj = New System.Windows.Forms.ListBox()
         Me.P2_Found = New System.Windows.Forms.TabPage()
         Me.lb_Found = New System.Windows.Forms.ListBox()
-        Me.btn_RefXY_Clear = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
         Me.TC2_Bilder.SuspendLayout()
         Me.P1_NewImg.SuspendLayout()
@@ -1646,7 +1646,6 @@ Partial Class Form_Main
         '
         Me.num_WTS_MinT.Location = New System.Drawing.Point(58, 88)
         Me.num_WTS_MinT.Maximum = New Decimal(New Integer() {999, 0, 0, 0})
-        Me.num_WTS_MinT.Minimum = New Decimal(New Integer() {5, 0, 0, 0})
         Me.num_WTS_MinT.Name = "num_WTS_MinT"
         Me.num_WTS_MinT.Size = New System.Drawing.Size(120, 22)
         Me.num_WTS_MinT.TabIndex = 30
@@ -1674,7 +1673,6 @@ Partial Class Form_Main
         '
         Me.num_WTS_MinB.Location = New System.Drawing.Point(58, 60)
         Me.num_WTS_MinB.Maximum = New Decimal(New Integer() {999, 0, 0, 0})
-        Me.num_WTS_MinB.Minimum = New Decimal(New Integer() {5, 0, 0, 0})
         Me.num_WTS_MinB.Name = "num_WTS_MinB"
         Me.num_WTS_MinB.Size = New System.Drawing.Size(120, 22)
         Me.num_WTS_MinB.TabIndex = 27
@@ -1702,7 +1700,6 @@ Partial Class Form_Main
         '
         Me.num_WTS_MinH.Location = New System.Drawing.Point(58, 32)
         Me.num_WTS_MinH.Maximum = New Decimal(New Integer() {999, 0, 0, 0})
-        Me.num_WTS_MinH.Minimum = New Decimal(New Integer() {5, 0, 0, 0})
         Me.num_WTS_MinH.Name = "num_WTS_MinH"
         Me.num_WTS_MinH.Size = New System.Drawing.Size(120, 22)
         Me.num_WTS_MinH.TabIndex = 24
@@ -2075,6 +2072,15 @@ Partial Class Form_Main
         Me.GroupBox20.TabStop = False
         Me.GroupBox20.Text = "Referenzieren XY"
         '
+        'btn_RefXY_Clear
+        '
+        Me.btn_RefXY_Clear.Location = New System.Drawing.Point(465, 129)
+        Me.btn_RefXY_Clear.Name = "btn_RefXY_Clear"
+        Me.btn_RefXY_Clear.Size = New System.Drawing.Size(284, 27)
+        Me.btn_RefXY_Clear.TabIndex = 6
+        Me.btn_RefXY_Clear.Text = "Alle Löschen"
+        Me.btn_RefXY_Clear.UseVisualStyleBackColor = True
+        '
         'lb_RefXY_Values
         '
         Me.lb_RefXY_Values.FormattingEnabled = True
@@ -2407,15 +2413,6 @@ Partial Class Form_Main
         Me.lb_Found.Name = "lb_Found"
         Me.lb_Found.Size = New System.Drawing.Size(534, 516)
         Me.lb_Found.TabIndex = 8
-        '
-        'btn_RefXY_Clear
-        '
-        Me.btn_RefXY_Clear.Location = New System.Drawing.Point(465, 129)
-        Me.btn_RefXY_Clear.Name = "btn_RefXY_Clear"
-        Me.btn_RefXY_Clear.Size = New System.Drawing.Size(284, 27)
-        Me.btn_RefXY_Clear.TabIndex = 6
-        Me.btn_RefXY_Clear.Text = "Alle Löschen"
-        Me.btn_RefXY_Clear.UseVisualStyleBackColor = True
         '
         'Form_Main
         '
