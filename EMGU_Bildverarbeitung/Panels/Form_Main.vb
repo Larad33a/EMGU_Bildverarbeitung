@@ -1399,66 +1399,12 @@ Public Class Form_Main
         ib_Found.Image = ZeichenMat3.Clone
 
         '7. werte senden
-        Dim Mobj As MyMatchObj = _MyMatchObjekts(0)
-        Dim Point As MyPoint = Mobj.Objekt.GetZentrumMyPoint(_MatDepth)
-        Dim Winkel As Double = Mobj.Objekt.GetWinkel2()
-        Dim depth As Double = Mobj.Objekt.GetDepthVal
-        'Pos
-        If _TcpVariablen.Exists("x") Then
-            _TcpVariablen.SetVariable("x", Point.X * num_RoboOffsetX.Value)
-        Else
-            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""x"" existiert nicht")
+        If Not SM_SendValues(_MyMatchObjekts(0), AktSearch) Then
+            lb_Info.Items.Insert(0, $"FEHLER: Fehler bei der Komunikation")
         End If
-        If _TcpVariablen.Exists("y") Then
-            _TcpVariablen.SetVariable("y", Point.Y + num_RoboOffsety.Value)
-        Else
-            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""y"" existiert nicht")
-        End If
-        If _TcpVariablen.Exists("z") Then
-            _TcpVariablen.SetVariable("z", depth)
-        Else
-            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""z"" existiert nicht")
-        End If
-        'Höhe Tiefe
-        If _TcpVariablen.Exists("h") Then
-            If Mobj.Ausrichtung = "HB" Then
-                _TcpVariablen.SetVariable("h", AktSearch.Tiefe)
-            Else
-                If Mobj.Ausrichtung = "HT" Then
-                    _TcpVariablen.SetVariable("h", AktSearch.Beite)
-                Else
-                    _TcpVariablen.SetVariable("h", AktSearch.Höhe)
-                End If
-            End If
-        Else
-            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""h"" existiert nicht")
-        End If
-
-        If _TcpVariablen.Exists("b") Then
-            If Mobj.Ausrichtung = "HB" Or Mobj.Ausrichtung = "BT" Then
-                _TcpVariablen.SetVariable("b", AktSearch.Beite)
-            Else
-                _TcpVariablen.SetVariable("b", AktSearch.Höhe)
-            End If
-        Else
-            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""b"" existiert nicht")
-        End If
-        If _TcpVariablen.Exists("t") Then
-            If Mobj.Ausrichtung = "BT" Or Mobj.Ausrichtung = "HT" Then
-                _TcpVariablen.SetVariable("t", AktSearch.Tiefe)
-            Else
-                _TcpVariablen.SetVariable("t", AktSearch.Höhe)
-
-            End If
-        Else
-            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""t"" existiert nicht")
-        End If
-        'Winkel
-        If _TcpVariablen.Exists("a") Then
-            _TcpVariablen.SetVariable("a", Winkel)
-        Else
-            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""a"" existiert nicht")
-        End If
+        'If Not SendValuesNew(_MyMatchObjekts(0)) Then
+        '    lb_Info.Items.Insert(0, $"FEHLER: Fehler bei der Komunikation")
+        'End If
         Return True
     End Function
 
@@ -1767,7 +1713,130 @@ Public Class Form_Main
     '----------------------------------------------------------------------------------------------------------------------------
     'Search Module
     '----------------------------------------------------------------------------------------------------------------------------
+    Private Function SM_SendValues(obj As MyMatchObj, atkSearchObj As MySearchObj) As Boolean
+        Dim Point As MyPoint = obj.Objekt.GetZentrumMyPoint()
+        Dim Winkel As Double = obj.Objekt.GetWinkel2()
+        Dim depth As Double = obj.Objekt.GetDepthVal
+        Dim Err As Boolean = False
+        'Pos
+        If _TcpVariablen.Exists("x") Then
+            _TcpVariablen.SetVariable("x", Point.X * num_RoboOffsetX.Value)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""x"" existiert nicht")
+            Err = True
+        End If
+        If _TcpVariablen.Exists("y") Then
+            _TcpVariablen.SetVariable("y", Point.Y + num_RoboOffsety.Value)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""y"" existiert nicht")
+            Err = True
+        End If
+        If _TcpVariablen.Exists("z") Then
+            _TcpVariablen.SetVariable("z", depth)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""z"" existiert nicht")
+            Err = True
+        End If
+        'Höhe Tiefe
+        If _TcpVariablen.Exists("h") Then
+            If obj.Ausrichtung = "HB" Then
+                _TcpVariablen.SetVariable("h", atkSearchObj.Tiefe)
+            Else
+                If obj.Ausrichtung = "HT" Then
+                    _TcpVariablen.SetVariable("h", atkSearchObj.Beite)
+                Else
+                    _TcpVariablen.SetVariable("h", atkSearchObj.Höhe)
+                End If
+            End If
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""h"" existiert nicht")
+            Err = True
+        End If
 
+        If _TcpVariablen.Exists("b") Then
+            If obj.Ausrichtung = "HB" Or obj.Ausrichtung = "BT" Then
+                _TcpVariablen.SetVariable("b", atkSearchObj.Beite)
+            Else
+                _TcpVariablen.SetVariable("b", atkSearchObj.Höhe)
+            End If
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""b"" existiert nicht")
+            Err = True
+        End If
+        If _TcpVariablen.Exists("t") Then
+            If obj.Ausrichtung = "BT" Or obj.Ausrichtung = "HT" Then
+                _TcpVariablen.SetVariable("t", atkSearchObj.Tiefe)
+            Else
+                _TcpVariablen.SetVariable("t", atkSearchObj.Höhe)
+
+            End If
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""t"" existiert nicht")
+            Err = True
+        End If
+        'Winkel
+        If _TcpVariablen.Exists("a") Then
+            _TcpVariablen.SetVariable("a", Winkel)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""a"" existiert nicht")
+            Err = True
+        End If
+        Return Not Err
+    End Function
+    Private Function SM_SendValuesNew(obj As MyMatchObj) As Boolean
+        Dim Point As MyPoint = obj.Objekt.GetZentrumMyPoint()
+        Dim Winkel As Double = obj.Objekt.GetWinkel2()
+        Dim depth As Double = obj.Objekt.GetDepthVal
+        Dim Err As Boolean = False
+        'Pos
+        If _TcpVariablen.Exists("x") Then
+            _TcpVariablen.SetVariable("x", Point.X * num_RefXY_FaktX.Value + num_RefXY_OffsX.Value)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""x"" existiert nicht")
+            Err = True
+        End If
+        If _TcpVariablen.Exists("y") Then
+            _TcpVariablen.SetVariable("y", Point.Y * num_RefXY_FaktY.Value + num_RefXY_OffsY.Value)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""y"" existiert nicht")
+            Err = True
+        End If
+        If _TcpVariablen.Exists("z") Then
+            _TcpVariablen.SetVariable("z", depth * num_RefZ_FaktZ.Value)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""z"" existiert nicht")
+            Err = True
+        End If
+        'Höhe Tiefe
+        If _TcpVariablen.Exists("h") Then
+            _TcpVariablen.SetVariable("h", obj.Objekt.GetHöhe)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""h"" existiert nicht")
+            Err = True
+        End If
+
+        If _TcpVariablen.Exists("b") Then
+            _TcpVariablen.SetVariable("b", obj.Objekt.GetBreite)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""b"" existiert nicht")
+            Err = True
+        End If
+        If _TcpVariablen.Exists("t") Then
+
+            _TcpVariablen.SetVariable("t", obj.Objekt.GetDepthVal())
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""t"" existiert nicht")
+            Err = True
+        End If
+        'Winkel
+        If _TcpVariablen.Exists("a") Then
+            _TcpVariablen.SetVariable("a", Winkel)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""a"" existiert nicht")
+            Err = True
+        End If
+        Return Not Err
+    End Function
 
     '----------------------------------------------------------------------------------------------------------------------------
     'LÖschen Tests

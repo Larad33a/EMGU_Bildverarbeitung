@@ -287,12 +287,12 @@ Public Class MyObjektV2
         End If
         Return CInt(Math.Round(_MinAreaRec.Size.Height * _MinAreaRec.Size.Width))
     End Function
-    Public Function GetZentrumMyPoint(depthMat As Mat) As MyPoint
+    Public Function GetZentrumMyPoint() As MyPoint
         'Prüfen ob _MinAreaRec Angelegt
         If _MinAreaRec.Size.IsEmpty Then
             Analyse()
         End If
-        Dim Z As Int32 = UmwandlungClass.GetAreaValue_Int16(depthMat, CInt(Math.Round(_MinAreaRec.Center.X)), CInt(Math.Round(_MinAreaRec.Center.Y)), UmwandlungClass.AreaTyp.Area_3X3, UmwandlungClass.ValueTyp.Midel)
+        Dim Z As Int32 = GetDepthVal()
         Return New MyPoint(_MinAreaRec.Center, Z)
     End Function
     Public Function GetZentrumPoint() As Point
