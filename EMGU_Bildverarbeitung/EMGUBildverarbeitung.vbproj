@@ -140,6 +140,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RoboReference.vb" />
     <Compile Include="Klassen\My\MyMatchObj.vb" />
     <Compile Include="Klassen\My\MyObjektV2.vb" />
     <Compile Include="Klassen\My\MyRefObjekt.vb" />
