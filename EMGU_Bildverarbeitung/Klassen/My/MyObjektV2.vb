@@ -406,7 +406,7 @@ Public Class MyObjektV2
             End If
         Next
 
-        Return Math.Round(tmpZ / cnt)
+        Return CInt(Math.Round(tmpZ / cnt, 0))
     End Function
 
 
