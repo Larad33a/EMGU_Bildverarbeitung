@@ -376,7 +376,7 @@ Public Class MyObjektV2
         Dim midel As Int32 = CInt(Math.Round(sum / _ReverenzenZ.Size))
         Return $"Min:{min} Max:{max} Midel:{midel}"
     End Function
-    Public Function GetDepthVal() As Double
+    Public Function GetDepthValAvg() As Double
         Dim sum As Int64
         Dim min As Int32 = Int32.MaxValue
         Dim max As Int32 = Int32.MinValue
@@ -391,6 +391,22 @@ Public Class MyObjektV2
         Next
         Dim midel As Int32 = CInt(Math.Round(sum / _ReverenzenZ.Size))
         Return midel
+    End Function
+
+    Public Function GetDepthVal() As Int32
+        Dim center As Point = GetZentrumPoint()
+        Dim tmpZ As Int32 = 0
+        Dim cnt As Integer = 0
+
+        For i = 0 To _ReverenzenXY.Size - 1
+            If _ReverenzenXY(i).X <= center.X + 2 And _ReverenzenXY(i).X >= center.X - 2 And
+                _ReverenzenXY(i).Y <= center.Y + 2 And _ReverenzenXY(i).Y >= center.Y - 2 Then
+                cnt += 1
+                tmpZ += _ReverenzenZ(i)
+            End If
+        Next
+
+        Return Math.Round(tmpZ / cnt)
     End Function
 
 
