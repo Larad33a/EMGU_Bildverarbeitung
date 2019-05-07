@@ -143,8 +143,9 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Klassen\MyMatchObj.vb" />
-    <Compile Include="Klassen\MyObjektV2.vb" />
+    <Compile Include="Klassen\My\MyMatchObj.vb" />
+    <Compile Include="Klassen\My\MyObjektV2.vb" />
+    <Compile Include="Klassen\My\MyRefObjekt.vb" />
     <Compile Include="Panels\Form_Main.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -170,9 +171,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Klassen\MyObekt.vb" />
-    <Compile Include="Klassen\MyPoint.vb" />
-    <Compile Include="Klassen\SearchObj.vb" />
+    <Compile Include="Klassen\My\MyObekt.vb" />
+    <Compile Include="Klassen\My\MyPoint.vb" />
+    <Compile Include="Klassen\My\MySearchObj.vb" />
     <Compile Include="Klassen\UmwandlungClass.vb" />
   </ItemGroup>
   <ItemGroup>
@@ -219,6 +220,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Import Project="..\packages\EMGU.CV.3.4.3.3016\build\EMGU.CV.targets" Condition="Exists('..\packages\EMGU.CV.3.4.3.3016\build\EMGU.CV.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

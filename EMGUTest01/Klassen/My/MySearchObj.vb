@@ -2,7 +2,7 @@
 Imports System.Xml.Schema
 Imports System.Xml.Serialization
 
-Public Class SearchObj : Implements IXmlSerializable
+Public Class MySearchObj : Implements IXmlSerializable
 
     Private _Name As String
     Public Property Name() As String

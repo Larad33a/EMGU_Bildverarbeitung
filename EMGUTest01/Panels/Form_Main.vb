@@ -73,9 +73,12 @@ Public Class Form_Main
     Private _RefCImgTaken As Boolean = False
     Private _RefDImgTaken As Boolean = False
 
+    'Listen
     Private _MyObjekte As New List(Of MyObjektV2)
-    Private _MySearchObjekte As New List(Of SearchObj)
+    Private _MySearchObjekte As New List(Of MySearchObj)
     Private _MyMatchObjekts As New List(Of MyMatchObj)
+    Private _MyRefXY_List As New List(Of MyRefObjekt)
+    Private _MyRefZ_List As New List(Of MyRefObjekt)
 
     'Mat
     Private _MatColor As Mat
@@ -229,10 +232,10 @@ Public Class Form_Main
 
     Private Sub btn_AddSearchObj_Click(sender As Object, e As EventArgs) Handles btn_AddSearchObj.Click
         lb_SearchObjList.Items.Clear()
-        Dim tmpObj As New SearchObj(_MySearchObjekte.Count + 1, tb_searchObjName.Text, CInt(num_newSearchObjH.Value), CInt(num_newSearchObjB.Value), CInt(num_newSearchObjT.Value))
+        Dim tmpObj As New MySearchObj(_MySearchObjekte.Count + 1, tb_searchObjName.Text, CInt(num_newSearchObjH.Value), CInt(num_newSearchObjB.Value), CInt(num_newSearchObjT.Value))
         _MySearchObjekte.Add(tmpObj)
 
-        For Each obj As SearchObj In _MySearchObjekte
+        For Each obj As MySearchObj In _MySearchObjekte
             lb_SearchObjList.Items.Add(obj.ToString())
         Next
     End Sub
@@ -266,7 +269,7 @@ Public Class Form_Main
                     Dim Strings() As String
                     Strings = sZeile.Split(CChar(";"))
 
-                    Dim tmpSearchObj As New SearchObj(Convert.ToInt32(Strings(0)), Strings(1), Convert.ToInt32(Strings(2)), Convert.ToInt32(Strings(3)), Convert.ToInt32(Strings(4)))
+                    Dim tmpSearchObj As New MySearchObj(Convert.ToInt32(Strings(0)), Strings(1), Convert.ToInt32(Strings(2)), Convert.ToInt32(Strings(3)), Convert.ToInt32(Strings(4)))
                     _MySearchObjekte.Add(tmpSearchObj)
                     sZeile = SaveStreamReader.ReadLine
                 Loop
@@ -408,6 +411,14 @@ Public Class Form_Main
     End Sub
     Private Sub comb_Konf_Dep_Auflösung_SelectedIndexChanged(sender As Object, e As EventArgs) Handles comb_Konf_Dep_Auflösung.SelectedIndexChanged
 
+    End Sub
+
+    'Referenzieren
+    Private Sub btn_RefXY_Add_Click(sender As Object, e As EventArgs) Handles btn_RefXY_Add.Click
+        If num_RefXY_KX.Value <> 0 Or num_RefXY_KY.Value <> 0 Or num_RefXY_RX.Value <> 0 Or num_RefXY_RY.Value <> 0 Then
+            Dim tmp_Refobj As New MyRefObjekt(num_RefXY_RX.Value, num_RefXY_RY.Value, num_RefXY_KX.Value, num_RefXY_KY.Value)
+            _MyRefXY_List.Add(tmp_Refobj)
+        End If
     End Sub
 
 
@@ -784,25 +795,25 @@ Public Class Form_Main
         lb_Info.Items.Insert(0, $"TakePicture: Neues Bild")
         'Bildvorhanden zurücksetzen
         If _MyPipeline.PollForFrames(Mydata) Then
-                If Mydata IsNot Nothing Then
-                    color = ToMat(Mydata.ColorFrame).Clone
-                    depth = ToMat(Mydata.DepthFrame, DepthType.Cv16S).Clone
-                    depthc = ToMat(_MyColorMap.Colorize(Mydata.DepthFrame)).Clone
-                Else
-                    lb_Info.Items.Insert(0, "TakePicture: Fehler PollForFrames gab keine Daten zurück")
-                End If
+            If Mydata IsNot Nothing Then
+                color = ToMat(Mydata.ColorFrame).Clone
+                depth = ToMat(Mydata.DepthFrame, DepthType.Cv16S).Clone
+                depthc = ToMat(_MyColorMap.Colorize(Mydata.DepthFrame)).Clone
             Else
-                lb_Info.Items.Insert(0, $"TakePicture: Fehler bei PollForFrames [{_trys,2}]")
-                If _trys < cMaxTrys Then
-                    _trys += 1
-                    Return False
-                Else
-                    _trys = 0
-                    lb_Info.Items.Insert(0, "TakePicture: Auto Restart")
-                    RestartCam()
-                    Return False
-                End If
+                lb_Info.Items.Insert(0, "TakePicture: Fehler PollForFrames gab keine Daten zurück")
             End If
+        Else
+            lb_Info.Items.Insert(0, $"TakePicture: Fehler bei PollForFrames [{_trys,2}]")
+            If _trys < cMaxTrys Then
+                _trys += 1
+                Return False
+            Else
+                _trys = 0
+                lb_Info.Items.Insert(0, "TakePicture: Auto Restart")
+                RestartCam()
+                Return False
+            End If
+        End If
         ImgStatus()
         Return True
     End Function
@@ -1224,7 +1235,7 @@ Public Class Form_Main
 
     Private Function Search() As Boolean
         '1. Objektprüfen und Holen
-        Dim AktSearch As SearchObj
+        Dim AktSearch As MySearchObj
         lb_Found.Items.Clear()
         _MyMatchObjekts.Clear()
 
@@ -1839,4 +1850,19 @@ Public Class Form_Main
         ib_res_02.Image = _MatResult.Clone
         TC2_Bilder.SelectedTab = P2_Result
     End Sub
+
+    Private Sub _ClearList(list As IList, Optional listbox As ListBox = Nothing)
+        list.Clear()
+        If listbox IsNot Nothing Then
+            _RefreshListbox(listbox, list)
+        End If
+    End Sub
+    Private Sub _RefreshListbox(listbox As ListBox, list As IList)
+        listbox.Items.Clear()
+        For Each obj In list
+            listbox.Items.Add(obj)
+        Next
+    End Sub
+
+
 End Class 'Form1
