@@ -545,7 +545,7 @@ Public Class Form_Main
         lbl_TCP_Status.Text = "Fehler"
     End Sub
     Private Sub _TcpVariablen_Disconnected() Handles _TcpVariablen.Disconnected
-        Me.Invoke(Sub() Disconect())
+        Disconect()
     End Sub
 
     Private Sub _TcpVariablen_VariableChanged(name As String, val As Double) Handles _TcpVariablen.VariableChanged
@@ -554,6 +554,10 @@ Public Class Form_Main
     End Sub
 
     Sub Disconect()
+        If InvokeRequired Then
+            Invoke(Sub() Disconect())
+            Return
+        End If
         lbl_TCP_Status.ForeColor = Color.Yellow
         lbl_TCP_Status.Text = "Getrennt"
     End Sub
@@ -1715,7 +1719,7 @@ Public Class Form_Main
     '----------------------------------------------------------------------------------------------------------------------------
     'LÖschen Tests
     '----------------------------------------------------------------------------------------------------------------------------
-    Private Function KantenFinden(ByRef resurceMask As Mat, ByRef resurceImg As Mat) As Boolean
+    Private Sub KantenFinden(ByRef resurceMask As Mat, ByRef resurceImg As Mat)
         Dim tmp_Mat As New Mat
         tmp_Mat = resurceMask.Clone
         Dim tmp_Img As New Mat
@@ -1846,7 +1850,7 @@ Public Class Form_Main
         'Dim v2 As New ImageViewer
         'v2.Image = tmp_Mat.Clone : v2.Text = "Line" : v2.Show()
 
-    End Function
+    End Sub
 
     Private Sub btn_Canny_Click(sender As Object, e As EventArgs) Handles btn_Canny.Click
         CvInvoke.Canny(_MatColor, _MatResult, 100, 200)
