@@ -52,4 +52,7 @@
     'Xr = Mx*Xc+Bx
     'Yr = My*Yc+By
 
+    Public Overrides Function ToString() As String
+        Return ($"R:({_PunktRobo.ToString(),5:n2}) | K:({_PunktCam.ToString(),5:n2})")
+    End Function
 End Class

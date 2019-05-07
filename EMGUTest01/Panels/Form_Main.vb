@@ -231,13 +231,9 @@ Public Class Form_Main
     End Sub
 
     Private Sub btn_AddSearchObj_Click(sender As Object, e As EventArgs) Handles btn_AddSearchObj.Click
-        lb_SearchObjList.Items.Clear()
         Dim tmpObj As New MySearchObj(_MySearchObjekte.Count + 1, tb_searchObjName.Text, CInt(num_newSearchObjH.Value), CInt(num_newSearchObjB.Value), CInt(num_newSearchObjT.Value))
         _MySearchObjekte.Add(tmpObj)
-
-        For Each obj As MySearchObj In _MySearchObjekte
-            lb_SearchObjList.Items.Add(obj.ToString())
-        Next
+        _RefreshListbox(lb_SearchObjList, _MySearchObjekte)
     End Sub
 
     Private Sub btn_SaveSearch_Click(sender As Object, e As EventArgs) Handles btn_SaveSearch.Click
@@ -255,8 +251,7 @@ Public Class Form_Main
     End Sub
 
     Private Sub btn_LoadSearch_Click(sender As Object, e As EventArgs) Handles btn_LoadSearch.Click
-        lb_SearchObjList.Items.Clear()
-        _MySearchObjekte.Clear()
+        _ClearList(_MySearchObjekte, lb_SearchObjList)
 
         Try
             Using SaveStreamReader As New StreamReader("SearchData.dat")
@@ -276,10 +271,7 @@ Public Class Form_Main
                 'Close the file.
                 SaveStreamReader.Close()
             End Using
-
-            For Each obj In _MySearchObjekte
-                lb_SearchObjList.Items.Add(obj.ToString())
-            Next
+            _RefreshListbox(lb_SearchObjList, _MySearchObjekte)
         Catch ex As Exception
 
         End Try
@@ -418,9 +410,13 @@ Public Class Form_Main
         If num_RefXY_KX.Value <> 0 Or num_RefXY_KY.Value <> 0 Or num_RefXY_RX.Value <> 0 Or num_RefXY_RY.Value <> 0 Then
             Dim tmp_Refobj As New MyRefObjekt(num_RefXY_RX.Value, num_RefXY_RY.Value, num_RefXY_KX.Value, num_RefXY_KY.Value)
             _MyRefXY_List.Add(tmp_Refobj)
+            _RefreshListbox(lb_RefXY_Values, _MyRefXY_List)
         End If
     End Sub
 
+    Private Sub btn_RefXY_Clear_Click(sender As Object, e As EventArgs) Handles btn_RefXY_Clear.Click
+        _ClearList(_MyRefXY_List, lb_RefXY_Values)
+    End Sub
 
     'Test
     Private Sub btn_TestVerschieben_Click(sender As Object, e As EventArgs) Handles btn_TestVerschieben.Click
@@ -778,6 +774,20 @@ Public Class Form_Main
         ib_Found.Image = _DisFound.Clone
     End Sub
 
+    'List Hilfen
+    Private Sub _ClearList(list As IList, Optional listbox As ListBox = Nothing)
+        list.Clear()
+        If listbox IsNot Nothing Then
+            _RefreshListbox(listbox, list)
+        End If
+    End Sub
+    Private Sub _RefreshListbox(listbox As ListBox, list As IList)
+        listbox.Items.Clear()
+        For Each obj In list
+            listbox.Items.Add(obj.ToString)
+        Next
+    End Sub
+
     '-----------------------------------------------------------------------------------------------------------------------
     'Sonstige Funktionen
     '-----------------------------------------------------------------------------------------------------------------------
@@ -832,8 +842,7 @@ Public Class Form_Main
 
     Private Function ImgageAnalyse() As Boolean
         'Alte Objekte löschen
-        LB_obj.Items.Clear()
-        _MyObjekte.Clear()
+        _ClearList(_MyObjekte, LB_obj)
         Dim vortsetzen As Boolean = False
         Dim Ergebnis As Boolean = False
         If Not _ColorImgTaken Or Not _DepthImgTaken Then
@@ -1093,8 +1102,10 @@ Public Class Form_Main
                 End If
             Next
         Next
+        'Objekte in Liste Eintragen
+        _RefreshListbox(LB_obj, _MyObjekte)
+        'Objekte Zeichnen
         For Each ob2 As MyObjektV2 In _MyObjekte
-            LB_obj.Items.Add(ob2.ToString)
             'Zentrum
             CvInvoke.Circle(ZeichenMat2, ob2.GetZentrumPoint, 5, New MCvScalar(255, 255, 255), 2)
             CvInvoke.Circle(ZeichenMat2, ob2.GetZentrumPoint, 1, New MCvScalar(255, 0, 255), 1)
@@ -1109,14 +1120,11 @@ Public Class Form_Main
             Next
             CvInvoke.Line(ZeichenMat2, pin(3), pin(0), New MCvScalar(255, 255, 255), 2) 'Grundlinie
             CvInvoke.PutText(ZeichenMat2, $"ID:{ob2.ID,2}", ob2.GetZentrumPoint, FontFace.HersheyComplex, 1, New MCvScalar(255, 255, 255), 2)
-
-
         Next
         ZeichenMat2.CopyTo(result)
         If debug Then
             CvInvoke.Imshow("Ergebnis", ZeichenMat2)
         End If
-
         Return True
     End Function
 
@@ -1236,8 +1244,7 @@ Public Class Form_Main
     Private Function Search() As Boolean
         '1. Objektprüfen und Holen
         Dim AktSearch As MySearchObj
-        lb_Found.Items.Clear()
-        _MyMatchObjekts.Clear()
+                _ClearList(_MyMatchObjekts, lb_Found)
 
         Try
             AktSearch = _MySearchObjekte.ElementAt(CInt(num_SearchObj.Value - 1))
@@ -1256,8 +1263,6 @@ Public Class Form_Main
         '2. Objektinfos Anzeigen
         lbl_InfoName.Text = AktSearch.Name
         lbl_InfoMaase.Text = AktSearch.Maase
-        'Alte Objekte aus liste Löschen
-        lb_Found.Items.Clear()
 
         '3. Bildauswerung starten
         ImgageAnalyse()
@@ -1309,9 +1314,8 @@ Public Class Form_Main
         End If
         lb_Info.Items.Insert(0, $"Es wurde {_MyMatchObjekts.Count,3} passendes Objekt gefunden.")
         _MyMatchObjekts.Sort()
-        For Each obj In _MyMatchObjekts
-            lb_Found.Items.Add(obj.ToString())
-        Next
+        _RefreshListbox(lb_Found, _MyMatchObjekts)
+
         lbl_FoundObj.Text = _MyMatchObjekts(0).Objekt.ToString
         Dim mm As Int32 = CInt(_MyMatchObjekts(0).Objekt.Dist_Max() / num_pixmmH_faktor.Value)
         lbl_FoundWidth.Text = $"{_MyMatchObjekts(0).Objekt.Dist_Max(),4} pixel = {mm,4} mm"
@@ -1638,8 +1642,10 @@ Public Class Form_Main
         End If
 
         'Eintagen
+        'Objekte in Liste Eintragen
+        _RefreshListbox(LB_obj, _MyObjekte)
+        'Objekte Zeichnen
         For Each ob2 As MyObjektV2 In _MyObjekte
-            LB_obj.Items.Add(ob2.ToString)
             'Zentrum
             CvInvoke.Circle(ZeichenMat2, ob2.GetZentrumPoint, 5, New MCvScalar(255, 255, 255), 2)
             CvInvoke.Circle(ZeichenMat2, ob2.GetZentrumPoint, 1, New MCvScalar(255, 0, 255), 1)
@@ -1654,8 +1660,6 @@ Public Class Form_Main
             Next
             CvInvoke.Line(ZeichenMat2, pin(3), pin(0), New MCvScalar(255, 255, 255), 2) 'Grundlinie
             CvInvoke.PutText(ZeichenMat2, $"ID:{ob2.ID,2}", ob2.GetZentrumPoint, FontFace.HersheyComplex, 1, New MCvScalar(255, 255, 255), 2)
-
-
         Next
         result = ZeichenMat2.Clone
         resultMask = tmp_Markers.Clone
@@ -1849,19 +1853,6 @@ Public Class Form_Main
         ib_res_01.Image = _MatColor.Clone
         ib_res_02.Image = _MatResult.Clone
         TC2_Bilder.SelectedTab = P2_Result
-    End Sub
-
-    Private Sub _ClearList(list As IList, Optional listbox As ListBox = Nothing)
-        list.Clear()
-        If listbox IsNot Nothing Then
-            _RefreshListbox(listbox, list)
-        End If
-    End Sub
-    Private Sub _RefreshListbox(listbox As ListBox, list As IList)
-        listbox.Items.Clear()
-        For Each obj In list
-            listbox.Items.Add(obj)
-        Next
     End Sub
 
 
