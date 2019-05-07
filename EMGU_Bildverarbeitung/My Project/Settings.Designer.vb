@@ -241,9 +241,9 @@ Namespace My
     Friend Module MySettingsProperty
         
         <Global.System.ComponentModel.Design.HelpKeywordAttribute("My.Settings")>  _
-        Friend ReadOnly Property Settings() As Global.EMGUTest02.My.MySettings
+        Friend ReadOnly Property Settings() As Global.EMGUBildverarbeitung.My.MySettings
             Get
-                Return Global.EMGUTest02.My.MySettings.Default
+                Return Global.EMGUBildverarbeitung.My.MySettings.Default
             End Get
         End Property
     End Module
