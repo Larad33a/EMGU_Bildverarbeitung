@@ -175,6 +175,12 @@ Public Class Form_Main
         My.Settings.TCP_Port = CInt(num_TCP_Port.Value)
         My.Settings.Save()
 
+        'Referenzierung
+        My.Settings.Rever_FaktorX = num_RefXY_FaktX.Value
+        My.Settings.Rever_FaktorY = num_RefXY_FaktY.Value
+        My.Settings.Rever_OffsetX = num_RefXY_OffsX.Value
+        My.Settings.Rever_OffsetY = num_RefXY_OffsY.Value
+
     End Sub
 
     '-----------------------------------------------------------------------------------------------------------------------
@@ -418,6 +424,9 @@ Public Class Form_Main
         _ClearList(_MyRefXY_List, lb_RefXY_Values)
     End Sub
 
+    Private Sub btn_RefXY_Calc_Click(sender As Object, e As EventArgs) Handles btn_RefXY_Calc.Click
+
+    End Sub
     'Test
     Private Sub btn_TestVerschieben_Click(sender As Object, e As EventArgs) Handles btn_TestVerschieben.Click
         Dim test As New Mat
@@ -508,12 +517,27 @@ Public Class Form_Main
         'Auswertung
         num_ThreshTief.Value = My.Settings.Ausw_TiefsteReg
         num_ThreshHoch.Value = My.Settings.Ausw_HöchsteReg
+        If My.Settings.Ausw_MindestObjH < 5 Then
+            My.Settings.Ausw_MindestObjH = 5
+        End If
+        If My.Settings.Ausw_MindestObjB < 5 Then
+            My.Settings.Ausw_MindestObjB = 5
+        End If
+        If My.Settings.Ausw_MindestObjT < 5 Then
+            My.Settings.Ausw_MindestObjT = 5
+        End If
         num_WTS_MinH.Value = My.Settings.Ausw_MindestObjH
         num_WTS_MinB.Value = My.Settings.Ausw_MindestObjB
         num_WTS_MinT.Value = My.Settings.Ausw_MindestObjT
         'TCP
         tb_TCP_HOST.Text = My.Settings.TCP_Host
         num_TCP_Port.Value = My.Settings.TCP_Port
+        'Referenzierung
+        num_RefXY_FaktX.Value = CDec(My.Settings.Rever_FaktorX)
+        num_RefXY_FaktY.Value = CDec(My.Settings.Rever_FaktorY)
+        num_RefXY_OffsX.Value = CDec(My.Settings.Rever_FaktorY)
+        num_RefXY_OffsY.Value = CDec(My.Settings.Rever_FaktorY)
+
     End Sub
 
     '-----------------------------------------------------------------------------------------------------------------------
@@ -1248,7 +1272,7 @@ Public Class Form_Main
     Private Function Search() As Boolean
         '1. Objektprüfen und Holen
         Dim AktSearch As MySearchObj
-                _ClearList(_MyMatchObjekts, lb_Found)
+        _ClearList(_MyMatchObjekts, lb_Found)
 
         Try
             AktSearch = _MySearchObjekte.ElementAt(CInt(num_SearchObj.Value - 1))
@@ -1355,12 +1379,12 @@ Public Class Form_Main
         Dim depth As Double = Mobj.Objekt.GetDepthVal
         'Pos
         If _TcpVariablen.Exists("x") Then
-            _TcpVariablen.SetVariable("x", PixToMil(Point.X) * num_RoboOffsetX.Value)
+            _TcpVariablen.SetVariable("x", Point.X * num_RoboOffsetX.Value)
         Else
             lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""x"" existiert nicht")
         End If
         If _TcpVariablen.Exists("y") Then
-            _TcpVariablen.SetVariable("y", PixToMil(Point.Y) + num_RoboOffsety.Value)
+            _TcpVariablen.SetVariable("y", Point.Y + num_RoboOffsety.Value)
         Else
             lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""y"" existiert nicht")
         End If
@@ -1858,6 +1882,5 @@ Public Class Form_Main
         ib_res_02.Image = _MatResult.Clone
         TC2_Bilder.SelectedTab = P2_Result
     End Sub
-
 
 End Class 'Form1

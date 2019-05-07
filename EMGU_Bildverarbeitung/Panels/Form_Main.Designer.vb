@@ -224,6 +224,15 @@ Partial Class Form_Main
         Me.LB_obj = New System.Windows.Forms.ListBox()
         Me.P2_Found = New System.Windows.Forms.TabPage()
         Me.lb_Found = New System.Windows.Forms.ListBox()
+        Me.Label48 = New System.Windows.Forms.Label()
+        Me.num_RefXY_FaktX = New System.Windows.Forms.NumericUpDown()
+        Me.Label49 = New System.Windows.Forms.Label()
+        Me.num_RefXY_FaktY = New System.Windows.Forms.NumericUpDown()
+        Me.Label50 = New System.Windows.Forms.Label()
+        Me.num_RefXY_OffsX = New System.Windows.Forms.NumericUpDown()
+        Me.Label51 = New System.Windows.Forms.Label()
+        Me.num_RefXY_OffsY = New System.Windows.Forms.NumericUpDown()
+        Me.btn_RefXY_Calc = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
         Me.TC2_Bilder.SuspendLayout()
         Me.P1_NewImg.SuspendLayout()
@@ -311,6 +320,10 @@ Partial Class Form_Main
         Me.TC3_ObjLists.SuspendLayout()
         Me.P1_All.SuspendLayout()
         Me.P2_Found.SuspendLayout()
+        CType(Me.num_RefXY_FaktX, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.num_RefXY_FaktY, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.num_RefXY_OffsX, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.num_RefXY_OffsY, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'GroupBox1
@@ -2061,6 +2074,15 @@ Partial Class Form_Main
         '
         'GroupBox20
         '
+        Me.GroupBox20.Controls.Add(Me.btn_RefXY_Calc)
+        Me.GroupBox20.Controls.Add(Me.Label51)
+        Me.GroupBox20.Controls.Add(Me.num_RefXY_OffsY)
+        Me.GroupBox20.Controls.Add(Me.Label50)
+        Me.GroupBox20.Controls.Add(Me.num_RefXY_OffsX)
+        Me.GroupBox20.Controls.Add(Me.Label49)
+        Me.GroupBox20.Controls.Add(Me.num_RefXY_FaktY)
+        Me.GroupBox20.Controls.Add(Me.Label48)
+        Me.GroupBox20.Controls.Add(Me.num_RefXY_FaktX)
         Me.GroupBox20.Controls.Add(Me.btn_RefXY_Clear)
         Me.GroupBox20.Controls.Add(Me.lb_RefXY_Values)
         Me.GroupBox20.Controls.Add(Me.GroupBox22)
@@ -2128,7 +2150,7 @@ Partial Class Form_Main
         'Label47
         '
         Me.Label47.AutoSize = True
-        Me.Label47.Location = New System.Drawing.Point(314, 26)
+        Me.Label47.Location = New System.Drawing.Point(314, 23)
         Me.Label47.Name = "Label47"
         Me.Label47.Size = New System.Drawing.Size(36, 17)
         Me.Label47.TabIndex = 3
@@ -2137,7 +2159,7 @@ Partial Class Form_Main
         'Label44
         '
         Me.Label44.AutoSize = True
-        Me.Label44.Location = New System.Drawing.Point(161, 26)
+        Me.Label44.Location = New System.Drawing.Point(161, 23)
         Me.Label44.Name = "Label44"
         Me.Label44.Size = New System.Drawing.Size(21, 17)
         Me.Label44.TabIndex = 3
@@ -2155,7 +2177,7 @@ Partial Class Form_Main
         'num_RefXY_KY
         '
         Me.num_RefXY_KY.DecimalPlaces = 2
-        Me.num_RefXY_KY.Location = New System.Drawing.Point(188, 24)
+        Me.num_RefXY_KY.Location = New System.Drawing.Point(188, 21)
         Me.num_RefXY_KY.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
         Me.num_RefXY_KY.Minimum = New Decimal(New Integer() {9999, 0, 0, -2147483648})
         Me.num_RefXY_KY.Name = "num_RefXY_KY"
@@ -2189,7 +2211,7 @@ Partial Class Form_Main
         'Label46
         '
         Me.Label46.AutoSize = True
-        Me.Label46.Location = New System.Drawing.Point(314, 26)
+        Me.Label46.Location = New System.Drawing.Point(314, 23)
         Me.Label46.Name = "Label46"
         Me.Label46.Size = New System.Drawing.Size(30, 17)
         Me.Label46.TabIndex = 4
@@ -2198,7 +2220,7 @@ Partial Class Form_Main
         'Label43
         '
         Me.Label43.AutoSize = True
-        Me.Label43.Location = New System.Drawing.Point(161, 26)
+        Me.Label43.Location = New System.Drawing.Point(161, 23)
         Me.Label43.Name = "Label43"
         Me.Label43.Size = New System.Drawing.Size(21, 17)
         Me.Label43.TabIndex = 3
@@ -2216,7 +2238,7 @@ Partial Class Form_Main
         'num_RefXY_RY
         '
         Me.num_RefXY_RY.DecimalPlaces = 2
-        Me.num_RefXY_RY.Location = New System.Drawing.Point(188, 24)
+        Me.num_RefXY_RY.Location = New System.Drawing.Point(188, 21)
         Me.num_RefXY_RY.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
         Me.num_RefXY_RY.Minimum = New Decimal(New Integer() {9999, 0, 0, -2147483648})
         Me.num_RefXY_RY.Name = "num_RefXY_RY"
@@ -2414,6 +2436,91 @@ Partial Class Form_Main
         Me.lb_Found.Size = New System.Drawing.Size(534, 516)
         Me.lb_Found.TabIndex = 8
         '
+        'Label48
+        '
+        Me.Label48.AutoSize = True
+        Me.Label48.Location = New System.Drawing.Point(755, 44)
+        Me.Label48.Name = "Label48"
+        Me.Label48.Size = New System.Drawing.Size(69, 17)
+        Me.Label48.TabIndex = 8
+        Me.Label48.Text = "Faktor_X:"
+        '
+        'num_RefXY_FaktX
+        '
+        Me.num_RefXY_FaktX.DecimalPlaces = 2
+        Me.num_RefXY_FaktX.Location = New System.Drawing.Point(827, 42)
+        Me.num_RefXY_FaktX.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
+        Me.num_RefXY_FaktX.Minimum = New Decimal(New Integer() {9999, 0, 0, -2147483648})
+        Me.num_RefXY_FaktX.Name = "num_RefXY_FaktX"
+        Me.num_RefXY_FaktX.Size = New System.Drawing.Size(120, 22)
+        Me.num_RefXY_FaktX.TabIndex = 7
+        '
+        'Label49
+        '
+        Me.Label49.AutoSize = True
+        Me.Label49.Location = New System.Drawing.Point(755, 72)
+        Me.Label49.Name = "Label49"
+        Me.Label49.Size = New System.Drawing.Size(69, 17)
+        Me.Label49.TabIndex = 10
+        Me.Label49.Text = "Faktor_Y:"
+        '
+        'num_RefXY_FaktY
+        '
+        Me.num_RefXY_FaktY.DecimalPlaces = 2
+        Me.num_RefXY_FaktY.Location = New System.Drawing.Point(827, 70)
+        Me.num_RefXY_FaktY.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
+        Me.num_RefXY_FaktY.Minimum = New Decimal(New Integer() {9999, 0, 0, -2147483648})
+        Me.num_RefXY_FaktY.Name = "num_RefXY_FaktY"
+        Me.num_RefXY_FaktY.Size = New System.Drawing.Size(120, 22)
+        Me.num_RefXY_FaktY.TabIndex = 9
+        '
+        'Label50
+        '
+        Me.Label50.AutoSize = True
+        Me.Label50.Location = New System.Drawing.Point(755, 100)
+        Me.Label50.Name = "Label50"
+        Me.Label50.Size = New System.Drawing.Size(67, 17)
+        Me.Label50.TabIndex = 12
+        Me.Label50.Text = "Offset_X:"
+        '
+        'num_RefXY_OffsX
+        '
+        Me.num_RefXY_OffsX.DecimalPlaces = 2
+        Me.num_RefXY_OffsX.Location = New System.Drawing.Point(827, 98)
+        Me.num_RefXY_OffsX.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
+        Me.num_RefXY_OffsX.Minimum = New Decimal(New Integer() {9999, 0, 0, -2147483648})
+        Me.num_RefXY_OffsX.Name = "num_RefXY_OffsX"
+        Me.num_RefXY_OffsX.Size = New System.Drawing.Size(120, 22)
+        Me.num_RefXY_OffsX.TabIndex = 11
+        '
+        'Label51
+        '
+        Me.Label51.AutoSize = True
+        Me.Label51.Location = New System.Drawing.Point(755, 128)
+        Me.Label51.Name = "Label51"
+        Me.Label51.Size = New System.Drawing.Size(67, 17)
+        Me.Label51.TabIndex = 14
+        Me.Label51.Text = "Offset_Y:"
+        '
+        'num_RefXY_OffsY
+        '
+        Me.num_RefXY_OffsY.DecimalPlaces = 2
+        Me.num_RefXY_OffsY.Location = New System.Drawing.Point(827, 126)
+        Me.num_RefXY_OffsY.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
+        Me.num_RefXY_OffsY.Minimum = New Decimal(New Integer() {9999, 0, 0, -2147483648})
+        Me.num_RefXY_OffsY.Name = "num_RefXY_OffsY"
+        Me.num_RefXY_OffsY.Size = New System.Drawing.Size(120, 22)
+        Me.num_RefXY_OffsY.TabIndex = 13
+        '
+        'btn_RefXY_Calc
+        '
+        Me.btn_RefXY_Calc.Location = New System.Drawing.Point(755, 9)
+        Me.btn_RefXY_Calc.Name = "btn_RefXY_Calc"
+        Me.btn_RefXY_Calc.Size = New System.Drawing.Size(192, 27)
+        Me.btn_RefXY_Calc.TabIndex = 15
+        Me.btn_RefXY_Calc.Text = "Berechnen"
+        Me.btn_RefXY_Calc.UseVisualStyleBackColor = True
+        '
         'Form_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
@@ -2515,6 +2622,7 @@ Partial Class Form_Main
         CType(Me.num_TCP_Port, System.ComponentModel.ISupportInitialize).EndInit()
         Me.P6_Reverenzieren.ResumeLayout(False)
         Me.GroupBox20.ResumeLayout(False)
+        Me.GroupBox20.PerformLayout()
         Me.GroupBox22.ResumeLayout(False)
         Me.GroupBox24.ResumeLayout(False)
         Me.GroupBox24.PerformLayout()
@@ -2530,6 +2638,10 @@ Partial Class Form_Main
         Me.TC3_ObjLists.ResumeLayout(False)
         Me.P1_All.ResumeLayout(False)
         Me.P2_Found.ResumeLayout(False)
+        CType(Me.num_RefXY_FaktX, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.num_RefXY_FaktY, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.num_RefXY_OffsX, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.num_RefXY_OffsY, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -2735,4 +2847,13 @@ Partial Class Form_Main
     Friend WithEvents num_RefXY_RX As NumericUpDown
     Friend WithEvents P7_SearchTask As TabPage
     Friend WithEvents btn_RefXY_Clear As Button
+    Friend WithEvents Label51 As Label
+    Friend WithEvents num_RefXY_OffsY As NumericUpDown
+    Friend WithEvents Label50 As Label
+    Friend WithEvents num_RefXY_OffsX As NumericUpDown
+    Friend WithEvents Label49 As Label
+    Friend WithEvents num_RefXY_FaktY As NumericUpDown
+    Friend WithEvents Label48 As Label
+    Friend WithEvents num_RefXY_FaktX As NumericUpDown
+    Friend WithEvents btn_RefXY_Calc As Button
 End Class

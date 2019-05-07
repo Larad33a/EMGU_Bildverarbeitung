@@ -230,6 +230,66 @@ Namespace My
                 Me("Konf_KameraColorOffset") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property Rever_FaktorX() As Double
+            Get
+                Return CType(Me("Rever_FaktorX"),Double)
+            End Get
+            Set
+                Me("Rever_FaktorX") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property Rever_FaktorY() As Double
+            Get
+                Return CType(Me("Rever_FaktorY"),Double)
+            End Get
+            Set
+                Me("Rever_FaktorY") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property Rever_OffsetX() As Double
+            Get
+                Return CType(Me("Rever_OffsetX"),Double)
+            End Get
+            Set
+                Me("Rever_OffsetX") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property Rever_OffsetY() As Double
+            Get
+                Return CType(Me("Rever_OffsetY"),Double)
+            End Get
+            Set
+                Me("Rever_OffsetY") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property Einstellung() As Double
+            Get
+                Return CType(Me("Einstellung"),Double)
+            End Get
+            Set
+                Me("Einstellung") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
