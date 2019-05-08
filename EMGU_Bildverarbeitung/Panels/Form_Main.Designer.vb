@@ -344,6 +344,7 @@ Partial Class Form_Main
         Me.GroupBox23.SuspendLayout()
         CType(Me.num_RefXY_RY, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.num_RefXY_RX, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.P7_SearchTask.SuspendLayout()
         Me.P8_test.SuspendLayout()
         Me.GroupBox8.SuspendLayout()
         Me.TC3_ObjLists.SuspendLayout()
@@ -3104,6 +3105,7 @@ Partial Class Form_Main
         Me.GroupBox23.PerformLayout()
         CType(Me.num_RefXY_RY, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.num_RefXY_RX, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.P7_SearchTask.ResumeLayout(False)
         Me.P8_test.ResumeLayout(False)
         Me.GroupBox8.ResumeLayout(False)
         Me.GroupBox8.PerformLayout()
@@ -3342,4 +3344,16 @@ Partial Class Form_Main
     Friend WithEvents cb_DistFunc_Show As CheckBox
     Friend WithEvents Label54 As Label
     Friend WithEvents num_DidzFunc_Backround As NumericUpDown
+    Friend WithEvents GroupBox29 As GroupBox
+    Friend WithEvents Button4 As Button
+    Friend WithEvents Button3 As Button
+    Friend WithEvents lbl_Auftrag_Status As Label
+    Friend WithEvents Label58 As Label
+    Friend WithEvents ListBox1 As ListBox
+    Friend WithEvents GroupBox28 As GroupBox
+    Friend WithEvents Button2 As Button
+    Friend WithEvents NumericUpDown1 As NumericUpDown
+    Friend WithEvents Label56 As Label
+    Friend WithEvents ComboBox1 As ComboBox
+    Friend WithEvents Label55 As Label
 End Class

@@ -42,6 +42,12 @@ Public Class Form_Main
         depth
     End Enum
 
+    Private Structure Auftrag
+        Dim obj As Int32
+        Dim SollAnzahl As Int32
+        Dim IstAnzahl As Int32
+    End Structure
+
 
     'Globale Variablen
     Private _MyPipeline As New Pipeline
@@ -88,6 +94,7 @@ Public Class Form_Main
     Private _MyMatchObjekts As New List(Of MyMatchObj)
     Private _MyRefXY_List As New List(Of MyRefObjekt)
     Private _MyRefZ_List As New List(Of MyRefObjekt)
+    Private _MyAuftrag As New List(Of Auftrag)
 
     'Mat
     Private _MatColor As Mat
@@ -1365,6 +1372,7 @@ Public Class Form_Main
         Return True
     End Function
 
+    'Mit Weniger DeepKopy
     Private Function MyWatershedDepthAndKombi2(ByRef resurceColor As Mat, ByRef resurceDepth As Mat, ByRef result As Mat, ByRef revC As Mat, ByRef revd As Mat, Optional debug As Boolean = False) As Boolean
         Dim Display1 As New Mat
         Dim Display2 As New Mat
@@ -1898,7 +1906,7 @@ Public Class Form_Main
     End Function
 
 
-    'Ohne Kopieren
+    'Ohne Deep Copi
     Private Function WM_ImageOfInterest2(ByRef resurce As Mat, ByRef result As Mat, Optional rev As Mat = Nothing, Optional dif As Boolean = False, Optional mask As Boolean = False, Optional depth As Boolean = False, Optional gaus As Boolean = False, Optional offset As Int32 = 0) As Boolean
         Dim Ergebnis As Boolean = True
         'Differenz
