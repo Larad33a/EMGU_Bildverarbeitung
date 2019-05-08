@@ -45,6 +45,10 @@
         _PunktCam = New PointF(kamerax, kameray)
     End Sub
     'Z
+    Sub New(zinmm As Int32)
+        _ZinMM = zinmm
+        _ZinUnits = ZinUnits
+    End Sub
     Sub New(zinmm As Int32, zinunits As Int32)
         _ZinMM = zinmm
         _ZinUnits = zinunits

@@ -63,9 +63,15 @@ Public Class Form_Main
 
 
 
-    'Private _cts As New CancellationTokenSource '#### Für Tasks zu beennden
     Private _MyPipelineAktiv As Boolean
     Private _trys As Int32 = 0
+
+    'Faktoren & Offsets
+    Private Refe_Faktor_X As Double
+    Private Refe_Faktor_Y As Double
+    Private Refe_Faktor_Z As Double
+    Private Refe_Offset_X As Double
+    Private Refe_Offset_Y As Double
 
     Private _DepthImgTaken As Boolean = False
     Private _DepthCImgTaken As Boolean = False
@@ -140,10 +146,10 @@ Public Class Form_Main
         _TcpVariablen.AddVariable("x")
         _TcpVariablen.AddVariable("y")
         _TcpVariablen.AddVariable("z")
-        _TcpVariablen.AddVariable("h")
-        _TcpVariablen.AddVariable("b")
-        _TcpVariablen.AddVariable("t")
-        _TcpVariablen.AddVariable("a")
+        _TcpVariablen.AddVariable("greif")
+        '_TcpVariablen.AddVariable("b")
+        '_TcpVariablen.AddVariable("t")
+        _TcpVariablen.AddVariable("winkel")
         _TcpVariablen.AddVariable("pic")
         _TcpVariablen.AddVariable("rdy")
         _refreshDataGridView()
@@ -173,8 +179,16 @@ Public Class Form_Main
         'TCP
         My.Settings.TCP_Host = tb_TCP_HOST.Text
         My.Settings.TCP_Port = CInt(num_TCP_Port.Value)
-        My.Settings.Save()
 
+        'Referenzierung
+        My.Settings.Rever_FaktorX = Refe_Faktor_X
+        My.Settings.Rever_FaktorY = Refe_Faktor_Y
+        My.Settings.Rever_OffsetX = Refe_Offset_X
+        My.Settings.Rever_OffsetY = Refe_Offset_Y
+        My.Settings.Rever_FaktorZ = Refe_Faktor_Z
+
+
+        My.Settings.Save()
     End Sub
 
     '-----------------------------------------------------------------------------------------------------------------------
@@ -418,6 +432,56 @@ Public Class Form_Main
         _ClearList(_MyRefXY_List, lb_RefXY_Values)
     End Sub
 
+    Private Sub btn_RefXY_Calc_Click(sender As Object, e As EventArgs) Handles btn_RefXY_Calc.Click
+
+        If Not Referenzierung.RefCalcXY(_MyRefXY_List, Refe_Faktor_X, Refe_Offset_X, Refe_Faktor_Y, Refe_Offset_Y) Then
+            lb_Info.Items.Insert(0, "FEHLER :Fehker bei der Automatischen Referenzierung")
+        End If
+        num_RefXY_FaktX.Value = CDec(Refe_Faktor_X)
+        num_RefXY_FaktY.Value = CDec(Refe_Faktor_Y)
+        num_RefZ_FaktZ.Value = CDec(Refe_Faktor_Z)
+        num_RefXY_OffsX.Value = CDec(Refe_Offset_X)
+        num_RefXY_OffsY.Value = CDec(Refe_Offset_Y)
+    End Sub
+
+    Private Sub btn_RefZ_Add_Click(sender As Object, e As EventArgs) Handles btn_RefZ_Add.Click
+        If num_RefZ_OZ.Value > 0 Then
+            Dim tmp_Refobj As New MyRefObjekt(CInt(num_RefZ_OZ.Value))
+            _MyRefZ_List.Add(tmp_Refobj)
+            _RefreshListbox(lb_RefZ_Values, _MyRefZ_List)
+            lbl_RefZ_RefCount.Text = _MyRefZ_List.Count.ToString()
+        End If
+    End Sub
+
+    Private Sub btn_RefZ_Clear_Click(sender As Object, e As EventArgs) Handles btn_RefZ_Clear.Click
+        _ClearList(_MyRefZ_List, lb_RefZ_Values)
+        lbl_RefZ_RefCount.Text = _MyRefZ_List.Count.ToString()
+    End Sub
+
+    Private Sub btn_RefZ_Calc_Click(sender As Object, e As EventArgs) Handles btn_RefZ_Calc.Click
+        If _MyObjekte.Count <= 0 Then
+            ImgageAnalyse()
+        End If
+        Referenzierung.RefCalcZ(_MyObjekte, _MyRefZ_List, Refe_Faktor_Z)
+        num_RefZ_FaktZ.Value = CDec(Refe_Faktor_Z)
+    End Sub
+
+    Private Sub num_RefXY_FaktX_ValueChanged(sender As Object, e As EventArgs) Handles num_RefXY_FaktX.ValueChanged
+        Refe_Faktor_X = num_RefXY_FaktX.Value
+    End Sub
+    Private Sub num_RefXY_FaktY_ValueChanged(sender As Object, e As EventArgs) Handles num_RefXY_FaktY.ValueChanged
+        Refe_Faktor_Y = num_RefXY_FaktY.Value
+    End Sub
+    Private Sub num_RefXY_OffsX_ValueChanged(sender As Object, e As EventArgs) Handles num_RefXY_OffsX.ValueChanged
+        Refe_Offset_X = num_RefXY_OffsX.Value
+    End Sub
+    Private Sub num_RefXY_OffsY_ValueChanged(sender As Object, e As EventArgs) Handles num_RefXY_OffsY.ValueChanged
+        Refe_Offset_Y = num_RefXY_OffsY.Value
+    End Sub
+    Private Sub num_RefZ_FaktZ_ValueChanged(sender As Object, e As EventArgs) Handles num_RefZ_FaktZ.ValueChanged
+        Refe_Faktor_Z = num_RefZ_FaktZ.Value
+    End Sub
+
     'Test
     Private Sub btn_TestVerschieben_Click(sender As Object, e As EventArgs) Handles btn_TestVerschieben.Click
         Dim test As New Mat
@@ -486,6 +550,17 @@ Public Class Form_Main
         'CvInvoke.Imshow("t", testmato)
     End Sub
 
+    'Listboxen
+    Private Sub LB_obj_SelectedIndexChanged(sender As Object, e As EventArgs) Handles LB_obj.SelectedIndexChanged
+        If LB_obj.SelectedIndex >= 0 And LB_obj.SelectedIndex <= _MyObjekte.Count Then
+            Dim obj As MyObjektV2 = _MyObjekte(LB_obj.SelectedIndex)
+            Dim p As Point = obj.GetZentrumPoint()
+            num_RefXY_KX.Value = p.X
+            num_RefXY_KY.Value = p.Y
+            num_RefZ_OZ.Value = CInt(obj.GetDepthValAvg())
+        End If
+    End Sub
+
     '-----------------------------------------------------------------------------------------------------------------------
     'Einstelungen
     '-----------------------------------------------------------------------------------------------------------------------
@@ -508,12 +583,48 @@ Public Class Form_Main
         'Auswertung
         num_ThreshTief.Value = My.Settings.Ausw_TiefsteReg
         num_ThreshHoch.Value = My.Settings.Ausw_HöchsteReg
+        If My.Settings.Ausw_MindestObjH < 5 Then
+            My.Settings.Ausw_MindestObjH = 5
+        End If
+        If My.Settings.Ausw_MindestObjB < 5 Then
+            My.Settings.Ausw_MindestObjB = 5
+        End If
+        If My.Settings.Ausw_MindestObjT < 5 Then
+            My.Settings.Ausw_MindestObjT = 5
+        End If
         num_WTS_MinH.Value = My.Settings.Ausw_MindestObjH
         num_WTS_MinB.Value = My.Settings.Ausw_MindestObjB
         num_WTS_MinT.Value = My.Settings.Ausw_MindestObjT
         'TCP
         tb_TCP_HOST.Text = My.Settings.TCP_Host
         num_TCP_Port.Value = My.Settings.TCP_Port
+        'Referenzierung
+        Refe_Faktor_X = My.Settings.Rever_FaktorX
+        Refe_Faktor_Y = My.Settings.Rever_FaktorY
+        Refe_Offset_X = My.Settings.Rever_OffsetX
+        Refe_Offset_Y = My.Settings.Rever_OffsetY
+        Refe_Faktor_Z = My.Settings.Rever_FaktorZ
+        If Refe_Faktor_X > 9999 Or Refe_Faktor_X < -9999 Or [Double].IsNaN(Refe_Faktor_X) Then
+            Refe_Faktor_X = 0
+        End If
+        If Refe_Faktor_Y > 9999 Or Refe_Faktor_Y < -9999 Or [Double].IsNaN(Refe_Faktor_Y) Then
+            Refe_Faktor_Y = 0
+        End If
+        If Refe_Faktor_Z > 9999 Or Refe_Faktor_Z < -9999 Or [Double].IsNaN(Refe_Faktor_Z) Then
+            Refe_Faktor_Z = 0
+        End If
+        If Refe_Offset_X > 9999 Or Refe_Offset_X < -9999 Or [Double].IsNaN(Refe_Offset_X) Then
+            Refe_Offset_X = 0
+        End If
+        If Refe_Offset_Y > 9999 Or Refe_Offset_Y < -9999 Or [Double].IsNaN(Refe_Offset_Y) Then
+            Refe_Offset_Y = 0
+        End If
+        num_RefXY_FaktX.Value = CDec(Refe_Faktor_X)
+        num_RefXY_FaktY.Value = CDec(Refe_Faktor_Y)
+        num_RefZ_FaktZ.Value = CDec(Refe_Faktor_Z)
+        num_RefXY_OffsX.Value = CDec(Refe_Offset_X)
+        num_RefXY_OffsY.Value = CDec(Refe_Offset_Y)
+
     End Sub
 
     '-----------------------------------------------------------------------------------------------------------------------
@@ -797,10 +908,10 @@ Public Class Form_Main
     '-----------------------------------------------------------------------------------------------------------------------
 
     Private Function PixToMil(pixel As Int32) As Int32
-        Return CInt(Math.Round(pixel / ((num_pixmmB_faktor.Value + num_pixmmH_faktor.Value) / 2)))
+        Return CInt(Math.Round(pixel * Math.Abs(Refe_Faktor_X)))
     End Function
     Private Function MilToPix(milimeter As Int32) As Int32
-        Return CInt(Math.Round(milimeter * ((num_pixmmB_faktor.Value + num_pixmmH_faktor.Value) / 2)))
+        Return CInt(Math.Round(milimeter / Math.Abs(Refe_Faktor_X)))
     End Function
 
     Private Function TakePicture(ByRef color As Mat, ByRef depth As Mat, ByRef depthc As Mat) As Boolean
@@ -1200,7 +1311,7 @@ Public Class Form_Main
         End If
 
         '4. Distanc Funktion & normalize
-        If Not WM_DistanceDetection(tmp_Binaer, tmp_DistObj, tmp_DistBack, cThreshhold2, cThreshhold3) Then
+        If Not WM_DistanceDetection(tmp_Binaer, tmp_DistObj, tmp_DistBack, cThreshhold2, cThreshhold3, cb_DistFunc_Show.Checked, cb_DistFunc_UseInv.Checked) Then
             lb_Info.Items.Insert(0, "Fehler bei: WM_DistanceDetection")
             Return False
         End If
@@ -1210,7 +1321,7 @@ Public Class Form_Main
         ib_Dist02.Image = Display2.Clone
 
         '5. Objekte bezeichnen
-        If Not WM_MarkObjects(tmp_DistObj, tmp_DistBack, tmp_Maske, Konturen) Then
+        If Not WM_MarkObjects(tmp_DistObj, tmp_DistBack, tmp_Maske, Konturen, cb_DistFunc_UseInv.Checked, CInt(num_DidzFunc_Backround.Value)) Then
             lb_Info.Items.Insert(0, "Fehler bei: WM_MarkObjects")
             Return False
         End If
@@ -1248,7 +1359,7 @@ Public Class Form_Main
     Private Function Search() As Boolean
         '1. Objektprüfen und Holen
         Dim AktSearch As MySearchObj
-                _ClearList(_MyMatchObjekts, lb_Found)
+        _ClearList(_MyMatchObjekts, lb_Found)
 
         Try
             AktSearch = _MySearchObjekte.ElementAt(CInt(num_SearchObj.Value - 1))
@@ -1280,7 +1391,7 @@ Public Class Form_Main
         For Each obj As MyObjektV2 In _MyObjekte
             'If obj.Passend(h, b, t, CInt(Num_SearchToleranz.Value)) Then
             Dim Ausrichtung As String
-            Dim Fläche_HB, Fläche_BT, Fläche_HT, Abweichung, Toleranz As Double
+            Dim Fläche_HB, Fläche_BT, Fläche_HT, Abweichung As Double
             Fläche_HB = h * b
             Fläche_BT = b * t
             Fläche_HT = h * t
@@ -1321,7 +1432,7 @@ Public Class Form_Main
         _RefreshListbox(lb_Found, _MyMatchObjekts)
 
         lbl_FoundObj.Text = _MyMatchObjekts(0).Objekt.ToString
-        Dim mm As Int32 = CInt(_MyMatchObjekts(0).Objekt.Dist_Max() / num_pixmmH_faktor.Value)
+        Dim mm As Int32 = CInt(_MyMatchObjekts(0).Objekt.Dist_Max() * Math.Abs(Refe_Faktor_X))
         lbl_FoundWidth.Text = $"{_MyMatchObjekts(0).Objekt.Dist_Max(),4} pixel = {mm,4} mm"
         lbl_FoundZent.Text = $"{_MyMatchObjekts(0).Objekt.GetZentrumPoint.ToString()}"
         lbl_Found_Rot.Text = $"{_MyMatchObjekts(0).Objekt.GetWinkel2.ToString()}"
@@ -1349,65 +1460,11 @@ Public Class Form_Main
         ib_Found.Image = ZeichenMat3.Clone
 
         '7. werte senden
-        Dim Mobj As MyMatchObj = _MyMatchObjekts(0)
-        Dim Point As MyPoint = Mobj.Objekt.GetZentrumMyPoint(_MatDepth)
-        Dim Winkel As Double = Mobj.Objekt.GetWinkel2()
-        Dim depth As Double = Mobj.Objekt.GetDepthVal
-        'Pos
-        If _TcpVariablen.Exists("x") Then
-            _TcpVariablen.SetVariable("x", PixToMil(Point.X) * num_RoboOffsetX.Value)
-        Else
-            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""x"" existiert nicht")
-        End If
-        If _TcpVariablen.Exists("y") Then
-            _TcpVariablen.SetVariable("y", PixToMil(Point.Y) + num_RoboOffsety.Value)
-        Else
-            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""y"" existiert nicht")
-        End If
-        If _TcpVariablen.Exists("z") Then
-            _TcpVariablen.SetVariable("z", depth)
-        Else
-            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""z"" existiert nicht")
-        End If
-        'Höhe Tiefe
-        If _TcpVariablen.Exists("h") Then
-            If Mobj.Ausrichtung = "HB" Then
-                _TcpVariablen.SetVariable("h", AktSearch.Tiefe)
-            Else
-                If Mobj.Ausrichtung = "HT" Then
-                    _TcpVariablen.SetVariable("h", AktSearch.Beite)
-                Else
-                    _TcpVariablen.SetVariable("h", AktSearch.Höhe)
-                End If
-            End If
-        Else
-            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""h"" existiert nicht")
-        End If
-
-        If _TcpVariablen.Exists("b") Then
-            If Mobj.Ausrichtung = "HB" Or Mobj.Ausrichtung = "BT" Then
-                _TcpVariablen.SetVariable("b", AktSearch.Beite)
-            Else
-                _TcpVariablen.SetVariable("b", AktSearch.Höhe)
-            End If
-        Else
-            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""b"" existiert nicht")
-        End If
-        If _TcpVariablen.Exists("t") Then
-            If Mobj.Ausrichtung = "BT" Or Mobj.Ausrichtung = "HT" Then
-                _TcpVariablen.SetVariable("t", AktSearch.Tiefe)
-            Else
-                _TcpVariablen.SetVariable("t", AktSearch.Höhe)
-
-            End If
-        Else
-            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""t"" existiert nicht")
-        End If
-        'Winkel
-        If _TcpVariablen.Exists("a") Then
-            _TcpVariablen.SetVariable("a", Winkel)
-        Else
-            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""a"" existiert nicht")
+        'If Not SM_SendValues(_MyMatchObjekts(0), AktSearch) Then
+        '    lb_Info.Items.Insert(0, $"FEHLER: Fehler bei der Komunikation")
+        'End If
+        If Not SM_SendValuesNew(_MyMatchObjekts(0)) Then
+            lb_Info.Items.Insert(0, $"FEHLER: Fehler bei der Komunikation")
         End If
         Return True
     End Function
@@ -1423,7 +1480,6 @@ Public Class Form_Main
     '----------------------------------------------------------------------------------------------------------------------------
     'Watershed Module
     '----------------------------------------------------------------------------------------------------------------------------
-
     Private Function WM_ImageOfInterest(ByRef resurce As Mat, ByRef result As Mat, Optional rev As Mat = Nothing, Optional dif As Boolean = False, Optional mask As Boolean = False, Optional depth As Boolean = False, Optional gaus As Boolean = False, Optional offset As Int32 = 0) As Boolean
         Dim Ergebnis As Boolean = True
         Dim tmp_Mat As New Mat
@@ -1450,6 +1506,9 @@ Public Class Form_Main
         If gaus And Ergebnis Then
             CvInvoke.GaussianBlur(tmp_Mat, tmp_Mat, New Drawing.Size(3, 3), 2)
         End If
+        If cb_debug.Checked Then
+            Dim v1 As New ImageViewer : v1.Image = tmp_Mat.Clone : v1.Text = "IOI" : v1.Show()
+        End If
         result = tmp_Mat.Clone
         Return Ergebnis
     End Function
@@ -1470,6 +1529,9 @@ Public Class Form_Main
 
         'zurückwandeln
         Result32F.ConvertTo(tmpResul, resurce.Depth)
+        If cb_debug.Checked Then
+            Dim v1 As New ImageViewer : v1.Image = tmpResul.Clone : v1.Text = "Laplace" : v1.Show()
+        End If
         result = tmpResul.Clone
         Return True
     End Function
@@ -1485,21 +1547,35 @@ Public Class Form_Main
         tmp_Mat.ConvertTo(GrayImg, DepthType.Cv8U)
 
         CvInvoke.Threshold(GrayImg, GrayImg, threshholdvalue, 255, ThresholdType.Binary Or ThresholdType.Otsu) 'benötigt cv8u
+        If cb_debug.Checked Then
+            Dim v1 As New ImageViewer : v1.Image = GrayImg.Clone : v1.Text = "to Bin" : v1.Show()
+        End If
         result = GrayImg.Clone
         Return True
     End Function
 
-    Private Function WM_DistanceDetection(ByRef resurce As Mat, ByRef resultobjekts As Mat, ByRef resultbackground As Mat, Optional threshholdvalueObj As Double = 0.1, Optional threshholdvalueBack As Double = 0.3) As Boolean
+    Private Function WM_DistanceDetection(ByRef resurce As Mat, ByRef resultobjekts As Mat, ByRef resultbackground As Mat, Optional threshholdvalueObj As Double = 0.1, Optional threshholdvalueBack As Double = 0.3, Optional cbShow As Boolean = False, Optional cbUseInv As Boolean = False) As Boolean
         Dim tmp_Mat As New Mat
         tmp_Mat = resurce.Clone
         Dim tmp_MatInv As New Mat
         CvInvoke.BitwiseNot(tmp_Mat, tmp_MatInv)
         'Distanc Funktion & normalize for objects
         CvInvoke.DistanceTransform(tmp_Mat, tmp_Mat, Nothing, DistType.L2, 3) 'Mask size muss 0 || 3 ||5 sein  'CvInvoke.DistanceTransform(BinaerImg, DistImg, Nothing, DistType.L2, 3)
+        If cbShow Then
+            Dim v1 As New ImageViewer
+            v1.Image = tmp_Mat.Clone : v1.Text = "Dist Obj" : v1.Show()
+        End If
         CvInvoke.Normalize(tmp_Mat, tmp_Mat, 0, 1.0, NormType.MinMax)
+
         'Distanc Funktion & normalize for background
-        CvInvoke.DistanceTransform(tmp_MatInv, tmp_MatInv, Nothing, DistType.L2, 3) 'Mask size muss 0 || 3 ||5 sein  'CvInvoke.DistanceTransform(BinaerImg, DistImg, Nothing, DistType.L2, 3)
-        CvInvoke.Normalize(tmp_MatInv, tmp_MatInv, 0, 1.0, NormType.MinMax)
+        If cbUseInv Then
+            CvInvoke.DistanceTransform(tmp_MatInv, tmp_MatInv, Nothing, DistType.L2, 3) 'Mask size muss 0 || 3 ||5 sein  'CvInvoke.DistanceTransform(BinaerImg, DistImg, Nothing, DistType.L2, 3)
+            If cbShow Then
+                Dim v1 As New ImageViewer
+                v1.Image = tmp_Mat.Clone : v1.Text = "Dist Back" : v1.Show()
+            End If
+            CvInvoke.Normalize(tmp_MatInv, tmp_MatInv, 0, 1.0, NormType.MinMax)
+        End If
 
 
         Dim kernel1 = Mat.Ones(3, 3, DepthType.Cv8U, 1)
@@ -1508,15 +1584,17 @@ Public Class Form_Main
         CvInvoke.Dilate(tmp_Mat, tmp_Mat, kernel1, New Point(-1, -1), 1, BorderType.Default, New MCvScalar(0))
         CvInvoke.Normalize(tmp_Mat, tmp_Mat, 0, 255, NormType.MinMax, DepthType.Cv8U)
         'Bild bereinigen (mit Treshold) und in CV8 wandeln background
-        CvInvoke.Threshold(tmp_MatInv, tmp_MatInv, threshholdvalueBack, 1.0, ThresholdType.Binary) '0.3
-        CvInvoke.Dilate(tmp_MatInv, tmp_MatInv, kernel1, New Point(-1, -1), 1, BorderType.Default, New MCvScalar(0))
-        CvInvoke.Normalize(tmp_MatInv, tmp_MatInv, 0, 255, NormType.MinMax, DepthType.Cv8U)
+        If cbUseInv Then
+            CvInvoke.Threshold(tmp_MatInv, tmp_MatInv, threshholdvalueBack, 1.0, ThresholdType.Binary) '0.3
+            CvInvoke.Dilate(tmp_MatInv, tmp_MatInv, kernel1, New Point(-1, -1), 1, BorderType.Default, New MCvScalar(0))
+            CvInvoke.Normalize(tmp_MatInv, tmp_MatInv, 0, 255, NormType.MinMax, DepthType.Cv8U)
+        End If
         resultobjekts = tmp_Mat.Clone
         resultbackground = tmp_MatInv.Clone
         Return True
     End Function
 
-    Private Function WM_MarkObjects(ByRef resurceObjects As Mat, ByRef resurceBackground As Mat, ByRef result As Mat, ByRef ObjKonturen As VectorOfVectorOfPoint) As Boolean
+    Private Function WM_MarkObjects(ByRef resurceObjects As Mat, ByRef resurceBackground As Mat, ByRef result As Mat, ByRef ObjKonturen As VectorOfVectorOfPoint, Optional cbUseInv As Boolean = False, Optional numbackColor As Int32 = -1) As Boolean
         Dim ContoursBack As New VectorOfVectorOfPoint
         Dim ContoursObj As New VectorOfVectorOfPoint
         Dim Markers As New Mat(resurceObjects.Size, DepthType.Cv32S, 1) ' Zur Anzeige farbiger Bilder
@@ -1527,12 +1605,14 @@ Public Class Form_Main
             Return False
         End If
         'Background bezeichnen
-        CvInvoke.FindContours(resurceBackground, ContoursBack, Nothing, RetrType.List, ChainApproxMethod.ChainApproxSimple)
-        lb_Info.Items.Insert(0, $"Es wurden {ContoursBack.Size} Hintergrundkontuen Gefunden")
-        For i = 0 To ContoursBack.Size - 1
-            Dim Colo = New MCvScalar(255) ' -1 ist der Hintergrund
-            CvInvoke.DrawContours(Markers, ContoursBack, i, Colo, -1) ' -1 damit die contour ausgefüllt wird
-        Next
+        If cbUseInv Then
+            CvInvoke.FindContours(resurceBackground, ContoursBack, Nothing, RetrType.List, ChainApproxMethod.ChainApproxSimple)
+            lb_Info.Items.Insert(0, $"Es wurden {ContoursBack.Size} Hintergrundkontuen Gefunden")
+            For i = 0 To ContoursBack.Size - 1
+                Dim Colo = New MCvScalar(255) ' -1 ist der Hintergrund
+                CvInvoke.DrawContours(Markers, ContoursBack, i, Colo, numbackColor) ' -1 damit die contour ausgefüllt wird
+            Next
+        End If
         'Objekte bezeichnen
         CvInvoke.FindContours(resurceObjects, ContoursObj, Nothing, RetrType.List, ChainApproxMethod.ChainApproxSimple)
         lb_Info.Items.Insert(0, $"Es wurden {ContoursObj.Size} Objektkontuen Gefunden")
@@ -1540,11 +1620,11 @@ Public Class Form_Main
             Dim Colo = New MCvScalar((i + 1) * 10) ' An 1 nummerieren. 0 ist ja der Hintergrund
             CvInvoke.DrawContours(Markers, ContoursObj, i, Colo, -1) ' -1 damit die contour ausgefüllt wird
         Next
-        If ContoursBack.Size <= 0 Or ContoursObj.Size <= 0 Then
-            lb_Info.Items.Insert(0, $"MarkObjects: Fehler es wurden nur {ContoursObj.Size} Objekt- und {ContoursBack.Size} Hintergrundkontuen Gefunden")
-            result = Markers.Clone
-            Return False
-        End If
+        'If ContoursBack.Size <= 0 Or ContoursObj.Size <= 0 Then
+        '    lb_Info.Items.Insert(0, $"MarkObjects: Fehler es wurden nur {ContoursObj.Size} Objekt- und {ContoursBack.Size} Hintergrundkontuen Gefunden")
+        '    result = Markers.Clone
+        '    Return False
+        'End If
         ObjKonturen = ContoursObj
         result = Markers.Clone
         Return True
@@ -1614,26 +1694,21 @@ Public Class Form_Main
         'Filtern
         If cb_Watershed_Filter.Checked Then
             Dim MinFlächeMM, MinFlächePix As Int32
-            'Kürzeste Kanten finden und Kleinste Fläche berechnen
-            If num_WTS_MinB.Value > num_WTS_MinH.Value Then
-                If num_WTS_MinB.Value > num_WTS_MinT.Value Then
-                    MinFlächeMM = CInt(num_WTS_MinH.Value * num_WTS_MinT.Value)
-                Else
-                    MinFlächeMM = CInt(num_WTS_MinH.Value * num_WTS_MinB.Value)
-                End If
-            Else
-                If num_WTS_MinH.Value > num_WTS_MinT.Value Then
-                    MinFlächeMM = CInt(num_WTS_MinB.Value * num_WTS_MinT.Value)
-                Else
-                    MinFlächeMM = CInt(num_WTS_MinB.Value * num_WTS_MinH.Value)
-                End If
+
+            MinFlächeMM = CInt(num_WTS_MinB.Value * num_WTS_MinH.Value)
+            If MinFlächeMM > CInt(num_WTS_MinB.Value * num_WTS_MinT.Value) Then
+                MinFlächeMM = CInt(num_WTS_MinB.Value * num_WTS_MinT.Value)
+            End If
+            If MinFlächeMM > CInt(num_WTS_MinH.Value * num_WTS_MinT.Value) Then
+                MinFlächeMM = CInt(num_WTS_MinH.Value * num_WTS_MinT.Value)
             End If
             MinFlächePix = MilToPix(MinFlächeMM)
             lb_Info.Items.Insert(0, $"Min Flävhe: {MinFlächeMM}mm² bzw. {MinFlächePix}pixel ")
             Dim entf As Int32 = 0
             Dim zulöschen As New List(Of MyObjektV2)
             For Each obj As MyObjektV2 In _MyObjekte
-                If obj.GetFläche < MinFlächePix Then
+                Dim tmpf As Int32 = obj.GetFläche
+                If tmpf < MinFlächePix Then
                     zulöschen.Add(obj)
                     entf += 1
                 End If
@@ -1645,9 +1720,9 @@ Public Class Form_Main
             lb_Info.Items.Insert(0, $"Es gibt {_MyObjekte.Count,3} interesante Objekte")
         End If
 
-        'Eintagen
-        'Objekte in Liste Eintragen
-        _RefreshListbox(LB_obj, _MyObjekte)
+            'Eintagen
+            'Objekte in Liste Eintragen
+            _RefreshListbox(LB_obj, _MyObjekte)
         'Objekte Zeichnen
         For Each ob2 As MyObjektV2 In _MyObjekte
             'Zentrum
@@ -1715,6 +1790,133 @@ Public Class Form_Main
         Return True
     End Function
 
+    '----------------------------------------------------------------------------------------------------------------------------
+    'Search Module
+    '----------------------------------------------------------------------------------------------------------------------------
+    Private Function SM_SendValues(obj As MyMatchObj, atkSearchObj As MySearchObj) As Boolean
+        Dim Point As MyPoint = obj.Objekt.GetZentrumMyPoint()
+        Dim Winkel As Double = obj.Objekt.GetWinkel2()
+        Dim depth As Double = obj.Objekt.GetDepthVal
+        Dim Err As Boolean = False
+        'Pos
+        If _TcpVariablen.Exists("x") Then
+            _TcpVariablen.SetVariable("x", Point.Y * num_RoboOffsety.Value)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""x"" existiert nicht")
+            Err = True
+        End If
+        If _TcpVariablen.Exists("y") Then
+            _TcpVariablen.SetVariable("y", Point.X + num_RoboOffsetX.Value)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""y"" existiert nicht")
+            Err = True
+        End If
+        If _TcpVariablen.Exists("z") Then
+            _TcpVariablen.SetVariable("z", depth)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""z"" existiert nicht")
+            Err = True
+        End If
+        'Höhe Tiefe
+        If _TcpVariablen.Exists("greif") Then
+            If obj.Ausrichtung = "HB" Then
+                _TcpVariablen.SetVariable("greif", atkSearchObj.Höhe)
+            Else
+                If obj.Ausrichtung = "HT" Then
+                    _TcpVariablen.SetVariable("greif", atkSearchObj.Tiefe)
+                Else
+                    _TcpVariablen.SetVariable("greif", atkSearchObj.Tiefe)
+                End If
+            End If
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""greif"" existiert nicht")
+            Err = True
+        End If
+
+        'If _TcpVariablen.Exists("b") Then
+        '    If obj.Ausrichtung = "HB" Or obj.Ausrichtung = "BT" Then
+        '        _TcpVariablen.SetVariable("b", atkSearchObj.Beite)
+        '    Else
+        '        _TcpVariablen.SetVariable("b", atkSearchObj.Höhe)
+        '    End If
+        'Else
+        '    lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""b"" existiert nicht")
+        '    Err = True
+        'End If
+        'If _TcpVariablen.Exists("t") Then
+        '    If obj.Ausrichtung = "BT" Or obj.Ausrichtung = "HT" Then
+        '        _TcpVariablen.SetVariable("t", atkSearchObj.Tiefe)
+        '    Else
+        '        _TcpVariablen.SetVariable("t", atkSearchObj.Höhe)
+
+        '    End If
+        'Else
+        '    lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""t"" existiert nicht")
+        '    Err = True
+        'End If
+        'Winkel
+        If _TcpVariablen.Exists("winkel") Then
+            _TcpVariablen.SetVariable("winkel", Winkel)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""winkel"" existiert nicht")
+            Err = True
+        End If
+        Return Not Err
+    End Function
+    Private Function SM_SendValuesNew(obj As MyMatchObj) As Boolean
+        Dim Point As MyPoint = obj.Objekt.GetZentrumMyPoint()
+        Dim Winkel As Double = obj.Objekt.GetWinkel2()
+        Dim depth As Double = obj.Objekt.GetDepthVal
+        Dim Err As Boolean = False
+        'Pos
+        If _TcpVariablen.Exists("x") Then
+            _TcpVariablen.SetVariable("x", Point.Y * num_RefXY_FaktY.Value + num_RefXY_OffsY.Value)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""x"" existiert nicht")
+            Err = True
+        End If
+        If _TcpVariablen.Exists("y") Then
+            _TcpVariablen.SetVariable("y", Point.X * num_RefXY_FaktX.Value + num_RefXY_OffsX.Value)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""y"" existiert nicht")
+            Err = True
+        End If
+        If _TcpVariablen.Exists("z") Then
+            _TcpVariablen.SetVariable("z", depth * num_RefZ_FaktZ.Value)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""z"" existiert nicht")
+            Err = True
+        End If
+        'Höhe Tiefe
+        If _TcpVariablen.Exists("greif") Then
+            _TcpVariablen.SetVariable("greif", obj.Objekt.GetHöhe)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""greif"" existiert nicht")
+            Err = True
+        End If
+
+        'If _TcpVariablen.Exists("b") Then
+        '    _TcpVariablen.SetVariable("b", obj.Objekt.GetBreite)
+        'Else
+        '    lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""b"" existiert nicht")
+        '    Err = True
+        'End If
+        'If _TcpVariablen.Exists("t") Then
+
+        '    _TcpVariablen.SetVariable("t", obj.Objekt.GetDepthVal())
+        'Else
+        '    lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""t"" existiert nicht")
+        '    Err = True
+        'End If
+        'Winkel
+        If _TcpVariablen.Exists("winkel") Then
+            _TcpVariablen.SetVariable("winkel", Winkel)
+        Else
+            lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""winkel"" existiert nicht")
+            Err = True
+        End If
+        Return Not Err
+    End Function
 
     '----------------------------------------------------------------------------------------------------------------------------
     'LÖschen Tests
@@ -1859,5 +2061,17 @@ Public Class Form_Main
         TC2_Bilder.SelectedTab = P2_Result
     End Sub
 
-
+    Private Sub btn_Info_Click(sender As Object, e As EventArgs) Handles btn_Info.Click
+        Dim obj As MyObjektV2 = _MyObjekte(LB_obj.SelectedIndex)
+        Dim Höhemm As Int32 = PixToMil(CInt(obj.GetHöhe))
+        Dim breitemm As Int32 = PixToMil(CInt(obj.GetBreite))
+        Dim Flächemm As Int32 = PixToMil(CInt(obj.GetFläche))
+        lb_Info.Items.Insert(0, "--------------------------------------------")
+        lb_Info.Items.Insert(0, $"TifenwerteGlobal:{obj.GetDepthStr}")
+        lb_Info.Items.Insert(0, $"TifenwerteZenterum:{obj.GetDepthVal}")
+        lb_Info.Items.Insert(0, $"Zentum My[{obj.GetZentrumMyPoint.ToString}], Float{obj.GetZentrumPointF},Int{obj.GetZentrumPoint}")
+        lb_Info.Items.Insert(0, $"Zentum Höhe in mm:{Höhemm} | Breite in mm:{breitemm} | Fläche in mm:{Flächemm}")
+        lb_Info.Items.Insert(0, $"TifenwerteGlobal:{obj.ToString}")
+        lb_Info.Items.Insert(0, "Obj. Info------------------------------------")
+    End Sub
 End Class 'Form1

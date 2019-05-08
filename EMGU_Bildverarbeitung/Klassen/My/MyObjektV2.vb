@@ -257,6 +257,18 @@ Public Class MyObjektV2
         End If
     End Function
 
+    Public Function PassendFläche2(HBFläche_pix As Double, BTFläche_pix As Double, HTFläche_pix As Double, Optional toleranz_prozent As Int32 = 0) As Boolean
+        Dim HBF_dif, BTF_dif, HTF_dif As Double
+        If toleranz_prozent > 0 Then
+            HBF_dif = (HBFläche_pix / 100) * toleranz_prozent
+            BTF_dif = (BTFläche_pix / 100) * toleranz_prozent
+            HTF_dif = (HTFläche_pix / 100) * toleranz_prozent
+            Return VergleichF(HBFläche_pix - HBF_dif, HBFläche_pix + HBF_dif, BTFläche_pix - BTF_dif, BTFläche_pix + BTF_dif, HTFläche_pix - HTF_dif, HTFläche_pix + HTF_dif)
+        Else
+            Return VergleichF(HBFläche_pix, BTFläche_pix, HTFläche_pix)
+        End If
+    End Function
+
     'Maase
     Public Function GetHöhe() As Double
         'Prüfen ob _MinAreaRec Angelegt
@@ -287,12 +299,12 @@ Public Class MyObjektV2
         End If
         Return CInt(Math.Round(_MinAreaRec.Size.Height * _MinAreaRec.Size.Width))
     End Function
-    Public Function GetZentrumMyPoint(depthMat As Mat) As MyPoint
+    Public Function GetZentrumMyPoint() As MyPoint
         'Prüfen ob _MinAreaRec Angelegt
         If _MinAreaRec.Size.IsEmpty Then
             Analyse()
         End If
-        Dim Z As Int32 = UmwandlungClass.GetAreaValue_Int16(depthMat, CInt(Math.Round(_MinAreaRec.Center.X)), CInt(Math.Round(_MinAreaRec.Center.Y)), UmwandlungClass.AreaTyp.Area_3X3, UmwandlungClass.ValueTyp.Midel)
+        Dim Z As Int32 = GetDepthVal()
         Return New MyPoint(_MinAreaRec.Center, Z)
     End Function
     Public Function GetZentrumPoint() As Point

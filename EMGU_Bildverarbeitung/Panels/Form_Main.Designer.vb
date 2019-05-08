@@ -190,7 +190,28 @@ Partial Class Form_Main
         Me.Label27 = New System.Windows.Forms.Label()
         Me.P6_Reverenzieren = New System.Windows.Forms.TabPage()
         Me.GroupBox21 = New System.Windows.Forms.GroupBox()
+        Me.lbl_RefZ_RefCount = New System.Windows.Forms.Label()
+        Me.Label53 = New System.Windows.Forms.Label()
+        Me.btn_RefZ_Calc = New System.Windows.Forms.Button()
+        Me.Label52 = New System.Windows.Forms.Label()
+        Me.num_RefZ_FaktZ = New System.Windows.Forms.NumericUpDown()
+        Me.btn_RefZ_Clear = New System.Windows.Forms.Button()
+        Me.GroupBox25 = New System.Windows.Forms.GroupBox()
+        Me.btn_RefZ_Add = New System.Windows.Forms.Button()
+        Me.GroupBox27 = New System.Windows.Forms.GroupBox()
+        Me.Label57 = New System.Windows.Forms.Label()
+        Me.num_RefZ_OZ = New System.Windows.Forms.NumericUpDown()
+        Me.lb_RefZ_Values = New System.Windows.Forms.ListBox()
         Me.GroupBox20 = New System.Windows.Forms.GroupBox()
+        Me.btn_RefXY_Calc = New System.Windows.Forms.Button()
+        Me.Label51 = New System.Windows.Forms.Label()
+        Me.num_RefXY_OffsY = New System.Windows.Forms.NumericUpDown()
+        Me.Label50 = New System.Windows.Forms.Label()
+        Me.num_RefXY_OffsX = New System.Windows.Forms.NumericUpDown()
+        Me.Label49 = New System.Windows.Forms.Label()
+        Me.num_RefXY_FaktY = New System.Windows.Forms.NumericUpDown()
+        Me.Label48 = New System.Windows.Forms.Label()
+        Me.num_RefXY_FaktX = New System.Windows.Forms.NumericUpDown()
         Me.btn_RefXY_Clear = New System.Windows.Forms.Button()
         Me.lb_RefXY_Values = New System.Windows.Forms.ListBox()
         Me.GroupBox22 = New System.Windows.Forms.GroupBox()
@@ -224,6 +245,12 @@ Partial Class Form_Main
         Me.LB_obj = New System.Windows.Forms.ListBox()
         Me.P2_Found = New System.Windows.Forms.TabPage()
         Me.lb_Found = New System.Windows.Forms.ListBox()
+        Me.btn_Info = New System.Windows.Forms.Button()
+        Me.GroupBox26 = New System.Windows.Forms.GroupBox()
+        Me.cb_DistFunc_Show = New System.Windows.Forms.CheckBox()
+        Me.cb_DistFunc_UseInv = New System.Windows.Forms.CheckBox()
+        Me.num_DidzFunc_Backround = New System.Windows.Forms.NumericUpDown()
+        Me.Label54 = New System.Windows.Forms.Label()
         Me.GroupBox1.SuspendLayout()
         Me.TC2_Bilder.SuspendLayout()
         Me.P1_NewImg.SuspendLayout()
@@ -298,7 +325,16 @@ Partial Class Form_Main
         Me.GroupBox16.SuspendLayout()
         CType(Me.num_TCP_Port, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.P6_Reverenzieren.SuspendLayout()
+        Me.GroupBox21.SuspendLayout()
+        CType(Me.num_RefZ_FaktZ, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox25.SuspendLayout()
+        Me.GroupBox27.SuspendLayout()
+        CType(Me.num_RefZ_OZ, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox20.SuspendLayout()
+        CType(Me.num_RefXY_OffsY, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.num_RefXY_OffsX, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.num_RefXY_FaktY, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.num_RefXY_FaktX, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox22.SuspendLayout()
         Me.GroupBox24.SuspendLayout()
         CType(Me.num_RefXY_KY, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -311,6 +347,8 @@ Partial Class Form_Main
         Me.TC3_ObjLists.SuspendLayout()
         Me.P1_All.SuspendLayout()
         Me.P2_Found.SuspendLayout()
+        Me.GroupBox26.SuspendLayout()
+        CType(Me.num_DidzFunc_Backround, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'GroupBox1
@@ -1591,6 +1629,7 @@ Partial Class Form_Main
         '
         'P4_Auswertung
         '
+        Me.P4_Auswertung.Controls.Add(Me.GroupBox26)
         Me.P4_Auswertung.Controls.Add(Me.GroupBox11)
         Me.P4_Auswertung.Controls.Add(Me.GroupBox18)
         Me.P4_Auswertung.Controls.Add(Me.GroupBox5)
@@ -2051,6 +2090,14 @@ Partial Class Form_Main
         '
         'GroupBox21
         '
+        Me.GroupBox21.Controls.Add(Me.lbl_RefZ_RefCount)
+        Me.GroupBox21.Controls.Add(Me.Label53)
+        Me.GroupBox21.Controls.Add(Me.btn_RefZ_Calc)
+        Me.GroupBox21.Controls.Add(Me.Label52)
+        Me.GroupBox21.Controls.Add(Me.num_RefZ_FaktZ)
+        Me.GroupBox21.Controls.Add(Me.btn_RefZ_Clear)
+        Me.GroupBox21.Controls.Add(Me.GroupBox25)
+        Me.GroupBox21.Controls.Add(Me.lb_RefZ_Values)
         Me.GroupBox21.Dock = System.Windows.Forms.DockStyle.Right
         Me.GroupBox21.Location = New System.Drawing.Point(959, 0)
         Me.GroupBox21.Name = "GroupBox21"
@@ -2059,8 +2106,130 @@ Partial Class Form_Main
         Me.GroupBox21.TabStop = False
         Me.GroupBox21.Text = "Referentieren Z"
         '
+        'lbl_RefZ_RefCount
+        '
+        Me.lbl_RefZ_RefCount.AutoSize = True
+        Me.lbl_RefZ_RefCount.Location = New System.Drawing.Point(638, 21)
+        Me.lbl_RefZ_RefCount.Name = "lbl_RefZ_RefCount"
+        Me.lbl_RefZ_RefCount.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.lbl_RefZ_RefCount.Size = New System.Drawing.Size(13, 17)
+        Me.lbl_RefZ_RefCount.TabIndex = 22
+        Me.lbl_RefZ_RefCount.Text = "-"
+        '
+        'Label53
+        '
+        Me.Label53.AutoSize = True
+        Me.Label53.Location = New System.Drawing.Point(508, 21)
+        Me.Label53.Name = "Label53"
+        Me.Label53.Size = New System.Drawing.Size(133, 17)
+        Me.Label53.TabIndex = 21
+        Me.Label53.Text = "Anzahl Referenzen:"
+        '
+        'btn_RefZ_Calc
+        '
+        Me.btn_RefZ_Calc.Location = New System.Drawing.Point(511, 65)
+        Me.btn_RefZ_Calc.Name = "btn_RefZ_Calc"
+        Me.btn_RefZ_Calc.Size = New System.Drawing.Size(192, 27)
+        Me.btn_RefZ_Calc.TabIndex = 20
+        Me.btn_RefZ_Calc.Text = "Berechnen"
+        Me.btn_RefZ_Calc.UseVisualStyleBackColor = True
+        '
+        'Label52
+        '
+        Me.Label52.AutoSize = True
+        Me.Label52.Location = New System.Drawing.Point(511, 100)
+        Me.Label52.Name = "Label52"
+        Me.Label52.Size = New System.Drawing.Size(69, 17)
+        Me.Label52.TabIndex = 19
+        Me.Label52.Text = "Faktor_Z:"
+        '
+        'num_RefZ_FaktZ
+        '
+        Me.num_RefZ_FaktZ.DecimalPlaces = 2
+        Me.num_RefZ_FaktZ.Location = New System.Drawing.Point(583, 98)
+        Me.num_RefZ_FaktZ.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
+        Me.num_RefZ_FaktZ.Minimum = New Decimal(New Integer() {9999, 0, 0, -2147483648})
+        Me.num_RefZ_FaktZ.Name = "num_RefZ_FaktZ"
+        Me.num_RefZ_FaktZ.Size = New System.Drawing.Size(120, 22)
+        Me.num_RefZ_FaktZ.TabIndex = 18
+        '
+        'btn_RefZ_Clear
+        '
+        Me.btn_RefZ_Clear.Location = New System.Drawing.Point(189, 129)
+        Me.btn_RefZ_Clear.Name = "btn_RefZ_Clear"
+        Me.btn_RefZ_Clear.Size = New System.Drawing.Size(284, 27)
+        Me.btn_RefZ_Clear.TabIndex = 17
+        Me.btn_RefZ_Clear.Text = "Alle Löschen"
+        Me.btn_RefZ_Clear.UseVisualStyleBackColor = True
+        '
+        'GroupBox25
+        '
+        Me.GroupBox25.Controls.Add(Me.btn_RefZ_Add)
+        Me.GroupBox25.Controls.Add(Me.GroupBox27)
+        Me.GroupBox25.Location = New System.Drawing.Point(6, 21)
+        Me.GroupBox25.Name = "GroupBox25"
+        Me.GroupBox25.Size = New System.Drawing.Size(177, 132)
+        Me.GroupBox25.TabIndex = 6
+        Me.GroupBox25.TabStop = False
+        Me.GroupBox25.Text = "Ref Höhe Anlegen"
+        '
+        'btn_RefZ_Add
+        '
+        Me.btn_RefZ_Add.Location = New System.Drawing.Point(11, 79)
+        Me.btn_RefZ_Add.Name = "btn_RefZ_Add"
+        Me.btn_RefZ_Add.Size = New System.Drawing.Size(144, 39)
+        Me.btn_RefZ_Add.TabIndex = 5
+        Me.btn_RefZ_Add.Text = "Hinzufügen"
+        Me.btn_RefZ_Add.UseVisualStyleBackColor = True
+        '
+        'GroupBox27
+        '
+        Me.GroupBox27.Controls.Add(Me.Label57)
+        Me.GroupBox27.Controls.Add(Me.num_RefZ_OZ)
+        Me.GroupBox27.Location = New System.Drawing.Point(0, 21)
+        Me.GroupBox27.Name = "GroupBox27"
+        Me.GroupBox27.Size = New System.Drawing.Size(164, 46)
+        Me.GroupBox27.TabIndex = 0
+        Me.GroupBox27.TabStop = False
+        Me.GroupBox27.Text = "Objekt"
+        '
+        'Label57
+        '
+        Me.Label57.AutoSize = True
+        Me.Label57.Location = New System.Drawing.Point(8, 23)
+        Me.Label57.Name = "Label57"
+        Me.Label57.Size = New System.Drawing.Size(21, 17)
+        Me.Label57.TabIndex = 2
+        Me.Label57.Text = "Z:"
+        '
+        'num_RefZ_OZ
+        '
+        Me.num_RefZ_OZ.Location = New System.Drawing.Point(35, 21)
+        Me.num_RefZ_OZ.Maximum = New Decimal(New Integer() {900, 0, 0, 0})
+        Me.num_RefZ_OZ.Name = "num_RefZ_OZ"
+        Me.num_RefZ_OZ.Size = New System.Drawing.Size(120, 22)
+        Me.num_RefZ_OZ.TabIndex = 0
+        '
+        'lb_RefZ_Values
+        '
+        Me.lb_RefZ_Values.FormattingEnabled = True
+        Me.lb_RefZ_Values.ItemHeight = 16
+        Me.lb_RefZ_Values.Location = New System.Drawing.Point(189, 13)
+        Me.lb_RefZ_Values.Name = "lb_RefZ_Values"
+        Me.lb_RefZ_Values.Size = New System.Drawing.Size(284, 116)
+        Me.lb_RefZ_Values.TabIndex = 16
+        '
         'GroupBox20
         '
+        Me.GroupBox20.Controls.Add(Me.btn_RefXY_Calc)
+        Me.GroupBox20.Controls.Add(Me.Label51)
+        Me.GroupBox20.Controls.Add(Me.num_RefXY_OffsY)
+        Me.GroupBox20.Controls.Add(Me.Label50)
+        Me.GroupBox20.Controls.Add(Me.num_RefXY_OffsX)
+        Me.GroupBox20.Controls.Add(Me.Label49)
+        Me.GroupBox20.Controls.Add(Me.num_RefXY_FaktY)
+        Me.GroupBox20.Controls.Add(Me.Label48)
+        Me.GroupBox20.Controls.Add(Me.num_RefXY_FaktX)
         Me.GroupBox20.Controls.Add(Me.btn_RefXY_Clear)
         Me.GroupBox20.Controls.Add(Me.lb_RefXY_Values)
         Me.GroupBox20.Controls.Add(Me.GroupBox22)
@@ -2071,6 +2240,91 @@ Partial Class Form_Main
         Me.GroupBox20.TabIndex = 0
         Me.GroupBox20.TabStop = False
         Me.GroupBox20.Text = "Referenzieren XY"
+        '
+        'btn_RefXY_Calc
+        '
+        Me.btn_RefXY_Calc.Location = New System.Drawing.Point(755, 9)
+        Me.btn_RefXY_Calc.Name = "btn_RefXY_Calc"
+        Me.btn_RefXY_Calc.Size = New System.Drawing.Size(192, 27)
+        Me.btn_RefXY_Calc.TabIndex = 15
+        Me.btn_RefXY_Calc.Text = "Berechnen"
+        Me.btn_RefXY_Calc.UseVisualStyleBackColor = True
+        '
+        'Label51
+        '
+        Me.Label51.AutoSize = True
+        Me.Label51.Location = New System.Drawing.Point(755, 128)
+        Me.Label51.Name = "Label51"
+        Me.Label51.Size = New System.Drawing.Size(67, 17)
+        Me.Label51.TabIndex = 14
+        Me.Label51.Text = "Offset_Y:"
+        '
+        'num_RefXY_OffsY
+        '
+        Me.num_RefXY_OffsY.DecimalPlaces = 2
+        Me.num_RefXY_OffsY.Location = New System.Drawing.Point(827, 126)
+        Me.num_RefXY_OffsY.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
+        Me.num_RefXY_OffsY.Minimum = New Decimal(New Integer() {9999, 0, 0, -2147483648})
+        Me.num_RefXY_OffsY.Name = "num_RefXY_OffsY"
+        Me.num_RefXY_OffsY.Size = New System.Drawing.Size(120, 22)
+        Me.num_RefXY_OffsY.TabIndex = 13
+        '
+        'Label50
+        '
+        Me.Label50.AutoSize = True
+        Me.Label50.Location = New System.Drawing.Point(755, 100)
+        Me.Label50.Name = "Label50"
+        Me.Label50.Size = New System.Drawing.Size(67, 17)
+        Me.Label50.TabIndex = 12
+        Me.Label50.Text = "Offset_X:"
+        '
+        'num_RefXY_OffsX
+        '
+        Me.num_RefXY_OffsX.DecimalPlaces = 2
+        Me.num_RefXY_OffsX.Location = New System.Drawing.Point(827, 98)
+        Me.num_RefXY_OffsX.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
+        Me.num_RefXY_OffsX.Minimum = New Decimal(New Integer() {9999, 0, 0, -2147483648})
+        Me.num_RefXY_OffsX.Name = "num_RefXY_OffsX"
+        Me.num_RefXY_OffsX.Size = New System.Drawing.Size(120, 22)
+        Me.num_RefXY_OffsX.TabIndex = 11
+        '
+        'Label49
+        '
+        Me.Label49.AutoSize = True
+        Me.Label49.Location = New System.Drawing.Point(755, 72)
+        Me.Label49.Name = "Label49"
+        Me.Label49.Size = New System.Drawing.Size(69, 17)
+        Me.Label49.TabIndex = 10
+        Me.Label49.Text = "Faktor_Y:"
+        '
+        'num_RefXY_FaktY
+        '
+        Me.num_RefXY_FaktY.DecimalPlaces = 2
+        Me.num_RefXY_FaktY.Location = New System.Drawing.Point(827, 70)
+        Me.num_RefXY_FaktY.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
+        Me.num_RefXY_FaktY.Minimum = New Decimal(New Integer() {9999, 0, 0, -2147483648})
+        Me.num_RefXY_FaktY.Name = "num_RefXY_FaktY"
+        Me.num_RefXY_FaktY.Size = New System.Drawing.Size(120, 22)
+        Me.num_RefXY_FaktY.TabIndex = 9
+        '
+        'Label48
+        '
+        Me.Label48.AutoSize = True
+        Me.Label48.Location = New System.Drawing.Point(755, 44)
+        Me.Label48.Name = "Label48"
+        Me.Label48.Size = New System.Drawing.Size(69, 17)
+        Me.Label48.TabIndex = 8
+        Me.Label48.Text = "Faktor_X:"
+        '
+        'num_RefXY_FaktX
+        '
+        Me.num_RefXY_FaktX.DecimalPlaces = 2
+        Me.num_RefXY_FaktX.Location = New System.Drawing.Point(827, 42)
+        Me.num_RefXY_FaktX.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
+        Me.num_RefXY_FaktX.Minimum = New Decimal(New Integer() {9999, 0, 0, -2147483648})
+        Me.num_RefXY_FaktX.Name = "num_RefXY_FaktX"
+        Me.num_RefXY_FaktX.Size = New System.Drawing.Size(120, 22)
+        Me.num_RefXY_FaktX.TabIndex = 7
         '
         'btn_RefXY_Clear
         '
@@ -2128,7 +2382,7 @@ Partial Class Form_Main
         'Label47
         '
         Me.Label47.AutoSize = True
-        Me.Label47.Location = New System.Drawing.Point(314, 26)
+        Me.Label47.Location = New System.Drawing.Point(314, 23)
         Me.Label47.Name = "Label47"
         Me.Label47.Size = New System.Drawing.Size(36, 17)
         Me.Label47.TabIndex = 3
@@ -2137,7 +2391,7 @@ Partial Class Form_Main
         'Label44
         '
         Me.Label44.AutoSize = True
-        Me.Label44.Location = New System.Drawing.Point(161, 26)
+        Me.Label44.Location = New System.Drawing.Point(161, 23)
         Me.Label44.Name = "Label44"
         Me.Label44.Size = New System.Drawing.Size(21, 17)
         Me.Label44.TabIndex = 3
@@ -2155,7 +2409,7 @@ Partial Class Form_Main
         'num_RefXY_KY
         '
         Me.num_RefXY_KY.DecimalPlaces = 2
-        Me.num_RefXY_KY.Location = New System.Drawing.Point(188, 24)
+        Me.num_RefXY_KY.Location = New System.Drawing.Point(188, 21)
         Me.num_RefXY_KY.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
         Me.num_RefXY_KY.Minimum = New Decimal(New Integer() {9999, 0, 0, -2147483648})
         Me.num_RefXY_KY.Name = "num_RefXY_KY"
@@ -2189,7 +2443,7 @@ Partial Class Form_Main
         'Label46
         '
         Me.Label46.AutoSize = True
-        Me.Label46.Location = New System.Drawing.Point(314, 26)
+        Me.Label46.Location = New System.Drawing.Point(314, 23)
         Me.Label46.Name = "Label46"
         Me.Label46.Size = New System.Drawing.Size(30, 17)
         Me.Label46.TabIndex = 4
@@ -2198,7 +2452,7 @@ Partial Class Form_Main
         'Label43
         '
         Me.Label43.AutoSize = True
-        Me.Label43.Location = New System.Drawing.Point(161, 26)
+        Me.Label43.Location = New System.Drawing.Point(161, 23)
         Me.Label43.Name = "Label43"
         Me.Label43.Size = New System.Drawing.Size(21, 17)
         Me.Label43.TabIndex = 3
@@ -2216,7 +2470,7 @@ Partial Class Form_Main
         'num_RefXY_RY
         '
         Me.num_RefXY_RY.DecimalPlaces = 2
-        Me.num_RefXY_RY.Location = New System.Drawing.Point(188, 24)
+        Me.num_RefXY_RY.Location = New System.Drawing.Point(188, 21)
         Me.num_RefXY_RY.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
         Me.num_RefXY_RY.Minimum = New Decimal(New Integer() {9999, 0, 0, -2147483648})
         Me.num_RefXY_RY.Name = "num_RefXY_RY"
@@ -2244,6 +2498,7 @@ Partial Class Form_Main
         '
         'P8_test
         '
+        Me.P8_test.Controls.Add(Me.btn_Info)
         Me.P8_test.Controls.Add(Me.btn_Canny)
         Me.P8_test.Controls.Add(Me.Button1)
         Me.P8_test.Controls.Add(Me.btn_TestVerschieben)
@@ -2265,7 +2520,7 @@ Partial Class Form_Main
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(195, 40)
+        Me.Button1.Location = New System.Drawing.Point(152, 25)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(178, 48)
         Me.Button1.TabIndex = 1
@@ -2414,6 +2669,69 @@ Partial Class Form_Main
         Me.lb_Found.Size = New System.Drawing.Size(534, 516)
         Me.lb_Found.TabIndex = 8
         '
+        'btn_Info
+        '
+        Me.btn_Info.Location = New System.Drawing.Point(152, 79)
+        Me.btn_Info.Name = "btn_Info"
+        Me.btn_Info.Size = New System.Drawing.Size(178, 48)
+        Me.btn_Info.TabIndex = 3
+        Me.btn_Info.Text = "Info"
+        Me.btn_Info.UseVisualStyleBackColor = True
+        '
+        'GroupBox26
+        '
+        Me.GroupBox26.Controls.Add(Me.Label54)
+        Me.GroupBox26.Controls.Add(Me.num_DidzFunc_Backround)
+        Me.GroupBox26.Controls.Add(Me.cb_DistFunc_UseInv)
+        Me.GroupBox26.Controls.Add(Me.cb_DistFunc_Show)
+        Me.GroupBox26.Location = New System.Drawing.Point(822, 10)
+        Me.GroupBox26.Name = "GroupBox26"
+        Me.GroupBox26.Size = New System.Drawing.Size(266, 145)
+        Me.GroupBox26.TabIndex = 26
+        Me.GroupBox26.TabStop = False
+        Me.GroupBox26.Text = "Distanze Funktion"
+        '
+        'cb_DistFunc_Show
+        '
+        Me.cb_DistFunc_Show.AutoSize = True
+        Me.cb_DistFunc_Show.Location = New System.Drawing.Point(6, 24)
+        Me.cb_DistFunc_Show.Name = "cb_DistFunc_Show"
+        Me.cb_DistFunc_Show.Size = New System.Drawing.Size(215, 21)
+        Me.cb_DistFunc_Show.TabIndex = 0
+        Me.cb_DistFunc_Show.Text = "Distanz unbereinigt Anzeigen"
+        Me.cb_DistFunc_Show.UseVisualStyleBackColor = True
+        '
+        'cb_DistFunc_UseInv
+        '
+        Me.cb_DistFunc_UseInv.AutoSize = True
+        Me.cb_DistFunc_UseInv.Checked = True
+        Me.cb_DistFunc_UseInv.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.cb_DistFunc_UseInv.Location = New System.Drawing.Point(6, 57)
+        Me.cb_DistFunc_UseInv.Name = "cb_DistFunc_UseInv"
+        Me.cb_DistFunc_UseInv.Size = New System.Drawing.Size(227, 21)
+        Me.cb_DistFunc_UseInv.TabIndex = 1
+        Me.cb_DistFunc_UseInv.Text = "Inverse für Hindergrund nutzen"
+        Me.cb_DistFunc_UseInv.UseVisualStyleBackColor = True
+        '
+        'num_DidzFunc_Backround
+        '
+        Me.num_DidzFunc_Backround.Location = New System.Drawing.Point(188, 88)
+        Me.num_DidzFunc_Backround.Maximum = New Decimal(New Integer() {50, 0, 0, 0})
+        Me.num_DidzFunc_Backround.Minimum = New Decimal(New Integer() {1, 0, 0, -2147483648})
+        Me.num_DidzFunc_Backround.Name = "num_DidzFunc_Backround"
+        Me.num_DidzFunc_Backround.Size = New System.Drawing.Size(72, 22)
+        Me.num_DidzFunc_Backround.TabIndex = 2
+        Me.num_DidzFunc_Backround.Value = New Decimal(New Integer() {1, 0, 0, -2147483648})
+        '
+        'Label54
+        '
+        Me.Label54.AutoSize = True
+        Me.Label54.Location = New System.Drawing.Point(6, 90)
+        Me.Label54.Name = "Label54"
+        Me.Label54.Size = New System.Drawing.Size(168, 17)
+        Me.Label54.TabIndex = 3
+        Me.Label54.Text = "Hintergrund Konturstärke"
+        '
         'Form_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
@@ -2514,7 +2832,19 @@ Partial Class Form_Main
         Me.GroupBox16.PerformLayout()
         CType(Me.num_TCP_Port, System.ComponentModel.ISupportInitialize).EndInit()
         Me.P6_Reverenzieren.ResumeLayout(False)
+        Me.GroupBox21.ResumeLayout(False)
+        Me.GroupBox21.PerformLayout()
+        CType(Me.num_RefZ_FaktZ, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox25.ResumeLayout(False)
+        Me.GroupBox27.ResumeLayout(False)
+        Me.GroupBox27.PerformLayout()
+        CType(Me.num_RefZ_OZ, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox20.ResumeLayout(False)
+        Me.GroupBox20.PerformLayout()
+        CType(Me.num_RefXY_OffsY, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.num_RefXY_OffsX, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.num_RefXY_FaktY, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.num_RefXY_FaktX, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox22.ResumeLayout(False)
         Me.GroupBox24.ResumeLayout(False)
         Me.GroupBox24.PerformLayout()
@@ -2530,6 +2860,9 @@ Partial Class Form_Main
         Me.TC3_ObjLists.ResumeLayout(False)
         Me.P1_All.ResumeLayout(False)
         Me.P2_Found.ResumeLayout(False)
+        Me.GroupBox26.ResumeLayout(False)
+        Me.GroupBox26.PerformLayout()
+        CType(Me.num_DidzFunc_Backround, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -2735,4 +3068,31 @@ Partial Class Form_Main
     Friend WithEvents num_RefXY_RX As NumericUpDown
     Friend WithEvents P7_SearchTask As TabPage
     Friend WithEvents btn_RefXY_Clear As Button
+    Friend WithEvents Label51 As Label
+    Friend WithEvents num_RefXY_OffsY As NumericUpDown
+    Friend WithEvents Label50 As Label
+    Friend WithEvents num_RefXY_OffsX As NumericUpDown
+    Friend WithEvents Label49 As Label
+    Friend WithEvents num_RefXY_FaktY As NumericUpDown
+    Friend WithEvents Label48 As Label
+    Friend WithEvents num_RefXY_FaktX As NumericUpDown
+    Friend WithEvents btn_RefXY_Calc As Button
+    Friend WithEvents btn_RefZ_Calc As Button
+    Friend WithEvents Label52 As Label
+    Friend WithEvents num_RefZ_FaktZ As NumericUpDown
+    Friend WithEvents btn_RefZ_Clear As Button
+    Friend WithEvents GroupBox25 As GroupBox
+    Friend WithEvents btn_RefZ_Add As Button
+    Friend WithEvents GroupBox27 As GroupBox
+    Friend WithEvents Label57 As Label
+    Friend WithEvents num_RefZ_OZ As NumericUpDown
+    Friend WithEvents lb_RefZ_Values As ListBox
+    Friend WithEvents lbl_RefZ_RefCount As Label
+    Friend WithEvents Label53 As Label
+    Friend WithEvents btn_Info As Button
+    Friend WithEvents GroupBox26 As GroupBox
+    Friend WithEvents cb_DistFunc_UseInv As CheckBox
+    Friend WithEvents cb_DistFunc_Show As CheckBox
+    Friend WithEvents Label54 As Label
+    Friend WithEvents num_DidzFunc_Backround As NumericUpDown
 End Class
