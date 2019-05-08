@@ -257,6 +257,18 @@ Public Class MyObjektV2
         End If
     End Function
 
+    Public Function PassendFläche2(HBFläche_pix As Double, BTFläche_pix As Double, HTFläche_pix As Double, Optional toleranz_prozent As Int32 = 0) As Boolean
+        Dim HBF_dif, BTF_dif, HTF_dif As Double
+        If toleranz_prozent > 0 Then
+            HBF_dif = (HBFläche_pix / 100) * toleranz_prozent
+            BTF_dif = (BTFläche_pix / 100) * toleranz_prozent
+            HTF_dif = (HTFläche_pix / 100) * toleranz_prozent
+            Return VergleichF(HBFläche_pix - HBF_dif, HBFläche_pix + HBF_dif, BTFläche_pix - BTF_dif, BTFläche_pix + BTF_dif, HTFläche_pix - HTF_dif, HTFläche_pix + HTF_dif)
+        Else
+            Return VergleichF(HBFläche_pix, BTFläche_pix, HTFläche_pix)
+        End If
+    End Function
+
     'Maase
     Public Function GetHöhe() As Double
         'Prüfen ob _MinAreaRec Angelegt

@@ -190,6 +190,8 @@ Partial Class Form_Main
         Me.Label27 = New System.Windows.Forms.Label()
         Me.P6_Reverenzieren = New System.Windows.Forms.TabPage()
         Me.GroupBox21 = New System.Windows.Forms.GroupBox()
+        Me.lbl_RefZ_RefCount = New System.Windows.Forms.Label()
+        Me.Label53 = New System.Windows.Forms.Label()
         Me.btn_RefZ_Calc = New System.Windows.Forms.Button()
         Me.Label52 = New System.Windows.Forms.Label()
         Me.num_RefZ_FaktZ = New System.Windows.Forms.NumericUpDown()
@@ -243,8 +245,12 @@ Partial Class Form_Main
         Me.LB_obj = New System.Windows.Forms.ListBox()
         Me.P2_Found = New System.Windows.Forms.TabPage()
         Me.lb_Found = New System.Windows.Forms.ListBox()
-        Me.Label53 = New System.Windows.Forms.Label()
-        Me.lbl_RefZ_RefCount = New System.Windows.Forms.Label()
+        Me.btn_Info = New System.Windows.Forms.Button()
+        Me.GroupBox26 = New System.Windows.Forms.GroupBox()
+        Me.cb_DistFunc_Show = New System.Windows.Forms.CheckBox()
+        Me.cb_DistFunc_UseInv = New System.Windows.Forms.CheckBox()
+        Me.num_DidzFunc_Backround = New System.Windows.Forms.NumericUpDown()
+        Me.Label54 = New System.Windows.Forms.Label()
         Me.GroupBox1.SuspendLayout()
         Me.TC2_Bilder.SuspendLayout()
         Me.P1_NewImg.SuspendLayout()
@@ -341,6 +347,8 @@ Partial Class Form_Main
         Me.TC3_ObjLists.SuspendLayout()
         Me.P1_All.SuspendLayout()
         Me.P2_Found.SuspendLayout()
+        Me.GroupBox26.SuspendLayout()
+        CType(Me.num_DidzFunc_Backround, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'GroupBox1
@@ -1621,6 +1629,7 @@ Partial Class Form_Main
         '
         'P4_Auswertung
         '
+        Me.P4_Auswertung.Controls.Add(Me.GroupBox26)
         Me.P4_Auswertung.Controls.Add(Me.GroupBox11)
         Me.P4_Auswertung.Controls.Add(Me.GroupBox18)
         Me.P4_Auswertung.Controls.Add(Me.GroupBox5)
@@ -2097,6 +2106,25 @@ Partial Class Form_Main
         Me.GroupBox21.TabStop = False
         Me.GroupBox21.Text = "Referentieren Z"
         '
+        'lbl_RefZ_RefCount
+        '
+        Me.lbl_RefZ_RefCount.AutoSize = True
+        Me.lbl_RefZ_RefCount.Location = New System.Drawing.Point(638, 21)
+        Me.lbl_RefZ_RefCount.Name = "lbl_RefZ_RefCount"
+        Me.lbl_RefZ_RefCount.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.lbl_RefZ_RefCount.Size = New System.Drawing.Size(13, 17)
+        Me.lbl_RefZ_RefCount.TabIndex = 22
+        Me.lbl_RefZ_RefCount.Text = "-"
+        '
+        'Label53
+        '
+        Me.Label53.AutoSize = True
+        Me.Label53.Location = New System.Drawing.Point(508, 21)
+        Me.Label53.Name = "Label53"
+        Me.Label53.Size = New System.Drawing.Size(133, 17)
+        Me.Label53.TabIndex = 21
+        Me.Label53.Text = "Anzahl Referenzen:"
+        '
         'btn_RefZ_Calc
         '
         Me.btn_RefZ_Calc.Location = New System.Drawing.Point(511, 65)
@@ -2470,6 +2498,7 @@ Partial Class Form_Main
         '
         'P8_test
         '
+        Me.P8_test.Controls.Add(Me.btn_Info)
         Me.P8_test.Controls.Add(Me.btn_Canny)
         Me.P8_test.Controls.Add(Me.Button1)
         Me.P8_test.Controls.Add(Me.btn_TestVerschieben)
@@ -2491,7 +2520,7 @@ Partial Class Form_Main
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(195, 40)
+        Me.Button1.Location = New System.Drawing.Point(152, 25)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(178, 48)
         Me.Button1.TabIndex = 1
@@ -2640,24 +2669,68 @@ Partial Class Form_Main
         Me.lb_Found.Size = New System.Drawing.Size(534, 516)
         Me.lb_Found.TabIndex = 8
         '
-        'Label53
+        'btn_Info
         '
-        Me.Label53.AutoSize = True
-        Me.Label53.Location = New System.Drawing.Point(508, 21)
-        Me.Label53.Name = "Label53"
-        Me.Label53.Size = New System.Drawing.Size(133, 17)
-        Me.Label53.TabIndex = 21
-        Me.Label53.Text = "Anzahl Referenzen:"
+        Me.btn_Info.Location = New System.Drawing.Point(152, 79)
+        Me.btn_Info.Name = "btn_Info"
+        Me.btn_Info.Size = New System.Drawing.Size(178, 48)
+        Me.btn_Info.TabIndex = 3
+        Me.btn_Info.Text = "Info"
+        Me.btn_Info.UseVisualStyleBackColor = True
         '
-        'lbl_RefZ_RefCount
+        'GroupBox26
         '
-        Me.lbl_RefZ_RefCount.AutoSize = True
-        Me.lbl_RefZ_RefCount.Location = New System.Drawing.Point(638, 21)
-        Me.lbl_RefZ_RefCount.Name = "lbl_RefZ_RefCount"
-        Me.lbl_RefZ_RefCount.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.lbl_RefZ_RefCount.Size = New System.Drawing.Size(13, 17)
-        Me.lbl_RefZ_RefCount.TabIndex = 22
-        Me.lbl_RefZ_RefCount.Text = "-"
+        Me.GroupBox26.Controls.Add(Me.Label54)
+        Me.GroupBox26.Controls.Add(Me.num_DidzFunc_Backround)
+        Me.GroupBox26.Controls.Add(Me.cb_DistFunc_UseInv)
+        Me.GroupBox26.Controls.Add(Me.cb_DistFunc_Show)
+        Me.GroupBox26.Location = New System.Drawing.Point(822, 10)
+        Me.GroupBox26.Name = "GroupBox26"
+        Me.GroupBox26.Size = New System.Drawing.Size(266, 145)
+        Me.GroupBox26.TabIndex = 26
+        Me.GroupBox26.TabStop = False
+        Me.GroupBox26.Text = "Distanze Funktion"
+        '
+        'cb_DistFunc_Show
+        '
+        Me.cb_DistFunc_Show.AutoSize = True
+        Me.cb_DistFunc_Show.Location = New System.Drawing.Point(6, 24)
+        Me.cb_DistFunc_Show.Name = "cb_DistFunc_Show"
+        Me.cb_DistFunc_Show.Size = New System.Drawing.Size(215, 21)
+        Me.cb_DistFunc_Show.TabIndex = 0
+        Me.cb_DistFunc_Show.Text = "Distanz unbereinigt Anzeigen"
+        Me.cb_DistFunc_Show.UseVisualStyleBackColor = True
+        '
+        'cb_DistFunc_UseInv
+        '
+        Me.cb_DistFunc_UseInv.AutoSize = True
+        Me.cb_DistFunc_UseInv.Checked = True
+        Me.cb_DistFunc_UseInv.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.cb_DistFunc_UseInv.Location = New System.Drawing.Point(6, 57)
+        Me.cb_DistFunc_UseInv.Name = "cb_DistFunc_UseInv"
+        Me.cb_DistFunc_UseInv.Size = New System.Drawing.Size(227, 21)
+        Me.cb_DistFunc_UseInv.TabIndex = 1
+        Me.cb_DistFunc_UseInv.Text = "Inverse für Hindergrund nutzen"
+        Me.cb_DistFunc_UseInv.UseVisualStyleBackColor = True
+        '
+        'num_DidzFunc_Backround
+        '
+        Me.num_DidzFunc_Backround.Location = New System.Drawing.Point(188, 88)
+        Me.num_DidzFunc_Backround.Maximum = New Decimal(New Integer() {50, 0, 0, 0})
+        Me.num_DidzFunc_Backround.Minimum = New Decimal(New Integer() {1, 0, 0, -2147483648})
+        Me.num_DidzFunc_Backround.Name = "num_DidzFunc_Backround"
+        Me.num_DidzFunc_Backround.Size = New System.Drawing.Size(72, 22)
+        Me.num_DidzFunc_Backround.TabIndex = 2
+        Me.num_DidzFunc_Backround.Value = New Decimal(New Integer() {1, 0, 0, -2147483648})
+        '
+        'Label54
+        '
+        Me.Label54.AutoSize = True
+        Me.Label54.Location = New System.Drawing.Point(6, 90)
+        Me.Label54.Name = "Label54"
+        Me.Label54.Size = New System.Drawing.Size(168, 17)
+        Me.Label54.TabIndex = 3
+        Me.Label54.Text = "Hintergrund Konturstärke"
         '
         'Form_Main
         '
@@ -2787,6 +2860,9 @@ Partial Class Form_Main
         Me.TC3_ObjLists.ResumeLayout(False)
         Me.P1_All.ResumeLayout(False)
         Me.P2_Found.ResumeLayout(False)
+        Me.GroupBox26.ResumeLayout(False)
+        Me.GroupBox26.PerformLayout()
+        CType(Me.num_DidzFunc_Backround, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -3013,4 +3089,10 @@ Partial Class Form_Main
     Friend WithEvents lb_RefZ_Values As ListBox
     Friend WithEvents lbl_RefZ_RefCount As Label
     Friend WithEvents Label53 As Label
+    Friend WithEvents btn_Info As Button
+    Friend WithEvents GroupBox26 As GroupBox
+    Friend WithEvents cb_DistFunc_UseInv As CheckBox
+    Friend WithEvents cb_DistFunc_Show As CheckBox
+    Friend WithEvents Label54 As Label
+    Friend WithEvents num_DidzFunc_Backround As NumericUpDown
 End Class
