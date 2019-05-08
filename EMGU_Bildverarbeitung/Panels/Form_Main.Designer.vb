@@ -251,6 +251,18 @@ Partial Class Form_Main
         Me.cb_DistFunc_UseInv = New System.Windows.Forms.CheckBox()
         Me.num_DidzFunc_Backround = New System.Windows.Forms.NumericUpDown()
         Me.Label54 = New System.Windows.Forms.Label()
+        Me.GroupBox28 = New System.Windows.Forms.GroupBox()
+        Me.Label55 = New System.Windows.Forms.Label()
+        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
+        Me.Label56 = New System.Windows.Forms.Label()
+        Me.NumericUpDown1 = New System.Windows.Forms.NumericUpDown()
+        Me.Button2 = New System.Windows.Forms.Button()
+        Me.GroupBox29 = New System.Windows.Forms.GroupBox()
+        Me.ListBox1 = New System.Windows.Forms.ListBox()
+        Me.Label58 = New System.Windows.Forms.Label()
+        Me.lbl_Auftrag_Status = New System.Windows.Forms.Label()
+        Me.Button3 = New System.Windows.Forms.Button()
+        Me.Button4 = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
         Me.TC2_Bilder.SuspendLayout()
         Me.P1_NewImg.SuspendLayout()
@@ -342,6 +354,7 @@ Partial Class Form_Main
         Me.GroupBox23.SuspendLayout()
         CType(Me.num_RefXY_RY, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.num_RefXY_RX, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.P7_SearchTask.SuspendLayout()
         Me.P8_test.SuspendLayout()
         Me.GroupBox8.SuspendLayout()
         Me.TC3_ObjLists.SuspendLayout()
@@ -349,6 +362,9 @@ Partial Class Form_Main
         Me.P2_Found.SuspendLayout()
         Me.GroupBox26.SuspendLayout()
         CType(Me.num_DidzFunc_Backround, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox28.SuspendLayout()
+        CType(Me.NumericUpDown1, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox29.SuspendLayout()
         Me.SuspendLayout()
         '
         'GroupBox1
@@ -2489,6 +2505,8 @@ Partial Class Form_Main
         '
         'P7_SearchTask
         '
+        Me.P7_SearchTask.Controls.Add(Me.GroupBox29)
+        Me.P7_SearchTask.Controls.Add(Me.GroupBox28)
         Me.P7_SearchTask.Location = New System.Drawing.Point(4, 25)
         Me.P7_SearchTask.Name = "P7_SearchTask"
         Me.P7_SearchTask.Size = New System.Drawing.Size(1668, 156)
@@ -2732,6 +2750,121 @@ Partial Class Form_Main
         Me.Label54.TabIndex = 3
         Me.Label54.Text = "Hintergrund Konturstärke"
         '
+        'GroupBox28
+        '
+        Me.GroupBox28.Controls.Add(Me.Button2)
+        Me.GroupBox28.Controls.Add(Me.NumericUpDown1)
+        Me.GroupBox28.Controls.Add(Me.Label56)
+        Me.GroupBox28.Controls.Add(Me.ComboBox1)
+        Me.GroupBox28.Controls.Add(Me.Label55)
+        Me.GroupBox28.Location = New System.Drawing.Point(5, 8)
+        Me.GroupBox28.Name = "GroupBox28"
+        Me.GroupBox28.Size = New System.Drawing.Size(263, 145)
+        Me.GroupBox28.TabIndex = 0
+        Me.GroupBox28.TabStop = False
+        Me.GroupBox28.Text = "Auftragerstellen"
+        '
+        'Label55
+        '
+        Me.Label55.AutoSize = True
+        Me.Label55.Location = New System.Drawing.Point(6, 32)
+        Me.Label55.Name = "Label55"
+        Me.Label55.Size = New System.Drawing.Size(57, 17)
+        Me.Label55.TabIndex = 0
+        Me.Label55.Text = "Objekt: "
+        '
+        'ComboBox1
+        '
+        Me.ComboBox1.FormattingEnabled = True
+        Me.ComboBox1.Location = New System.Drawing.Point(69, 29)
+        Me.ComboBox1.Name = "ComboBox1"
+        Me.ComboBox1.Size = New System.Drawing.Size(178, 24)
+        Me.ComboBox1.TabIndex = 1
+        '
+        'Label56
+        '
+        Me.Label56.AutoSize = True
+        Me.Label56.Location = New System.Drawing.Point(6, 63)
+        Me.Label56.Name = "Label56"
+        Me.Label56.Size = New System.Drawing.Size(55, 17)
+        Me.Label56.TabIndex = 2
+        Me.Label56.Text = "Anzahl:"
+        '
+        'NumericUpDown1
+        '
+        Me.NumericUpDown1.Location = New System.Drawing.Point(69, 59)
+        Me.NumericUpDown1.Name = "NumericUpDown1"
+        Me.NumericUpDown1.Size = New System.Drawing.Size(111, 22)
+        Me.NumericUpDown1.TabIndex = 3
+        '
+        'Button2
+        '
+        Me.Button2.Location = New System.Drawing.Point(9, 104)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(237, 27)
+        Me.Button2.TabIndex = 4
+        Me.Button2.Text = "Zum Auftrag hunifügen"
+        Me.Button2.UseVisualStyleBackColor = True
+        '
+        'GroupBox29
+        '
+        Me.GroupBox29.Controls.Add(Me.Button4)
+        Me.GroupBox29.Controls.Add(Me.Button3)
+        Me.GroupBox29.Controls.Add(Me.lbl_Auftrag_Status)
+        Me.GroupBox29.Controls.Add(Me.Label58)
+        Me.GroupBox29.Controls.Add(Me.ListBox1)
+        Me.GroupBox29.Location = New System.Drawing.Point(274, 8)
+        Me.GroupBox29.Name = "GroupBox29"
+        Me.GroupBox29.Size = New System.Drawing.Size(461, 145)
+        Me.GroupBox29.TabIndex = 1
+        Me.GroupBox29.TabStop = False
+        Me.GroupBox29.Text = "Auftrag"
+        '
+        'ListBox1
+        '
+        Me.ListBox1.FormattingEnabled = True
+        Me.ListBox1.ItemHeight = 16
+        Me.ListBox1.Location = New System.Drawing.Point(6, 21)
+        Me.ListBox1.Name = "ListBox1"
+        Me.ListBox1.Size = New System.Drawing.Size(205, 132)
+        Me.ListBox1.TabIndex = 0
+        '
+        'Label58
+        '
+        Me.Label58.AutoSize = True
+        Me.Label58.Location = New System.Drawing.Point(217, 21)
+        Me.Label58.Name = "Label58"
+        Me.Label58.Size = New System.Drawing.Size(52, 17)
+        Me.Label58.TabIndex = 1
+        Me.Label58.Text = "Status:"
+        '
+        'lbl_Auftrag_Status
+        '
+        Me.lbl_Auftrag_Status.AutoSize = True
+        Me.lbl_Auftrag_Status.Location = New System.Drawing.Point(275, 21)
+        Me.lbl_Auftrag_Status.Name = "lbl_Auftrag_Status"
+        Me.lbl_Auftrag_Status.Size = New System.Drawing.Size(13, 17)
+        Me.lbl_Auftrag_Status.TabIndex = 2
+        Me.lbl_Auftrag_Status.Text = "-"
+        '
+        'Button3
+        '
+        Me.Button3.Location = New System.Drawing.Point(217, 54)
+        Me.Button3.Name = "Button3"
+        Me.Button3.Size = New System.Drawing.Size(237, 27)
+        Me.Button3.TabIndex = 5
+        Me.Button3.Text = "Auftrag Starten"
+        Me.Button3.UseVisualStyleBackColor = True
+        '
+        'Button4
+        '
+        Me.Button4.Location = New System.Drawing.Point(217, 112)
+        Me.Button4.Name = "Button4"
+        Me.Button4.Size = New System.Drawing.Size(237, 27)
+        Me.Button4.TabIndex = 6
+        Me.Button4.Text = "Auftrag Löschen"
+        Me.Button4.UseVisualStyleBackColor = True
+        '
         'Form_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
@@ -2854,6 +2987,7 @@ Partial Class Form_Main
         Me.GroupBox23.PerformLayout()
         CType(Me.num_RefXY_RY, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.num_RefXY_RX, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.P7_SearchTask.ResumeLayout(False)
         Me.P8_test.ResumeLayout(False)
         Me.GroupBox8.ResumeLayout(False)
         Me.GroupBox8.PerformLayout()
@@ -2863,6 +2997,11 @@ Partial Class Form_Main
         Me.GroupBox26.ResumeLayout(False)
         Me.GroupBox26.PerformLayout()
         CType(Me.num_DidzFunc_Backround, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox28.ResumeLayout(False)
+        Me.GroupBox28.PerformLayout()
+        CType(Me.NumericUpDown1, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox29.ResumeLayout(False)
+        Me.GroupBox29.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -3095,4 +3234,16 @@ Partial Class Form_Main
     Friend WithEvents cb_DistFunc_Show As CheckBox
     Friend WithEvents Label54 As Label
     Friend WithEvents num_DidzFunc_Backround As NumericUpDown
+    Friend WithEvents GroupBox29 As GroupBox
+    Friend WithEvents Button4 As Button
+    Friend WithEvents Button3 As Button
+    Friend WithEvents lbl_Auftrag_Status As Label
+    Friend WithEvents Label58 As Label
+    Friend WithEvents ListBox1 As ListBox
+    Friend WithEvents GroupBox28 As GroupBox
+    Friend WithEvents Button2 As Button
+    Friend WithEvents NumericUpDown1 As NumericUpDown
+    Friend WithEvents Label56 As Label
+    Friend WithEvents ComboBox1 As ComboBox
+    Friend WithEvents Label55 As Label
 End Class
