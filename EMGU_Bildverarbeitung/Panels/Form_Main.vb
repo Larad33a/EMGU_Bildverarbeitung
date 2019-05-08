@@ -567,6 +567,10 @@ Public Class Form_Main
             num_RefXY_KX.Value = p.X
             num_RefXY_KY.Value = p.Y
             num_RefZ_OZ.Value = CInt(obj.GetDepthValAvg())
+            Dim dimensions() As Int32 = obj.GetDimension(Refe_Faktor_X, ZOffset)
+            num_newSearchObjB.Value = dimensions(0)
+            num_newSearchObjH.Value = dimensions(1)
+            num_newSearchObjT.Value = dimensions(2)
         End If
     End Sub
 
@@ -1835,9 +1839,9 @@ Public Class Form_Main
             lb_Info.Items.Insert(0, $"Es gibt {_MyObjekte.Count,3} interesante Objekte")
         End If
 
-            'Eintagen
-            'Objekte in Liste Eintragen
-            _RefreshListbox(LB_obj, _MyObjekte)
+        'Eintagen
+        'Objekte in Liste Eintragen
+        _RefreshListbox(LB_obj, _MyObjekte)
         'Objekte Zeichnen
         For Each ob2 As MyObjektV2 In _MyObjekte
             'Zentrum
