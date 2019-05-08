@@ -234,7 +234,7 @@ Public Class MyObjektV2
         End If
     End Function
 
-    Public Function Passend(höhe_pix As Int32, breit_pix As Int32, tiefe_pix As Int32, Optional toleranz_prozent As Int32 = 0) As Boolean
+    Public Function PassendAlt(höhe_pix As Int32, breit_pix As Int32, tiefe_pix As Int32, Optional toleranz_prozent As Int32 = 0) As Boolean
         Dim höhe_dif, breite_dif, tiefe_dif As Double
         If toleranz_prozent > 0 Then
             höhe_dif = (höhe_pix / 100) * toleranz_prozent
@@ -245,6 +245,28 @@ Public Class MyObjektV2
             Return (Vergleich(höhe_pix, breit_pix, tiefe_pix) Or Vergleich(breit_pix, höhe_pix, tiefe_pix) Or Vergleich(tiefe_pix, höhe_pix, breit_pix))
         End If
     End Function
+
+    Public Function Passend(höhe_mm As Int32, breite_mm As Int32, tiefe_mm As Int32, pixToMm As Double, zOffset As Integer, ByRef abweichung As Double, toleranz_prozent As Int32) As Boolean
+        Dim uebereinstimmungPrc As Double = 0.0
+        Dim soll As New List(Of Int32)
+        Dim ist As New List(Of Int32)
+        ist.Add(CInt(Math.Round(GetHöhe(pixToMm))))
+        ist.Add(CInt(Math.Round(GetBreite(pixToMm))))
+        ist.Add(CInt(Math.Round(zOffset - GetDepthVal())))
+        soll.Add(höhe_mm)
+        soll.Add(breite_mm)
+        soll.Add(tiefe_mm)
+        ist.Sort()
+        soll.Sort()
+        ' Vergleichen
+        For i = 0 To 2
+            uebereinstimmungPrc += If(ist(i) > soll(i), soll(i) / ist(i), ist(i) / soll(i)) / 3
+        Next
+        uebereinstimmungPrc = Math.Round(uebereinstimmungPrc * 100, 2)
+        abweichung = uebereinstimmungPrc
+        Return uebereinstimmungPrc > (100.0 - CDbl(toleranz_prozent))
+    End Function
+
     Public Function PassendFläche(HBFläche_pix As Double, BTFläche_pix As Double, HTFläche_pix As Double, Optional toleranz_prozent As Int32 = 0) As Boolean
         Dim HBF_dif, BTF_dif, HTF_dif As Double
         If toleranz_prozent > 0 Then
@@ -281,6 +303,9 @@ Public Class MyObjektV2
             Return _MinAreaRec.Size.Width
         End If
     End Function
+    Public Function GetHöhe(pixToMM As Double) As Double
+        Return GetHöhe() * pixToMM
+    End Function
     Public Function GetBreite() As Double
         'Prüfen ob _MinAreaRec Angelegt
         If _MinAreaRec.Size.IsEmpty Then
@@ -291,6 +316,9 @@ Public Class MyObjektV2
         Else
             Return _MinAreaRec.Size.Width
         End If
+    End Function
+    Public Function GetBreite(pixToMM As Double) As Double
+        Return GetBreite() * pixToMM
     End Function
     Public Function GetFläche() As Int32
         'Prüfen ob _MinAreaRec Angelegt

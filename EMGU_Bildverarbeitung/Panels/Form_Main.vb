@@ -33,6 +33,8 @@ Public Class Form_Main
     Const Versatz_Bild_Tiefe_X = 100
     Const Versatz_Bild_Tiefe_Y = 100
 
+    Const ZOffset As Int32 = 717
+
     'Enums
     Public Enum Enum_Format
         color
@@ -1387,37 +1389,12 @@ Public Class Form_Main
         Dim h As Int32 = MilToPix(AktSearch.Höhe)
         Dim b As Int32 = MilToPix(AktSearch.Beite)
         Dim t As Int32 = MilToPix(AktSearch.Tiefe)
-        lb_Info.Items.Insert(0, $"h:{h,4} b:{b,4} t:{t,4}")
+        lb_Info.Items.Insert(0, $"Gesuchtes Objekt: h:{h,4} b:{b,4} t:{t,4}")
         For Each obj As MyObjektV2 In _MyObjekte
-            'If obj.Passend(h, b, t, CInt(Num_SearchToleranz.Value)) Then
-            Dim Ausrichtung As String
-            Dim Fläche_HB, Fläche_BT, Fläche_HT, Abweichung As Double
-            Fläche_HB = h * b
-            Fläche_BT = b * t
-            Fläche_HT = h * t
-            lb_Info.Items.Insert(0, $"Gesuchte Flächen: HB{Fläche_HB,3} BT{Fläche_BT,3} HT{Fläche_HT,3}")
-            If obj.PassendFläche(Fläche_HB, Fläche_BT, Fläche_HT, CInt(Num_SearchToleranz.Value)) Then
-                'Prüfung zu welcher Fläche die Abweichung am gerinsten ist
-                If Math.Abs(100 - ((100 / Fläche_HB) * obj.GetFläche)) < Math.Abs(100 - ((100 / Fläche_BT) * obj.GetFläche)) Then
-                    If Math.Abs(100 - ((100 / Fläche_HB) * obj.GetFläche)) < Math.Abs(100 - ((100 / Fläche_HT) * obj.GetFläche)) Then
-                        Abweichung = Math.Abs(100 - ((100 / Fläche_HB) * obj.GetFläche))
-                        Ausrichtung = "HB"
-                    Else
-                        Abweichung = Math.Abs(100 - ((100 / Fläche_HT) * obj.GetFläche))
-                        Ausrichtung = "HT"
-                    End If
-                Else
-                    If Math.Abs(100 - ((100 / Fläche_BT) * obj.GetFläche)) < Math.Abs(100 - ((100 / Fläche_HT) * obj.GetFläche)) Then
-                        Abweichung = Math.Abs(100 - ((100 / Fläche_BT) * obj.GetFläche))
-                        Ausrichtung = "BT"
-                    Else
-                        Abweichung = Math.Abs(100 - ((100 / Fläche_HT) * obj.GetFläche))
-                        Ausrichtung = "HT"
-                    End If
-                End If
-                _MyMatchObjekts.Add(New MyMatchObj(Abweichung, Ausrichtung, obj))
+            Dim Abweichung As Double
+            If obj.Passend(AktSearch.Höhe, AktSearch.Beite, AktSearch.Tiefe, Refe_Faktor_X, ZOffset, Abweichung, CInt(Num_SearchToleranz.Value)) Then
+                _MyMatchObjekts.Add(New MyMatchObj(Abweichung, "undef", obj))
             End If
-            'End If
         Next
 
         '5. Passendes Objekt Anzeigen
