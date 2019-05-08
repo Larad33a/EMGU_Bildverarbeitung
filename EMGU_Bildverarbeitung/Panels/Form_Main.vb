@@ -1391,9 +1391,9 @@ Public Class Form_Main
         Dim t As Int32 = MilToPix(AktSearch.Tiefe)
         lb_Info.Items.Insert(0, $"Gesuchtes Objekt: h:{h,4} b:{b,4} t:{t,4}")
         For Each obj As MyObjektV2 In _MyObjekte
-            Dim Abweichung As Double
-            If obj.Passend(AktSearch.Höhe, AktSearch.Beite, AktSearch.Tiefe, Refe_Faktor_X, ZOffset, Abweichung, CInt(Num_SearchToleranz.Value)) Then
-                _MyMatchObjekts.Add(New MyMatchObj(Abweichung, "undef", obj))
+            Dim Übereinstimmung As Double
+            If obj.Passend(AktSearch.Höhe, AktSearch.Beite, AktSearch.Tiefe, Refe_Faktor_X, ZOffset, Übereinstimmung, CInt(Num_SearchToleranz.Value)) Then
+                _MyMatchObjekts.Add(New MyMatchObj(Übereinstimmung, "undef", obj))
             End If
         Next
 
@@ -1406,6 +1406,7 @@ Public Class Form_Main
         End If
         lb_Info.Items.Insert(0, $"Es wurde {_MyMatchObjekts.Count,3} passendes Objekt gefunden.")
         _MyMatchObjekts.Sort()
+        _MyMatchObjekts.Reverse()
         _RefreshListbox(lb_Found, _MyMatchObjekts)
 
         lbl_FoundObj.Text = _MyMatchObjekts(0).Objekt.ToString

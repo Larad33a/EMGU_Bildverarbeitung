@@ -1,13 +1,13 @@
 ﻿
 Public Class MyMatchObj : Implements IComparable(Of MyMatchObj)
 
-    Private _Abweichung As Double
-    Public Property Abweichung() As Double
+    Private _Uebereinstimmung As Double
+    Public Property Uebereinstimmung() As Double
         Get
-            Return _Abweichung
+            Return _Uebereinstimmung
         End Get
-        Set(ByVal Abweichung As Double)
-            _Abweichung = Abweichung
+        Set(ByVal value As Double)
+            _Uebereinstimmung = value
         End Set
     End Property
     Private _Objekt As MyObjektV2
@@ -28,17 +28,17 @@ Public Class MyMatchObj : Implements IComparable(Of MyMatchObj)
             _Ausrichtung = value
         End Set
     End Property
-    Sub New(abweichung As Double, ausrichtung As String, objekt As MyObjektV2)
-        _Abweichung = abweichung
+    Sub New(übereinstimmung As Double, ausrichtung As String, objekt As MyObjektV2)
+        _Uebereinstimmung = übereinstimmung
         _Ausrichtung = ausrichtung
         _Objekt = objekt
     End Sub
 
     Function Compareto(obj As MyMatchObj) As Integer _
         Implements IComparable(Of MyMatchObj).CompareTo
-        Return _Abweichung.CompareTo(obj.Abweichung)
+        Return _Uebereinstimmung.CompareTo(obj.Uebereinstimmung)
     End Function
     Public Overrides Function ToString() As String
-        Return $"{_Abweichung,3:n2}% | {_Ausrichtung} | ID: {_Objekt.ID}"
+        Return $"{_Uebereinstimmung,3:n2}% | {_Ausrichtung} | ID: {_Objekt.ID}"
     End Function
 End Class
