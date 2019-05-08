@@ -1111,7 +1111,6 @@ Partial Class Form_Main
         Me.num_newSearchObjT.Location = New System.Drawing.Point(181, 77)
         Me.num_newSearchObjT.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
         Me.num_newSearchObjT.Maximum = New Decimal(New Integer() {1500, 0, 0, 0})
-        Me.num_newSearchObjT.Minimum = New Decimal(New Integer() {10, 0, 0, 0})
         Me.num_newSearchObjT.Name = "num_newSearchObjT"
         Me.num_newSearchObjT.Size = New System.Drawing.Size(66, 20)
         Me.num_newSearchObjT.TabIndex = 8
@@ -1122,7 +1121,6 @@ Partial Class Form_Main
         Me.num_newSearchObjB.Location = New System.Drawing.Point(93, 78)
         Me.num_newSearchObjB.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
         Me.num_newSearchObjB.Maximum = New Decimal(New Integer() {1500, 0, 0, 0})
-        Me.num_newSearchObjB.Minimum = New Decimal(New Integer() {10, 0, 0, 0})
         Me.num_newSearchObjB.Name = "num_newSearchObjB"
         Me.num_newSearchObjB.Size = New System.Drawing.Size(66, 20)
         Me.num_newSearchObjB.TabIndex = 6
@@ -1153,7 +1151,6 @@ Partial Class Form_Main
         Me.num_newSearchObjH.Location = New System.Drawing.Point(7, 76)
         Me.num_newSearchObjH.Margin = New System.Windows.Forms.Padding(2, 2, 2, 2)
         Me.num_newSearchObjH.Maximum = New Decimal(New Integer() {1500, 0, 0, 0})
-        Me.num_newSearchObjH.Minimum = New Decimal(New Integer() {10, 0, 0, 0})
         Me.num_newSearchObjH.Name = "num_newSearchObjH"
         Me.num_newSearchObjH.Size = New System.Drawing.Size(66, 20)
         Me.num_newSearchObjH.TabIndex = 4

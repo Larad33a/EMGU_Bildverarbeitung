@@ -235,7 +235,7 @@ Public Class MyObjektV2
     End Function
 
     Public Function GetDimension(PixToMm As Double, zOffset As Int32) As Int32()
-        Dim arr(3) As Int32
+        Dim arr(2) As Int32
         arr(0) = CInt(Math.Round(GetHöhe(PixToMm)))
         arr(1) = CInt(Math.Round(GetBreite(PixToMm)))
         arr(2) = CInt(Math.Round(zOffset - GetDepthVal()))
