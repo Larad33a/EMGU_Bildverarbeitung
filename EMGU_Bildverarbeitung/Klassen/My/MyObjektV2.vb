@@ -304,7 +304,7 @@ Public Class MyObjektV2
         End If
     End Function
     Public Function GetHöhe(pixToMM As Double) As Double
-        Return GetHöhe() * pixToMM
+        Return GetDepthVal() * GetHöhe() * pixToMM
     End Function
     Public Function GetBreite() As Double
         'Prüfen ob _MinAreaRec Angelegt
@@ -318,22 +318,20 @@ Public Class MyObjektV2
         End If
     End Function
     Public Function GetBreite(pixToMM As Double) As Double
-        Return GetBreite() * pixToMM
+        Return GetDepthVal() * GetBreite() * pixToMM
     End Function
     Public Function GetFläche() As Int32
-        'Prüfen ob _MinAreaRec Angelegt
-        If _MinAreaRec.Size.IsEmpty Then
-            Analyse()
-        End If
-        Return CInt(Math.Round(_MinAreaRec.Size.Height * _MinAreaRec.Size.Width))
+        Return CInt(Math.Round(GetBreite() * GetHöhe()))
+    End Function
+    Public Function GetFläche(pixToMM As Double) As Int32
+        Return CInt(Math.Round(GetBreite(pixToMM) * GetHöhe(pixToMM)))
     End Function
     Public Function GetZentrumMyPoint() As MyPoint
         'Prüfen ob _MinAreaRec Angelegt
         If _MinAreaRec.Size.IsEmpty Then
             Analyse()
         End If
-        Dim Z As Int32 = GetDepthVal()
-        Return New MyPoint(_MinAreaRec.Center, Z)
+        Return New MyPoint(_MinAreaRec.Center, GetDepthVal())
     End Function
     Public Function GetZentrumPoint() As Point
         'Prüfen ob _MinAreaRec Angelegt

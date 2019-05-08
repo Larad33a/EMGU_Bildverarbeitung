@@ -1,6 +1,6 @@
 ﻿Module Referenzierung
-    Public Function RefCalcFactor(val1Cam As Single, val1Robot As Single, val2Cam As Single, val2Robot As Single) As Double
-        Return (val1Robot - val2Robot) / (val1Cam - val2Cam)
+    Public Function RefCalcFactor(val1Cam As Single, val1Robot As Single, val2Cam As Single, val2Robot As Single, valZCam As Int32) As Double
+        Return (val1Robot - val2Robot) / (val1Cam - val2Cam) * valZCam
     End Function
 
     Public Function RefCalcOffset(val1Cam As Single, val1Robot As Single, val2Cam As Single, val2Robot As Single) As Double
@@ -15,8 +15,8 @@
             For k = i + 1 To refList.Count - 1
                 Dim entry1 As MyRefObjekt = refList(i)
                 Dim entry2 As MyRefObjekt = refList(k)
-                tmpFactorX += RefCalcFactor(entry1.PunktCam.X, entry1.PunktRobo.Y, entry2.PunktCam.X, entry2.PunktRobo.Y)
-                tmpFactorY += RefCalcFactor(entry1.PunktCam.Y, entry1.PunktRobo.X, entry2.PunktCam.Y, entry2.PunktRobo.X)
+                tmpFactorX += RefCalcFactor(entry1.PunktCam.X, entry1.PunktRobo.Y, entry2.PunktCam.X, entry2.PunktRobo.Y, CInt((entry1.ZinUnits + entry2.ZinUnits) / 2))
+                tmpFactorY += RefCalcFactor(entry1.PunktCam.Y, entry1.PunktRobo.X, entry2.PunktCam.Y, entry2.PunktRobo.X, CInt((entry1.ZinUnits + entry2.ZinUnits) / 2))
                 tmpOffsetX += RefCalcOffset(entry1.PunktCam.X, entry1.PunktRobo.Y, entry2.PunktCam.X, entry2.PunktRobo.Y)
                 tmpOffsetY += RefCalcOffset(entry1.PunktCam.Y, entry1.PunktRobo.X, entry2.PunktCam.Y, entry2.PunktRobo.X)
                 cnt += 1

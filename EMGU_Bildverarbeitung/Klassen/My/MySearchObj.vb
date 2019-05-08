@@ -23,7 +23,7 @@ Public Class MySearchObj : Implements IXmlSerializable
         End Set
     End Property
     Private _Breite As Int32
-    Public Property Beite() As Int32
+    Public Property Breite() As Int32
         Get
             Return _Breite
         End Get

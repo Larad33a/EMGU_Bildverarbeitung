@@ -34,6 +34,7 @@ Public Class Form_Main
     Const Versatz_Bild_Tiefe_Y = 100
 
     Const ZOffset As Int32 = 717
+    Const Brennweite As Double = 1.88
 
     'Enums
     Public Enum Enum_Format
@@ -431,7 +432,7 @@ Public Class Form_Main
     'Referenzieren
     Private Sub btn_RefXY_Add_Click(sender As Object, e As EventArgs) Handles btn_RefXY_Add.Click
         If num_RefXY_KX.Value <> 0 Or num_RefXY_KY.Value <> 0 Or num_RefXY_RX.Value <> 0 Or num_RefXY_RY.Value <> 0 Then
-            Dim tmp_Refobj As New MyRefObjekt(num_RefXY_RX.Value, num_RefXY_RY.Value, num_RefXY_KX.Value, num_RefXY_KY.Value)
+            Dim tmp_Refobj As New MyRefObjekt(num_RefXY_RX.Value, num_RefXY_RY.Value, num_RefXY_KX.Value, num_RefXY_KY.Value, CInt(num_RefZ_OZ.Value))
             _MyRefXY_List.Add(tmp_Refobj)
             _RefreshListbox(lb_RefXY_Values, _MyRefXY_List)
         End If
@@ -448,7 +449,6 @@ Public Class Form_Main
         End If
         num_RefXY_FaktX.Value = CDec(Refe_Faktor_X)
         num_RefXY_FaktY.Value = CDec(Refe_Faktor_Y)
-        num_RefZ_FaktZ.Value = CDec(Refe_Faktor_Z)
         num_RefXY_OffsX.Value = CDec(Refe_Offset_X)
         num_RefXY_OffsY.Value = CDec(Refe_Offset_Y)
     End Sub
@@ -566,7 +566,7 @@ Public Class Form_Main
             Dim p As Point = obj.GetZentrumPoint()
             num_RefXY_KX.Value = p.X
             num_RefXY_KY.Value = p.Y
-            num_RefZ_OZ.Value = CInt(obj.GetDepthValAvg())
+            num_RefZ_OZ.Value = CInt(obj.GetDepthVal())
             Dim dimensions() As Int32 = obj.GetDimension(Refe_Faktor_X, ZOffset)
             num_newSearchObjB.Value = dimensions(0)
             num_newSearchObjH.Value = dimensions(1)
@@ -920,11 +920,12 @@ Public Class Form_Main
     'Sonstige Funktionen
     '-----------------------------------------------------------------------------------------------------------------------
 
-    Private Function PixToMil(pixel As Int32) As Int32
-        Return CInt(Math.Round(pixel * Math.Abs(Refe_Faktor_X)))
+    Private Function PixToMil(pixel As Int32, depth As Int32) As Int32
+        Return CInt(Math.Round(pixel * depth * Math.Abs(Refe_Faktor_X)))
     End Function
-    Private Function MilToPix(milimeter As Int32) As Int32
-        Return CInt(Math.Round(milimeter / Math.Abs(Refe_Faktor_X)))
+
+    Private Function MilToPix(milimeter As Int32, depth As Int32) As Int32
+        Return CInt(Math.Round(milimeter / (depth * Math.Abs(Refe_Faktor_X))))
     End Function
 
     Private Function TakePicture(ByRef color As Mat, ByRef depth As Mat, ByRef depthc As Mat) As Boolean
@@ -1526,14 +1527,10 @@ Public Class Form_Main
         ImgageAnalyse()
 
         '4. Gefundene Objekte vergleichen 
-        'Mase von mm in pixel wandeln
-        Dim h As Int32 = MilToPix(AktSearch.Höhe)
-        Dim b As Int32 = MilToPix(AktSearch.Beite)
-        Dim t As Int32 = MilToPix(AktSearch.Tiefe)
-        lb_Info.Items.Insert(0, $"Gesuchtes Objekt: h:{h,4} b:{b,4} t:{t,4}")
+        lb_Info.Items.Insert(0, $"Gesuchtes Objekt: h:{AktSearch.Höhe,4} b:{AktSearch.Breite,4} t:{AktSearch.Tiefe,4}")
         For Each obj As MyObjektV2 In _MyObjekte
             Dim Übereinstimmung As Double
-            If obj.Passend(AktSearch.Höhe, AktSearch.Beite, AktSearch.Tiefe, Refe_Faktor_X, ZOffset, Übereinstimmung, CInt(Num_SearchToleranz.Value)) Then
+            If obj.Passend(AktSearch.Höhe, AktSearch.Breite, AktSearch.Tiefe, Refe_Faktor_X, ZOffset, Übereinstimmung, CInt(Num_SearchToleranz.Value)) Then
                 _MyMatchObjekts.Add(New MyMatchObj(Übereinstimmung, "undef", obj))
             End If
         Next
@@ -1812,7 +1809,7 @@ Public Class Form_Main
         lb_Info.Items.Insert(0, $"Es wurden {_MyObjekte.Count,3} Objekte erkannt")
         'Filtern
         If cb_Watershed_Filter.Checked Then
-            Dim MinFlächeMM, MinFlächePix As Int32
+            Dim MinFlächeMM As Int32
 
             MinFlächeMM = CInt(num_WTS_MinB.Value * num_WTS_MinH.Value)
             If MinFlächeMM > CInt(num_WTS_MinB.Value * num_WTS_MinT.Value) Then
@@ -1821,13 +1818,12 @@ Public Class Form_Main
             If MinFlächeMM > CInt(num_WTS_MinH.Value * num_WTS_MinT.Value) Then
                 MinFlächeMM = CInt(num_WTS_MinH.Value * num_WTS_MinT.Value)
             End If
-            MinFlächePix = MilToPix(MinFlächeMM)
-            lb_Info.Items.Insert(0, $"Min Flävhe: {MinFlächeMM}mm² bzw. {MinFlächePix}pixel ")
+            lb_Info.Items.Insert(0, $"Min Flävhe: {MinFlächeMM}mm²")
             Dim entf As Int32 = 0
             Dim zulöschen As New List(Of MyObjektV2)
             For Each obj As MyObjektV2 In _MyObjekte
-                Dim tmpf As Int32 = obj.GetFläche
-                If tmpf < MinFlächePix Then
+                Dim tmpf As Int32 = obj.GetFläche(Refe_Faktor_X)
+                If tmpf < MinFlächeMM Then
                     zulöschen.Add(obj)
                     entf += 1
                 End If
@@ -2113,7 +2109,7 @@ Public Class Form_Main
         lb_Info.Items.Insert(0, $"Es wurden {_MyObjekte.Count,3} Objekte erkannt")
         'Filtern
         If cb_Watershed_Filter.Checked Then
-            Dim MinFlächeMM, MinFlächePix As Int32
+            Dim MinFlächeMM As Int32
 
             MinFlächeMM = CInt(num_WTS_MinB.Value * num_WTS_MinH.Value)
             If MinFlächeMM > CInt(num_WTS_MinB.Value * num_WTS_MinT.Value) Then
@@ -2122,13 +2118,12 @@ Public Class Form_Main
             If MinFlächeMM > CInt(num_WTS_MinH.Value * num_WTS_MinT.Value) Then
                 MinFlächeMM = CInt(num_WTS_MinH.Value * num_WTS_MinT.Value)
             End If
-            MinFlächePix = MilToPix(MinFlächeMM)
-            lb_Info.Items.Insert(0, $"Min Flävhe: {MinFlächeMM}mm² bzw. {MinFlächePix}pixel ")
+            lb_Info.Items.Insert(0, $"Min Flävhe: {MinFlächeMM}mm²")
             Dim entf As Int32 = 0
             Dim zulöschen As New List(Of MyObjektV2)
             For Each obj As MyObjektV2 In _MyObjekte
-                Dim tmpf As Int32 = obj.GetFläche
-                If tmpf < MinFlächePix Then
+                Dim tmpf As Int32 = obj.GetFläche(Refe_Faktor_X)
+                If tmpf < MinFlächeMM Then
                     zulöschen.Add(obj)
                     entf += 1
                 End If
@@ -2356,7 +2351,7 @@ Public Class Form_Main
         CvInvoke.Imshow("t3", tmp_Mat)
 
         'Filtern
-        Dim MinFlächeMM, MinFlächePix As Int32
+        Dim MinFlächeMM As Int32
         If cb_Watershed_Filter.Checked Then
             'Kürzeste Kanten finden und Kleinste Fläche berechnen
             If num_WTS_MinB.Value > num_WTS_MinH.Value Then
@@ -2372,10 +2367,9 @@ Public Class Form_Main
                     MinFlächeMM = CInt(num_WTS_MinB.Value * num_WTS_MinH.Value)
                 End If
             End If
-            MinFlächePix = MilToPix(MinFlächeMM)
-            lb_Info.Items.Insert(0, $"Min Flävhe: {MinFlächeMM}mm² bzw. {MinFlächePix}pixel ")
+            lb_Info.Items.Insert(0, $"Min Flävhe: {MinFlächeMM}mm²")
         Else
-            MinFlächePix = 0
+            MinFlächeMM = 0
         End If
 
 
@@ -2393,7 +2387,7 @@ Public Class Form_Main
             Dim fläche As Int32 = HöhePix * BreitePix
 
             lb_Info.Items.Insert(0, $"MinAreaRec: {i,3} H:{HöhePix,4} B:{BreitePix,4} F:{fläche,4}")
-            If fläche >= MinFlächePix Then
+            If fläche >= MinFlächeMM Then
                 lb_Info.Items.Insert(0, $"MinAreaRec: {i,3} OK")
                 CvInvoke.PutText(tmp_Img, wert.ToString("N2"), New Point(CInt(myFinalRec.Center.X), CInt(myFinalRec.Center.Y)), FontFace.HersheyComplex, 1, New MCvScalar(255, 255, 255))
                 For j = 0 To 3
@@ -2482,9 +2476,9 @@ Public Class Form_Main
 
     Private Sub btn_Info_Click(sender As Object, e As EventArgs) Handles btn_Info.Click
         Dim obj As MyObjektV2 = _MyObjekte(LB_obj.SelectedIndex)
-        Dim Höhemm As Int32 = PixToMil(CInt(obj.GetHöhe))
-        Dim breitemm As Int32 = PixToMil(CInt(obj.GetBreite))
-        Dim Flächemm As Int32 = PixToMil(CInt(obj.GetFläche))
+        Dim Höhemm As Int32 = CInt(obj.GetHöhe(Refe_Faktor_X))
+        Dim breitemm As Int32 = CInt(obj.GetBreite(Refe_Faktor_X))
+        Dim Flächemm As Int32 = CInt(obj.GetFläche(Refe_Faktor_X))
         lb_Info.Items.Insert(0, "--------------------------------------------")
         lb_Info.Items.Insert(0, $"TifenwerteGlobal:{obj.GetDepthStr}")
         lb_Info.Items.Insert(0, $"TifenwerteZenterum:{obj.GetDepthVal}")
