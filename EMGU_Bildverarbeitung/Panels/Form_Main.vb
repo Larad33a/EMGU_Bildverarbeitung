@@ -34,6 +34,7 @@ Public Class Form_Main
     Const Versatz_Bild_Tiefe_Y = 100
 
     Const ZOffset As Int32 = 717
+    Const Brennweite As Double = 1.88
 
     'Enums
     Public Enum Enum_Format
@@ -424,7 +425,7 @@ Public Class Form_Main
     'Referenzieren
     Private Sub btn_RefXY_Add_Click(sender As Object, e As EventArgs) Handles btn_RefXY_Add.Click
         If num_RefXY_KX.Value <> 0 Or num_RefXY_KY.Value <> 0 Or num_RefXY_RX.Value <> 0 Or num_RefXY_RY.Value <> 0 Then
-            Dim tmp_Refobj As New MyRefObjekt(num_RefXY_RX.Value, num_RefXY_RY.Value, num_RefXY_KX.Value, num_RefXY_KY.Value)
+            Dim tmp_Refobj As New MyRefObjekt(num_RefXY_RX.Value, num_RefXY_RY.Value, num_RefXY_KX.Value, num_RefXY_KY.Value, CInt(num_RefZ_OZ.Value))
             _MyRefXY_List.Add(tmp_Refobj)
             _RefreshListbox(lb_RefXY_Values, _MyRefXY_List)
         End If
@@ -436,12 +437,11 @@ Public Class Form_Main
 
     Private Sub btn_RefXY_Calc_Click(sender As Object, e As EventArgs) Handles btn_RefXY_Calc.Click
 
-        If Not Referenzierung.RefCalcXY(_MyRefXY_List, Refe_Faktor_X, Refe_Offset_X, Refe_Faktor_Y, Refe_Offset_Y) Then
+        If Not Referenzierung.RefCalcXY(_MyRefXY_List, Refe_Faktor_X, Refe_Offset_X, Refe_Faktor_Y, Refe_Offset_Y, Brennweite) Then
             lb_Info.Items.Insert(0, "FEHLER :Fehker bei der Automatischen Referenzierung")
         End If
         num_RefXY_FaktX.Value = CDec(Refe_Faktor_X)
         num_RefXY_FaktY.Value = CDec(Refe_Faktor_Y)
-        num_RefZ_FaktZ.Value = CDec(Refe_Faktor_Z)
         num_RefXY_OffsX.Value = CDec(Refe_Offset_X)
         num_RefXY_OffsY.Value = CDec(Refe_Offset_Y)
     End Sub
@@ -559,7 +559,7 @@ Public Class Form_Main
             Dim p As Point = obj.GetZentrumPoint()
             num_RefXY_KX.Value = p.X
             num_RefXY_KY.Value = p.Y
-            num_RefZ_OZ.Value = CInt(obj.GetDepthValAvg())
+            num_RefZ_OZ.Value = CInt(obj.GetDepthVal())
             Dim dimensions() As Int32 = obj.GetDimension(Refe_Faktor_X, ZOffset)
             num_newSearchObjB.Value = dimensions(0)
             num_newSearchObjH.Value = dimensions(1)
@@ -913,11 +913,12 @@ Public Class Form_Main
     'Sonstige Funktionen
     '-----------------------------------------------------------------------------------------------------------------------
 
-    Private Function PixToMil(pixel As Int32) As Int32
-        Return CInt(Math.Round(pixel * Math.Abs(Refe_Faktor_X)))
+    Private Function PixToMil(pixel As Int32, depth As Int32) As Int32
+        Return CInt(Math.Round(pixel * depth * Math.Abs(Refe_Faktor_X)))
     End Function
-    Private Function MilToPix(milimeter As Int32) As Int32
-        Return CInt(Math.Round(milimeter / Math.Abs(Refe_Faktor_X)))
+
+    Private Function MilToPix(milimeter As Int32, depth As Int32) As Int32
+        Return CInt(Math.Round(milimeter / (depth * Math.Abs(Refe_Faktor_X))))
     End Function
 
     Private Function TakePicture(ByRef color As Mat, ByRef depth As Mat, ByRef depthc As Mat) As Boolean
