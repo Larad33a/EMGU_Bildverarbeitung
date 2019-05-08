@@ -1060,7 +1060,6 @@ Partial Class Form_Main
         '
         Me.num_newSearchObjT.Location = New System.Drawing.Point(241, 95)
         Me.num_newSearchObjT.Maximum = New Decimal(New Integer() {1500, 0, 0, 0})
-        Me.num_newSearchObjT.Minimum = New Decimal(New Integer() {10, 0, 0, 0})
         Me.num_newSearchObjT.Name = "num_newSearchObjT"
         Me.num_newSearchObjT.Size = New System.Drawing.Size(88, 22)
         Me.num_newSearchObjT.TabIndex = 8
@@ -1070,7 +1069,6 @@ Partial Class Form_Main
         '
         Me.num_newSearchObjB.Location = New System.Drawing.Point(124, 96)
         Me.num_newSearchObjB.Maximum = New Decimal(New Integer() {1500, 0, 0, 0})
-        Me.num_newSearchObjB.Minimum = New Decimal(New Integer() {10, 0, 0, 0})
         Me.num_newSearchObjB.Name = "num_newSearchObjB"
         Me.num_newSearchObjB.Size = New System.Drawing.Size(88, 22)
         Me.num_newSearchObjB.TabIndex = 6
@@ -1098,7 +1096,6 @@ Partial Class Form_Main
         '
         Me.num_newSearchObjH.Location = New System.Drawing.Point(9, 93)
         Me.num_newSearchObjH.Maximum = New Decimal(New Integer() {1500, 0, 0, 0})
-        Me.num_newSearchObjH.Minimum = New Decimal(New Integer() {10, 0, 0, 0})
         Me.num_newSearchObjH.Name = "num_newSearchObjH"
         Me.num_newSearchObjH.Size = New System.Drawing.Size(88, 22)
         Me.num_newSearchObjH.TabIndex = 4
