@@ -234,35 +234,35 @@ Public Class MyObjektV2
         End If
     End Function
 
-    Public Function PassendAlt(höhe_pix As Int32, breit_pix As Int32, tiefe_pix As Int32, Optional toleranz_prozent As Int32 = 0) As Boolean
-        Dim höhe_dif, breite_dif, tiefe_dif As Double
-        If toleranz_prozent > 0 Then
-            höhe_dif = (höhe_pix / 100) * toleranz_prozent
-            breite_dif = (breit_pix / 100) * toleranz_prozent
-            tiefe_dif = (tiefe_pix / 100) * toleranz_prozent
-            Return (Vergleich(höhe_pix - höhe_dif, höhe_pix + höhe_dif, breit_pix - breite_dif, breit_pix + breite_dif, tiefe_pix - tiefe_dif, tiefe_pix + tiefe_dif) Or Vergleich(breit_pix - breite_dif, breit_pix + breite_dif, höhe_pix - höhe_dif, höhe_pix + höhe_dif, tiefe_pix - tiefe_dif, tiefe_pix + tiefe_dif) Or Vergleich(tiefe_pix - tiefe_dif, tiefe_pix + tiefe_dif, höhe_pix - höhe_dif, höhe_pix + höhe_dif, breit_pix - breite_dif, breit_pix + breite_dif))
-        Else
-            Return (Vergleich(höhe_pix, breit_pix, tiefe_pix) Or Vergleich(breit_pix, höhe_pix, tiefe_pix) Or Vergleich(tiefe_pix, höhe_pix, breit_pix))
-        End If
+    Public Function GetDimension(PixToMm As Double, zOffset As Int32) As Int32()
+        Dim arr(3) As Int32
+        arr(0) = CInt(Math.Round(GetHöhe(PixToMm)))
+        arr(1) = CInt(Math.Round(GetBreite(PixToMm)))
+        arr(2) = CInt(Math.Round(zOffset - GetDepthVal()))
+        Array.Sort(arr)
+        Return arr
     End Function
 
-    Public Function Passend(höhe_mm As Int32, breite_mm As Int32, tiefe_mm As Int32, pixToMm As Double, zOffset As Integer, ByRef abweichung As Double, toleranz_prozent As Int32) As Boolean
+    Public Function Passend(höhe_mm As Int32, breite_mm As Int32, tiefe_mm As Int32, pixToMm As Double, zOffset As Int32, ByRef abweichung As Double, toleranz_prozent As Int32) As Boolean
         Dim uebereinstimmungPrc As Double = 0.0
         Dim soll As New List(Of Int32)
         Dim ist As New List(Of Int32)
-        ist.Add(CInt(Math.Round(GetHöhe(pixToMm))))
-        ist.Add(CInt(Math.Round(GetBreite(pixToMm))))
-        ist.Add(CInt(Math.Round(zOffset - GetDepthVal())))
+        Dim dimensions() As Int32 = GetDimension(pixToMm, zOffset)
+        ' Istwerte
+        For i = 0 To 2
+            ist.Add(dimensions(i))
+        Next
+        ' Sollwerte
         soll.Add(höhe_mm)
         soll.Add(breite_mm)
         soll.Add(tiefe_mm)
-        ist.Sort()
         soll.Sort()
         ' Vergleichen
         For i = 0 To 2
             uebereinstimmungPrc += If(ist(i) > soll(i), soll(i) / ist(i), ist(i) / soll(i)) / 3
         Next
         uebereinstimmungPrc = Math.Round(uebereinstimmungPrc * 100, 2)
+        ' Ausgeben
         abweichung = uebereinstimmungPrc
         Return uebereinstimmungPrc > (100.0 - CDbl(toleranz_prozent))
     End Function
