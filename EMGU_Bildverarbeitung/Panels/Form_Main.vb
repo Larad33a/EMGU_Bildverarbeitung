@@ -307,6 +307,13 @@ Public Class Form_Main
         End Try
     End Sub
 
+    Private Sub btn_DelSingelSearch_Click(sender As Object, e As EventArgs) Handles btn_DelSingelSearch.Click
+        If lb_SearchObjList.SelectedIndex >= 0 Then
+            _MySearchObjekte.RemoveAt(lb_SearchObjList.SelectedIndex)
+            _RefreshListbox(lb_SearchObjList, _MySearchObjekte)
+        End If
+    End Sub
+
     'TCP_Variablen
     Private Sub btn_TCP_Connect_Click(sender As Object, e As EventArgs) Handles btn_TCP_Connect.Click
         lbl_TCP_Status.ForeColor = Color.Black
@@ -2489,6 +2496,5 @@ Public Class Form_Main
             lb_Info.Items.Insert(0, "Obj. Info------------------------------------")
         End If
     End Sub
-
 
 End Class 'Form1

@@ -21,6 +21,6 @@
     'Yr = My*Yc+By
 
     Public Overrides Function ToString() As String
-        Return ($"R:({_PunktRobo.ToString(),5:n2}) | K:({_PunktCam.ToString(),5:n2} | KZ:{})")
+        Return ($"R:({_PunktRobo.ToString(),5:n2}) | K:({_PunktCam.ToString(),5:n2} | KZ:{_ZinUnits,3})")
     End Function
 End Class

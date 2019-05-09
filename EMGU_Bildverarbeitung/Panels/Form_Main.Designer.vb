@@ -79,6 +79,7 @@ Partial Class Form_Main
         Me.TC1_Menue = New System.Windows.Forms.TabControl()
         Me.P1_Steuerung = New System.Windows.Forms.TabPage()
         Me.GroupBox10 = New System.Windows.Forms.GroupBox()
+        Me.btn_DelSingelSearch = New System.Windows.Forms.Button()
         Me.btn_LoadSearch = New System.Windows.Forms.Button()
         Me.btn_SaveSearch = New System.Windows.Forms.Button()
         Me.Label17 = New System.Windows.Forms.Label()
@@ -195,6 +196,10 @@ Partial Class Form_Main
         Me.Label27 = New System.Windows.Forms.Label()
         Me.P6_Reverenzieren = New System.Windows.Forms.TabPage()
         Me.GroupBox20 = New System.Windows.Forms.GroupBox()
+        Me.Label52 = New System.Windows.Forms.Label()
+        Me.num_RefXY_FaktPosy = New System.Windows.Forms.NumericUpDown()
+        Me.Label53 = New System.Windows.Forms.Label()
+        Me.num_RefXY_FaktPosX = New System.Windows.Forms.NumericUpDown()
         Me.btn_RefXY_Calc = New System.Windows.Forms.Button()
         Me.Label51 = New System.Windows.Forms.Label()
         Me.num_RefXY_OffsY = New System.Windows.Forms.NumericUpDown()
@@ -209,6 +214,9 @@ Partial Class Form_Main
         Me.GroupBox22 = New System.Windows.Forms.GroupBox()
         Me.btn_RefXY_Add = New System.Windows.Forms.Button()
         Me.GroupBox24 = New System.Windows.Forms.GroupBox()
+        Me.Label47 = New System.Windows.Forms.Label()
+        Me.Label57 = New System.Windows.Forms.Label()
+        Me.num_RefZ_OZ = New System.Windows.Forms.NumericUpDown()
         Me.Label44 = New System.Windows.Forms.Label()
         Me.Label45 = New System.Windows.Forms.Label()
         Me.num_RefXY_KY = New System.Windows.Forms.NumericUpDown()
@@ -237,13 +245,18 @@ Partial Class Form_Main
         Me.LB_obj = New System.Windows.Forms.ListBox()
         Me.P2_Found = New System.Windows.Forms.TabPage()
         Me.lb_Found = New System.Windows.Forms.ListBox()
-        Me.Label52 = New System.Windows.Forms.Label()
-        Me.num_RefXY_FaktPosy = New System.Windows.Forms.NumericUpDown()
-        Me.Label53 = New System.Windows.Forms.Label()
-        Me.num_RefXY_FaktPosX = New System.Windows.Forms.NumericUpDown()
-        Me.Label57 = New System.Windows.Forms.Label()
-        Me.num_RefZ_OZ = New System.Windows.Forms.NumericUpDown()
-        Me.Label47 = New System.Windows.Forms.Label()
+        Me.GroupBox21 = New System.Windows.Forms.GroupBox()
+        Me.Label59 = New System.Windows.Forms.Label()
+        Me.Label60 = New System.Windows.Forms.Label()
+        Me.num_Batch_ItemCount = New System.Windows.Forms.NumericUpDown()
+        Me.cb_Batch_Item = New System.Windows.Forms.ComboBox()
+        Me.btn_Batch_ItemAdd = New System.Windows.Forms.Button()
+        Me.GroupBox25 = New System.Windows.Forms.GroupBox()
+        Me.lb_Batch = New System.Windows.Forms.ListBox()
+        Me.btn_BatchStart = New System.Windows.Forms.Button()
+        Me.btn_BatchStop = New System.Windows.Forms.Button()
+        Me.btn_Batch_ItemDel = New System.Windows.Forms.Button()
+        Me.btn_BatchDelet = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
         Me.TC2_Bilder.SuspendLayout()
         Me.P1_NewImg.SuspendLayout()
@@ -321,25 +334,29 @@ Partial Class Form_Main
         CType(Me.num_TCP_Port, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.P6_Reverenzieren.SuspendLayout()
         Me.GroupBox20.SuspendLayout()
+        CType(Me.num_RefXY_FaktPosy, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.num_RefXY_FaktPosX, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.num_RefXY_OffsY, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.num_RefXY_OffsX, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.num_RefXY_FaktY, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.num_RefXY_FaktX, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox22.SuspendLayout()
         Me.GroupBox24.SuspendLayout()
+        CType(Me.num_RefZ_OZ, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.num_RefXY_KY, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.num_RefXY_KX, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox23.SuspendLayout()
         CType(Me.num_RefXY_RY, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.num_RefXY_RX, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.P7_SearchTask.SuspendLayout()
         Me.P8_test.SuspendLayout()
         Me.GroupBox8.SuspendLayout()
         Me.TC3_ObjLists.SuspendLayout()
         Me.P1_All.SuspendLayout()
         Me.P2_Found.SuspendLayout()
-        CType(Me.num_RefXY_FaktPosy, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.num_RefXY_FaktPosX, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.num_RefZ_OZ, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox21.SuspendLayout()
+        CType(Me.num_Batch_ItemCount, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox25.SuspendLayout()
         Me.SuspendLayout()
         '
         'GroupBox1
@@ -975,6 +992,7 @@ Partial Class Form_Main
         '
         'GroupBox10
         '
+        Me.GroupBox10.Controls.Add(Me.btn_DelSingelSearch)
         Me.GroupBox10.Controls.Add(Me.btn_LoadSearch)
         Me.GroupBox10.Controls.Add(Me.btn_SaveSearch)
         Me.GroupBox10.Controls.Add(Me.Label17)
@@ -996,12 +1014,22 @@ Partial Class Form_Main
         Me.GroupBox10.TabStop = False
         Me.GroupBox10.Text = "Objekte"
         '
+        'btn_DelSingelSearch
+        '
+        Me.btn_DelSingelSearch.Location = New System.Drawing.Point(558, 111)
+        Me.btn_DelSingelSearch.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.btn_DelSingelSearch.Name = "btn_DelSingelSearch"
+        Me.btn_DelSingelSearch.Size = New System.Drawing.Size(83, 23)
+        Me.btn_DelSingelSearch.TabIndex = 14
+        Me.btn_DelSingelSearch.Text = "Löschen"
+        Me.btn_DelSingelSearch.UseVisualStyleBackColor = True
+        '
         'btn_LoadSearch
         '
-        Me.btn_LoadSearch.Location = New System.Drawing.Point(527, 111)
+        Me.btn_LoadSearch.Location = New System.Drawing.Point(450, 111)
         Me.btn_LoadSearch.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.btn_LoadSearch.Name = "btn_LoadSearch"
-        Me.btn_LoadSearch.Size = New System.Drawing.Size(115, 23)
+        Me.btn_LoadSearch.Size = New System.Drawing.Size(83, 23)
         Me.btn_LoadSearch.TabIndex = 13
         Me.btn_LoadSearch.Text = "Laden"
         Me.btn_LoadSearch.UseVisualStyleBackColor = True
@@ -1011,7 +1039,7 @@ Partial Class Form_Main
         Me.btn_SaveSearch.Location = New System.Drawing.Point(361, 111)
         Me.btn_SaveSearch.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.btn_SaveSearch.Name = "btn_SaveSearch"
-        Me.btn_SaveSearch.Size = New System.Drawing.Size(115, 23)
+        Me.btn_SaveSearch.Size = New System.Drawing.Size(83, 23)
         Me.btn_SaveSearch.TabIndex = 12
         Me.btn_SaveSearch.Text = "Speichern"
         Me.btn_SaveSearch.UseVisualStyleBackColor = True
@@ -1252,8 +1280,6 @@ Partial Class Form_Main
         'cb_debug
         '
         Me.cb_debug.AutoSize = True
-        Me.cb_debug.Checked = True
-        Me.cb_debug.CheckState = System.Windows.Forms.CheckState.Checked
         Me.cb_debug.Location = New System.Drawing.Point(5, 22)
         Me.cb_debug.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.cb_debug.Name = "cb_debug"
@@ -1265,8 +1291,6 @@ Partial Class Form_Main
         'cb_DrawPoint
         '
         Me.cb_DrawPoint.AutoSize = True
-        Me.cb_DrawPoint.Checked = True
-        Me.cb_DrawPoint.CheckState = System.Windows.Forms.CheckState.Checked
         Me.cb_DrawPoint.Location = New System.Drawing.Point(5, 49)
         Me.cb_DrawPoint.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.cb_DrawPoint.Name = "cb_DrawPoint"
@@ -2292,6 +2316,46 @@ Partial Class Form_Main
         Me.GroupBox20.TabStop = False
         Me.GroupBox20.Text = "Referenzieren XY"
         '
+        'Label52
+        '
+        Me.Label52.AutoSize = True
+        Me.Label52.Location = New System.Drawing.Point(1441, 71)
+        Me.Label52.Name = "Label52"
+        Me.Label52.Size = New System.Drawing.Size(93, 17)
+        Me.Label52.TabIndex = 19
+        Me.Label52.Text = "Faktor_PosY:"
+        '
+        'num_RefXY_FaktPosy
+        '
+        Me.num_RefXY_FaktPosy.DecimalPlaces = 7
+        Me.num_RefXY_FaktPosy.Location = New System.Drawing.Point(1540, 69)
+        Me.num_RefXY_FaktPosy.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.num_RefXY_FaktPosy.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
+        Me.num_RefXY_FaktPosy.Minimum = New Decimal(New Integer() {9999, 0, 0, -2147483648})
+        Me.num_RefXY_FaktPosy.Name = "num_RefXY_FaktPosy"
+        Me.num_RefXY_FaktPosy.Size = New System.Drawing.Size(120, 22)
+        Me.num_RefXY_FaktPosy.TabIndex = 18
+        '
+        'Label53
+        '
+        Me.Label53.AutoSize = True
+        Me.Label53.Location = New System.Drawing.Point(1441, 44)
+        Me.Label53.Name = "Label53"
+        Me.Label53.Size = New System.Drawing.Size(93, 17)
+        Me.Label53.TabIndex = 17
+        Me.Label53.Text = "Faktor_PosX:"
+        '
+        'num_RefXY_FaktPosX
+        '
+        Me.num_RefXY_FaktPosX.DecimalPlaces = 7
+        Me.num_RefXY_FaktPosX.Location = New System.Drawing.Point(1540, 41)
+        Me.num_RefXY_FaktPosX.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.num_RefXY_FaktPosX.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
+        Me.num_RefXY_FaktPosX.Minimum = New Decimal(New Integer() {9999, 0, 0, -2147483648})
+        Me.num_RefXY_FaktPosX.Name = "num_RefXY_FaktPosX"
+        Me.num_RefXY_FaktPosX.Size = New System.Drawing.Size(120, 22)
+        Me.num_RefXY_FaktPosX.TabIndex = 16
+        '
         'btn_RefXY_Calc
         '
         Me.btn_RefXY_Calc.Location = New System.Drawing.Point(1241, 9)
@@ -2444,6 +2508,33 @@ Partial Class Form_Main
         Me.GroupBox24.TabStop = False
         Me.GroupBox24.Text = "Kamera"
         '
+        'Label47
+        '
+        Me.Label47.AutoSize = True
+        Me.Label47.Location = New System.Drawing.Point(473, 23)
+        Me.Label47.Name = "Label47"
+        Me.Label47.Size = New System.Drawing.Size(36, 17)
+        Me.Label47.TabIndex = 6
+        Me.Label47.Text = "pixel"
+        '
+        'Label57
+        '
+        Me.Label57.AutoSize = True
+        Me.Label57.Location = New System.Drawing.Point(320, 23)
+        Me.Label57.Name = "Label57"
+        Me.Label57.Size = New System.Drawing.Size(21, 17)
+        Me.Label57.TabIndex = 5
+        Me.Label57.Text = "Z:"
+        '
+        'num_RefZ_OZ
+        '
+        Me.num_RefZ_OZ.Location = New System.Drawing.Point(347, 21)
+        Me.num_RefZ_OZ.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
+        Me.num_RefZ_OZ.Maximum = New Decimal(New Integer() {900, 0, 0, 0})
+        Me.num_RefZ_OZ.Name = "num_RefZ_OZ"
+        Me.num_RefZ_OZ.Size = New System.Drawing.Size(120, 22)
+        Me.num_RefZ_OZ.TabIndex = 4
+        '
         'Label44
         '
         Me.Label44.AutoSize = True
@@ -2551,6 +2642,8 @@ Partial Class Form_Main
         '
         'P7_SearchTask
         '
+        Me.P7_SearchTask.Controls.Add(Me.GroupBox25)
+        Me.P7_SearchTask.Controls.Add(Me.GroupBox21)
         Me.P7_SearchTask.Location = New System.Drawing.Point(4, 25)
         Me.P7_SearchTask.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
         Me.P7_SearchTask.Name = "P7_SearchTask"
@@ -2759,72 +2852,124 @@ Partial Class Form_Main
         Me.lb_Found.Size = New System.Drawing.Size(535, 516)
         Me.lb_Found.TabIndex = 8
         '
-        'Label52
+        'GroupBox21
         '
-        Me.Label52.AutoSize = True
-        Me.Label52.Location = New System.Drawing.Point(1441, 71)
-        Me.Label52.Name = "Label52"
-        Me.Label52.Size = New System.Drawing.Size(93, 17)
-        Me.Label52.TabIndex = 19
-        Me.Label52.Text = "Faktor_PosY:"
+        Me.GroupBox21.Controls.Add(Me.btn_Batch_ItemAdd)
+        Me.GroupBox21.Controls.Add(Me.cb_Batch_Item)
+        Me.GroupBox21.Controls.Add(Me.num_Batch_ItemCount)
+        Me.GroupBox21.Controls.Add(Me.Label60)
+        Me.GroupBox21.Controls.Add(Me.Label59)
+        Me.GroupBox21.Location = New System.Drawing.Point(0, 0)
+        Me.GroupBox21.Name = "GroupBox21"
+        Me.GroupBox21.Size = New System.Drawing.Size(314, 155)
+        Me.GroupBox21.TabIndex = 0
+        Me.GroupBox21.TabStop = False
+        Me.GroupBox21.Text = "Item für Auftrag anlegen"
         '
-        'num_RefXY_FaktPosy
+        'Label59
         '
-        Me.num_RefXY_FaktPosy.DecimalPlaces = 7
-        Me.num_RefXY_FaktPosy.Location = New System.Drawing.Point(1540, 69)
-        Me.num_RefXY_FaktPosy.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.num_RefXY_FaktPosy.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
-        Me.num_RefXY_FaktPosy.Minimum = New Decimal(New Integer() {9999, 0, 0, -2147483648})
-        Me.num_RefXY_FaktPosy.Name = "num_RefXY_FaktPosy"
-        Me.num_RefXY_FaktPosy.Size = New System.Drawing.Size(120, 22)
-        Me.num_RefXY_FaktPosy.TabIndex = 18
+        Me.Label59.AutoSize = True
+        Me.Label59.Location = New System.Drawing.Point(10, 30)
+        Me.Label59.Name = "Label59"
+        Me.Label59.Size = New System.Drawing.Size(38, 17)
+        Me.Label59.TabIndex = 0
+        Me.Label59.Text = "Item:"
         '
-        'Label53
+        'Label60
         '
-        Me.Label53.AutoSize = True
-        Me.Label53.Location = New System.Drawing.Point(1441, 44)
-        Me.Label53.Name = "Label53"
-        Me.Label53.Size = New System.Drawing.Size(93, 17)
-        Me.Label53.TabIndex = 17
-        Me.Label53.Text = "Faktor_PosX:"
+        Me.Label60.AutoSize = True
+        Me.Label60.Location = New System.Drawing.Point(10, 67)
+        Me.Label60.Name = "Label60"
+        Me.Label60.Size = New System.Drawing.Size(55, 17)
+        Me.Label60.TabIndex = 1
+        Me.Label60.Text = "Anzahl:"
         '
-        'num_RefXY_FaktPosX
+        'num_Batch_ItemCount
         '
-        Me.num_RefXY_FaktPosX.DecimalPlaces = 7
-        Me.num_RefXY_FaktPosX.Location = New System.Drawing.Point(1540, 41)
-        Me.num_RefXY_FaktPosX.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.num_RefXY_FaktPosX.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
-        Me.num_RefXY_FaktPosX.Minimum = New Decimal(New Integer() {9999, 0, 0, -2147483648})
-        Me.num_RefXY_FaktPosX.Name = "num_RefXY_FaktPosX"
-        Me.num_RefXY_FaktPosX.Size = New System.Drawing.Size(120, 22)
-        Me.num_RefXY_FaktPosX.TabIndex = 16
+        Me.num_Batch_ItemCount.Location = New System.Drawing.Point(71, 65)
+        Me.num_Batch_ItemCount.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
+        Me.num_Batch_ItemCount.Name = "num_Batch_ItemCount"
+        Me.num_Batch_ItemCount.Size = New System.Drawing.Size(74, 22)
+        Me.num_Batch_ItemCount.TabIndex = 2
         '
-        'Label57
+        'cb_Batch_Item
         '
-        Me.Label57.AutoSize = True
-        Me.Label57.Location = New System.Drawing.Point(320, 23)
-        Me.Label57.Name = "Label57"
-        Me.Label57.Size = New System.Drawing.Size(21, 17)
-        Me.Label57.TabIndex = 5
-        Me.Label57.Text = "Z:"
+        Me.cb_Batch_Item.FormattingEnabled = True
+        Me.cb_Batch_Item.Location = New System.Drawing.Point(71, 27)
+        Me.cb_Batch_Item.Name = "cb_Batch_Item"
+        Me.cb_Batch_Item.Size = New System.Drawing.Size(237, 24)
+        Me.cb_Batch_Item.TabIndex = 3
         '
-        'num_RefZ_OZ
+        'btn_Batch_ItemAdd
         '
-        Me.num_RefZ_OZ.Location = New System.Drawing.Point(347, 21)
-        Me.num_RefZ_OZ.Margin = New System.Windows.Forms.Padding(3, 2, 3, 2)
-        Me.num_RefZ_OZ.Maximum = New Decimal(New Integer() {900, 0, 0, 0})
-        Me.num_RefZ_OZ.Name = "num_RefZ_OZ"
-        Me.num_RefZ_OZ.Size = New System.Drawing.Size(120, 22)
-        Me.num_RefZ_OZ.TabIndex = 4
+        Me.btn_Batch_ItemAdd.Location = New System.Drawing.Point(13, 108)
+        Me.btn_Batch_ItemAdd.Name = "btn_Batch_ItemAdd"
+        Me.btn_Batch_ItemAdd.Size = New System.Drawing.Size(294, 24)
+        Me.btn_Batch_ItemAdd.TabIndex = 4
+        Me.btn_Batch_ItemAdd.Text = "Zum Auftrag Hinzufügen"
+        Me.btn_Batch_ItemAdd.UseVisualStyleBackColor = True
         '
-        'Label47
+        'GroupBox25
         '
-        Me.Label47.AutoSize = True
-        Me.Label47.Location = New System.Drawing.Point(473, 23)
-        Me.Label47.Name = "Label47"
-        Me.Label47.Size = New System.Drawing.Size(36, 17)
-        Me.Label47.TabIndex = 6
-        Me.Label47.Text = "pixel"
+        Me.GroupBox25.Controls.Add(Me.btn_BatchDelet)
+        Me.GroupBox25.Controls.Add(Me.btn_Batch_ItemDel)
+        Me.GroupBox25.Controls.Add(Me.btn_BatchStop)
+        Me.GroupBox25.Controls.Add(Me.btn_BatchStart)
+        Me.GroupBox25.Controls.Add(Me.lb_Batch)
+        Me.GroupBox25.Location = New System.Drawing.Point(320, 0)
+        Me.GroupBox25.Name = "GroupBox25"
+        Me.GroupBox25.Size = New System.Drawing.Size(837, 158)
+        Me.GroupBox25.TabIndex = 1
+        Me.GroupBox25.TabStop = False
+        Me.GroupBox25.Text = "Auftrag"
+        '
+        'lb_Batch
+        '
+        Me.lb_Batch.FormattingEnabled = True
+        Me.lb_Batch.ItemHeight = 16
+        Me.lb_Batch.Location = New System.Drawing.Point(6, 21)
+        Me.lb_Batch.Name = "lb_Batch"
+        Me.lb_Batch.Size = New System.Drawing.Size(445, 132)
+        Me.lb_Batch.TabIndex = 0
+        '
+        'btn_BatchStart
+        '
+        Me.btn_BatchStart.Location = New System.Drawing.Point(457, 21)
+        Me.btn_BatchStart.Name = "btn_BatchStart"
+        Me.btn_BatchStart.Size = New System.Drawing.Size(181, 23)
+        Me.btn_BatchStart.TabIndex = 1
+        Me.btn_BatchStart.Text = "Auftrag starten"
+        Me.btn_BatchStart.UseVisualStyleBackColor = True
+        '
+        'btn_BatchStop
+        '
+        Me.btn_BatchStop.Enabled = False
+        Me.btn_BatchStop.Location = New System.Drawing.Point(457, 50)
+        Me.btn_BatchStop.Name = "btn_BatchStop"
+        Me.btn_BatchStop.Size = New System.Drawing.Size(181, 23)
+        Me.btn_BatchStop.TabIndex = 2
+        Me.btn_BatchStop.Text = "Auftrag Stoppen"
+        Me.btn_BatchStop.UseVisualStyleBackColor = True
+        '
+        'btn_Batch_ItemDel
+        '
+        Me.btn_Batch_ItemDel.Enabled = False
+        Me.btn_Batch_ItemDel.Location = New System.Drawing.Point(644, 109)
+        Me.btn_Batch_ItemDel.Name = "btn_Batch_ItemDel"
+        Me.btn_Batch_ItemDel.Size = New System.Drawing.Size(181, 23)
+        Me.btn_Batch_ItemDel.TabIndex = 3
+        Me.btn_Batch_ItemDel.Text = "Item Aus Auftrag löschen"
+        Me.btn_Batch_ItemDel.UseVisualStyleBackColor = True
+        '
+        'btn_BatchDelet
+        '
+        Me.btn_BatchDelet.Enabled = False
+        Me.btn_BatchDelet.Location = New System.Drawing.Point(457, 109)
+        Me.btn_BatchDelet.Name = "btn_BatchDelet"
+        Me.btn_BatchDelet.Size = New System.Drawing.Size(181, 23)
+        Me.btn_BatchDelet.TabIndex = 4
+        Me.btn_BatchDelet.Text = "Auftrag löschen"
+        Me.btn_BatchDelet.UseVisualStyleBackColor = True
         '
         'Form_Main
         '
@@ -2932,6 +3077,8 @@ Partial Class Form_Main
         Me.P6_Reverenzieren.ResumeLayout(False)
         Me.GroupBox20.ResumeLayout(False)
         Me.GroupBox20.PerformLayout()
+        CType(Me.num_RefXY_FaktPosy, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.num_RefXY_FaktPosX, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.num_RefXY_OffsY, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.num_RefXY_OffsX, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.num_RefXY_FaktY, System.ComponentModel.ISupportInitialize).EndInit()
@@ -2939,21 +3086,24 @@ Partial Class Form_Main
         Me.GroupBox22.ResumeLayout(False)
         Me.GroupBox24.ResumeLayout(False)
         Me.GroupBox24.PerformLayout()
+        CType(Me.num_RefZ_OZ, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.num_RefXY_KY, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.num_RefXY_KX, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox23.ResumeLayout(False)
         Me.GroupBox23.PerformLayout()
         CType(Me.num_RefXY_RY, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.num_RefXY_RX, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.P7_SearchTask.ResumeLayout(False)
         Me.P8_test.ResumeLayout(False)
         Me.GroupBox8.ResumeLayout(False)
         Me.GroupBox8.PerformLayout()
         Me.TC3_ObjLists.ResumeLayout(False)
         Me.P1_All.ResumeLayout(False)
         Me.P2_Found.ResumeLayout(False)
-        CType(Me.num_RefXY_FaktPosy, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.num_RefXY_FaktPosX, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.num_RefZ_OZ, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox21.ResumeLayout(False)
+        Me.GroupBox21.PerformLayout()
+        CType(Me.num_Batch_ItemCount, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox25.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -3191,4 +3341,17 @@ Partial Class Form_Main
     Friend WithEvents Label47 As Label
     Friend WithEvents Label57 As Label
     Friend WithEvents num_RefZ_OZ As NumericUpDown
+    Friend WithEvents btn_DelSingelSearch As Button
+    Friend WithEvents GroupBox25 As GroupBox
+    Friend WithEvents btn_BatchDelet As Button
+    Friend WithEvents btn_Batch_ItemDel As Button
+    Friend WithEvents btn_BatchStop As Button
+    Friend WithEvents btn_BatchStart As Button
+    Friend WithEvents lb_Batch As ListBox
+    Friend WithEvents GroupBox21 As GroupBox
+    Friend WithEvents btn_Batch_ItemAdd As Button
+    Friend WithEvents cb_Batch_Item As ComboBox
+    Friend WithEvents num_Batch_ItemCount As NumericUpDown
+    Friend WithEvents Label60 As Label
+    Friend WithEvents Label59 As Label
 End Class
