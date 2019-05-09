@@ -909,6 +909,12 @@ Public Class Form_Main
             listbox.Items.Add(obj.ToString)
         Next
     End Sub
+    Private Sub _RefreshListbox(listbox As ListBox, list As IList, faktx As Double, posFaktx As Double, posFakty As Double, offsetx As Double, offsety As Double)
+        listbox.Items.Clear()
+        For Each obj As MyObjektV2 In list
+            listbox.Items.Add(obj.ToString(faktx, posFaktx, posFakty, offsetx, offsety))
+        Next
+    End Sub
 
     '-----------------------------------------------------------------------------------------------------------------------
     'Sonstige Funktionen
@@ -2131,7 +2137,7 @@ Public Class Form_Main
 
         'Eintagen
         'Objekte in Liste Eintragen
-        _RefreshListbox(LB_obj, _MyObjekte)
+        _RefreshListbox(LB_obj, _MyObjekte, refVals.XFactor, refVals.XPosFactor, refVals.YPosFactor, refVals.XOffset, refVals.YOffset)
         'Objekte Zeichnen
         For Each ob2 As MyObjektV2 In _MyObjekte
             'Zentrum

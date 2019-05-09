@@ -341,6 +341,14 @@ Public Class MyObjektV2
         Dim tmpPoint As New Point(CInt(Math.Round(_MinAreaRec.Center.X)), CInt(Math.Round(_MinAreaRec.Center.Y)))
         Return tmpPoint
     End Function
+    Public Function GetZentrumPoint(posFaktX As Double, posFaktY As Double, offsetX As Double, offsetY As Double) As Point
+        'Prüfen ob _MinAreaRec Angelegt
+        If _MinAreaRec.Size.IsEmpty Then
+            Analyse()
+        End If
+        Dim tmpPoint As New Point(CInt(Math.Round(_MinAreaRec.Center.X * posFaktX + offsetX)), CInt(Math.Round(_MinAreaRec.Center.Y * posFaktY + offsetY)))
+        Return tmpPoint
+    End Function
     Public Function GetZentrumPointF() As PointF
         'Prüfen ob _MinAreaRec Angelegt
         If _MinAreaRec.Size.IsEmpty Then
@@ -485,5 +493,7 @@ Public Class MyObjektV2
     Public Overrides Function ToString() As String
         Return ($"{_ID,3}:Zentrum:{GetZentrumPoint.ToString()} ; Höhe:{GetHöhe(),4:n2} ; Breite: {GetBreite(),4:n2} ; Fläche:{GetFläche(),4} ; Winkel: {GetWinkel2.ToString("N2"),6} | {_MinAreaRec.Angle,6:n2}")
     End Function
-
+    Public Overloads Function ToString(pixToMM As Double, posFaktX As Double, posFaktY As Double, offsetX As Double, offsetY As Double) As String
+        Return ($"{_ID,3}:Zentrum:{GetZentrumPoint(posFaktX, posFaktY, offsetX, offsetY).ToString()} ; Höhe:{GetHöhe(pixToMM),4:n2} ; Breite: {GetBreite(pixToMM),4:n2} ; Fläche:{GetFläche(pixToMM),4} ; Winkel: {GetWinkel2.ToString("N2"),6} | {_MinAreaRec.Angle,6:n2}")
+    End Function
 End Class
