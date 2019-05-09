@@ -487,6 +487,9 @@ Public Class Form_Main
         refVals.YPosFactor = num_RefXY_FaktPosy.Value
     End Sub
 
+    'Aufträge (Batch)
+
+
     'Test
     Private Sub btn_TestVerschieben_Click(sender As Object, e As EventArgs) Handles btn_TestVerschieben.Click
         Dim test As New Mat
@@ -2497,4 +2500,11 @@ Public Class Form_Main
         End If
     End Sub
 
+    Private Sub btn_Batch_ItemAdd_Click(sender As Object, e As EventArgs) Handles btn_Batch_ItemAdd.Click
+
+    End Sub
+
+    Private Sub btn_BatchStart_Click(sender As Object, e As EventArgs) Handles btn_BatchStart.Click
+
+    End Sub
 End Class 'Form1
