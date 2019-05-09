@@ -10,6 +10,7 @@
     End Property
     Private _Fläche As Double
     Public Property fläche() As Double
+        'Test
         Get
             Return _Fläche
         End Get
