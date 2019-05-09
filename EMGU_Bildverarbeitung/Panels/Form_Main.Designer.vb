@@ -228,6 +228,18 @@ Partial Class Form_Main
         Me.num_RefXY_RY = New System.Windows.Forms.NumericUpDown()
         Me.num_RefXY_RX = New System.Windows.Forms.NumericUpDown()
         Me.P7_SearchTask = New System.Windows.Forms.TabPage()
+        Me.GroupBox25 = New System.Windows.Forms.GroupBox()
+        Me.btn_BatchDelet = New System.Windows.Forms.Button()
+        Me.btn_Batch_ItemDel = New System.Windows.Forms.Button()
+        Me.btn_BatchStop = New System.Windows.Forms.Button()
+        Me.btn_BatchStart = New System.Windows.Forms.Button()
+        Me.lb_Batch = New System.Windows.Forms.ListBox()
+        Me.GroupBox21 = New System.Windows.Forms.GroupBox()
+        Me.btn_Batch_ItemAdd = New System.Windows.Forms.Button()
+        Me.cb_Batch_Item = New System.Windows.Forms.ComboBox()
+        Me.num_Batch_ItemCount = New System.Windows.Forms.NumericUpDown()
+        Me.Label60 = New System.Windows.Forms.Label()
+        Me.Label59 = New System.Windows.Forms.Label()
         Me.P8_test = New System.Windows.Forms.TabPage()
         Me.btn_Info = New System.Windows.Forms.Button()
         Me.btn_Canny = New System.Windows.Forms.Button()
@@ -245,18 +257,6 @@ Partial Class Form_Main
         Me.LB_obj = New System.Windows.Forms.ListBox()
         Me.P2_Found = New System.Windows.Forms.TabPage()
         Me.lb_Found = New System.Windows.Forms.ListBox()
-        Me.GroupBox21 = New System.Windows.Forms.GroupBox()
-        Me.Label59 = New System.Windows.Forms.Label()
-        Me.Label60 = New System.Windows.Forms.Label()
-        Me.num_Batch_ItemCount = New System.Windows.Forms.NumericUpDown()
-        Me.cb_Batch_Item = New System.Windows.Forms.ComboBox()
-        Me.btn_Batch_ItemAdd = New System.Windows.Forms.Button()
-        Me.GroupBox25 = New System.Windows.Forms.GroupBox()
-        Me.lb_Batch = New System.Windows.Forms.ListBox()
-        Me.btn_BatchStart = New System.Windows.Forms.Button()
-        Me.btn_BatchStop = New System.Windows.Forms.Button()
-        Me.btn_Batch_ItemDel = New System.Windows.Forms.Button()
-        Me.btn_BatchDelet = New System.Windows.Forms.Button()
         Me.GroupBox1.SuspendLayout()
         Me.TC2_Bilder.SuspendLayout()
         Me.P1_NewImg.SuspendLayout()
@@ -349,14 +349,14 @@ Partial Class Form_Main
         CType(Me.num_RefXY_RY, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.num_RefXY_RX, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.P7_SearchTask.SuspendLayout()
+        Me.GroupBox25.SuspendLayout()
+        Me.GroupBox21.SuspendLayout()
+        CType(Me.num_Batch_ItemCount, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.P8_test.SuspendLayout()
         Me.GroupBox8.SuspendLayout()
         Me.TC3_ObjLists.SuspendLayout()
         Me.P1_All.SuspendLayout()
         Me.P2_Found.SuspendLayout()
-        Me.GroupBox21.SuspendLayout()
-        CType(Me.num_Batch_ItemCount, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.GroupBox25.SuspendLayout()
         Me.SuspendLayout()
         '
         'GroupBox1
@@ -2652,6 +2652,123 @@ Partial Class Form_Main
         Me.P7_SearchTask.Text = "Suchaufträge"
         Me.P7_SearchTask.UseVisualStyleBackColor = True
         '
+        'GroupBox25
+        '
+        Me.GroupBox25.Controls.Add(Me.btn_BatchDelet)
+        Me.GroupBox25.Controls.Add(Me.btn_Batch_ItemDel)
+        Me.GroupBox25.Controls.Add(Me.btn_BatchStop)
+        Me.GroupBox25.Controls.Add(Me.btn_BatchStart)
+        Me.GroupBox25.Controls.Add(Me.lb_Batch)
+        Me.GroupBox25.Location = New System.Drawing.Point(320, 0)
+        Me.GroupBox25.Name = "GroupBox25"
+        Me.GroupBox25.Size = New System.Drawing.Size(837, 158)
+        Me.GroupBox25.TabIndex = 1
+        Me.GroupBox25.TabStop = False
+        Me.GroupBox25.Text = "Auftrag"
+        '
+        'btn_BatchDelet
+        '
+        Me.btn_BatchDelet.Location = New System.Drawing.Point(457, 109)
+        Me.btn_BatchDelet.Name = "btn_BatchDelet"
+        Me.btn_BatchDelet.Size = New System.Drawing.Size(181, 23)
+        Me.btn_BatchDelet.TabIndex = 4
+        Me.btn_BatchDelet.Text = "Auftrag löschen"
+        Me.btn_BatchDelet.UseVisualStyleBackColor = True
+        '
+        'btn_Batch_ItemDel
+        '
+        Me.btn_Batch_ItemDel.Location = New System.Drawing.Point(644, 109)
+        Me.btn_Batch_ItemDel.Name = "btn_Batch_ItemDel"
+        Me.btn_Batch_ItemDel.Size = New System.Drawing.Size(181, 23)
+        Me.btn_Batch_ItemDel.TabIndex = 3
+        Me.btn_Batch_ItemDel.Text = "Item Aus Auftrag löschen"
+        Me.btn_Batch_ItemDel.UseVisualStyleBackColor = True
+        '
+        'btn_BatchStop
+        '
+        Me.btn_BatchStop.Enabled = False
+        Me.btn_BatchStop.Location = New System.Drawing.Point(457, 50)
+        Me.btn_BatchStop.Name = "btn_BatchStop"
+        Me.btn_BatchStop.Size = New System.Drawing.Size(181, 23)
+        Me.btn_BatchStop.TabIndex = 2
+        Me.btn_BatchStop.Text = "Auftrag Stoppen"
+        Me.btn_BatchStop.UseVisualStyleBackColor = True
+        '
+        'btn_BatchStart
+        '
+        Me.btn_BatchStart.Location = New System.Drawing.Point(457, 21)
+        Me.btn_BatchStart.Name = "btn_BatchStart"
+        Me.btn_BatchStart.Size = New System.Drawing.Size(181, 23)
+        Me.btn_BatchStart.TabIndex = 1
+        Me.btn_BatchStart.Text = "Auftrag starten"
+        Me.btn_BatchStart.UseVisualStyleBackColor = True
+        '
+        'lb_Batch
+        '
+        Me.lb_Batch.FormattingEnabled = True
+        Me.lb_Batch.ItemHeight = 16
+        Me.lb_Batch.Location = New System.Drawing.Point(6, 21)
+        Me.lb_Batch.Name = "lb_Batch"
+        Me.lb_Batch.Size = New System.Drawing.Size(445, 132)
+        Me.lb_Batch.TabIndex = 0
+        '
+        'GroupBox21
+        '
+        Me.GroupBox21.Controls.Add(Me.btn_Batch_ItemAdd)
+        Me.GroupBox21.Controls.Add(Me.cb_Batch_Item)
+        Me.GroupBox21.Controls.Add(Me.num_Batch_ItemCount)
+        Me.GroupBox21.Controls.Add(Me.Label60)
+        Me.GroupBox21.Controls.Add(Me.Label59)
+        Me.GroupBox21.Location = New System.Drawing.Point(0, 0)
+        Me.GroupBox21.Name = "GroupBox21"
+        Me.GroupBox21.Size = New System.Drawing.Size(314, 155)
+        Me.GroupBox21.TabIndex = 0
+        Me.GroupBox21.TabStop = False
+        Me.GroupBox21.Text = "Item für Auftrag anlegen"
+        '
+        'btn_Batch_ItemAdd
+        '
+        Me.btn_Batch_ItemAdd.Location = New System.Drawing.Point(13, 108)
+        Me.btn_Batch_ItemAdd.Name = "btn_Batch_ItemAdd"
+        Me.btn_Batch_ItemAdd.Size = New System.Drawing.Size(294, 24)
+        Me.btn_Batch_ItemAdd.TabIndex = 4
+        Me.btn_Batch_ItemAdd.Text = "Zum Auftrag Hinzufügen"
+        Me.btn_Batch_ItemAdd.UseVisualStyleBackColor = True
+        '
+        'cb_Batch_Item
+        '
+        Me.cb_Batch_Item.FormattingEnabled = True
+        Me.cb_Batch_Item.Location = New System.Drawing.Point(71, 27)
+        Me.cb_Batch_Item.Name = "cb_Batch_Item"
+        Me.cb_Batch_Item.Size = New System.Drawing.Size(237, 24)
+        Me.cb_Batch_Item.TabIndex = 3
+        '
+        'num_Batch_ItemCount
+        '
+        Me.num_Batch_ItemCount.Location = New System.Drawing.Point(71, 65)
+        Me.num_Batch_ItemCount.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
+        Me.num_Batch_ItemCount.Name = "num_Batch_ItemCount"
+        Me.num_Batch_ItemCount.Size = New System.Drawing.Size(74, 22)
+        Me.num_Batch_ItemCount.TabIndex = 2
+        '
+        'Label60
+        '
+        Me.Label60.AutoSize = True
+        Me.Label60.Location = New System.Drawing.Point(10, 67)
+        Me.Label60.Name = "Label60"
+        Me.Label60.Size = New System.Drawing.Size(55, 17)
+        Me.Label60.TabIndex = 1
+        Me.Label60.Text = "Anzahl:"
+        '
+        'Label59
+        '
+        Me.Label59.AutoSize = True
+        Me.Label59.Location = New System.Drawing.Point(10, 30)
+        Me.Label59.Name = "Label59"
+        Me.Label59.Size = New System.Drawing.Size(38, 17)
+        Me.Label59.TabIndex = 0
+        Me.Label59.Text = "Item:"
+        '
         'P8_test
         '
         Me.P8_test.Controls.Add(Me.btn_Info)
@@ -2852,125 +2969,6 @@ Partial Class Form_Main
         Me.lb_Found.Size = New System.Drawing.Size(535, 516)
         Me.lb_Found.TabIndex = 8
         '
-        'GroupBox21
-        '
-        Me.GroupBox21.Controls.Add(Me.btn_Batch_ItemAdd)
-        Me.GroupBox21.Controls.Add(Me.cb_Batch_Item)
-        Me.GroupBox21.Controls.Add(Me.num_Batch_ItemCount)
-        Me.GroupBox21.Controls.Add(Me.Label60)
-        Me.GroupBox21.Controls.Add(Me.Label59)
-        Me.GroupBox21.Location = New System.Drawing.Point(0, 0)
-        Me.GroupBox21.Name = "GroupBox21"
-        Me.GroupBox21.Size = New System.Drawing.Size(314, 155)
-        Me.GroupBox21.TabIndex = 0
-        Me.GroupBox21.TabStop = False
-        Me.GroupBox21.Text = "Item für Auftrag anlegen"
-        '
-        'Label59
-        '
-        Me.Label59.AutoSize = True
-        Me.Label59.Location = New System.Drawing.Point(10, 30)
-        Me.Label59.Name = "Label59"
-        Me.Label59.Size = New System.Drawing.Size(38, 17)
-        Me.Label59.TabIndex = 0
-        Me.Label59.Text = "Item:"
-        '
-        'Label60
-        '
-        Me.Label60.AutoSize = True
-        Me.Label60.Location = New System.Drawing.Point(10, 67)
-        Me.Label60.Name = "Label60"
-        Me.Label60.Size = New System.Drawing.Size(55, 17)
-        Me.Label60.TabIndex = 1
-        Me.Label60.Text = "Anzahl:"
-        '
-        'num_Batch_ItemCount
-        '
-        Me.num_Batch_ItemCount.Location = New System.Drawing.Point(71, 65)
-        Me.num_Batch_ItemCount.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
-        Me.num_Batch_ItemCount.Name = "num_Batch_ItemCount"
-        Me.num_Batch_ItemCount.Size = New System.Drawing.Size(74, 22)
-        Me.num_Batch_ItemCount.TabIndex = 2
-        '
-        'cb_Batch_Item
-        '
-        Me.cb_Batch_Item.FormattingEnabled = True
-        Me.cb_Batch_Item.Location = New System.Drawing.Point(71, 27)
-        Me.cb_Batch_Item.Name = "cb_Batch_Item"
-        Me.cb_Batch_Item.Size = New System.Drawing.Size(237, 24)
-        Me.cb_Batch_Item.TabIndex = 3
-        '
-        'btn_Batch_ItemAdd
-        '
-        Me.btn_Batch_ItemAdd.Location = New System.Drawing.Point(13, 108)
-        Me.btn_Batch_ItemAdd.Name = "btn_Batch_ItemAdd"
-        Me.btn_Batch_ItemAdd.Size = New System.Drawing.Size(294, 24)
-        Me.btn_Batch_ItemAdd.TabIndex = 4
-        Me.btn_Batch_ItemAdd.Text = "Zum Auftrag Hinzufügen"
-        Me.btn_Batch_ItemAdd.UseVisualStyleBackColor = True
-        '
-        'GroupBox25
-        '
-        Me.GroupBox25.Controls.Add(Me.btn_BatchDelet)
-        Me.GroupBox25.Controls.Add(Me.btn_Batch_ItemDel)
-        Me.GroupBox25.Controls.Add(Me.btn_BatchStop)
-        Me.GroupBox25.Controls.Add(Me.btn_BatchStart)
-        Me.GroupBox25.Controls.Add(Me.lb_Batch)
-        Me.GroupBox25.Location = New System.Drawing.Point(320, 0)
-        Me.GroupBox25.Name = "GroupBox25"
-        Me.GroupBox25.Size = New System.Drawing.Size(837, 158)
-        Me.GroupBox25.TabIndex = 1
-        Me.GroupBox25.TabStop = False
-        Me.GroupBox25.Text = "Auftrag"
-        '
-        'lb_Batch
-        '
-        Me.lb_Batch.FormattingEnabled = True
-        Me.lb_Batch.ItemHeight = 16
-        Me.lb_Batch.Location = New System.Drawing.Point(6, 21)
-        Me.lb_Batch.Name = "lb_Batch"
-        Me.lb_Batch.Size = New System.Drawing.Size(445, 132)
-        Me.lb_Batch.TabIndex = 0
-        '
-        'btn_BatchStart
-        '
-        Me.btn_BatchStart.Location = New System.Drawing.Point(457, 21)
-        Me.btn_BatchStart.Name = "btn_BatchStart"
-        Me.btn_BatchStart.Size = New System.Drawing.Size(181, 23)
-        Me.btn_BatchStart.TabIndex = 1
-        Me.btn_BatchStart.Text = "Auftrag starten"
-        Me.btn_BatchStart.UseVisualStyleBackColor = True
-        '
-        'btn_BatchStop
-        '
-        Me.btn_BatchStop.Enabled = False
-        Me.btn_BatchStop.Location = New System.Drawing.Point(457, 50)
-        Me.btn_BatchStop.Name = "btn_BatchStop"
-        Me.btn_BatchStop.Size = New System.Drawing.Size(181, 23)
-        Me.btn_BatchStop.TabIndex = 2
-        Me.btn_BatchStop.Text = "Auftrag Stoppen"
-        Me.btn_BatchStop.UseVisualStyleBackColor = True
-        '
-        'btn_Batch_ItemDel
-        '
-        Me.btn_Batch_ItemDel.Enabled = False
-        Me.btn_Batch_ItemDel.Location = New System.Drawing.Point(644, 109)
-        Me.btn_Batch_ItemDel.Name = "btn_Batch_ItemDel"
-        Me.btn_Batch_ItemDel.Size = New System.Drawing.Size(181, 23)
-        Me.btn_Batch_ItemDel.TabIndex = 3
-        Me.btn_Batch_ItemDel.Text = "Item Aus Auftrag löschen"
-        Me.btn_Batch_ItemDel.UseVisualStyleBackColor = True
-        '
-        'btn_BatchDelet
-        '
-        Me.btn_BatchDelet.Enabled = False
-        Me.btn_BatchDelet.Location = New System.Drawing.Point(457, 109)
-        Me.btn_BatchDelet.Name = "btn_BatchDelet"
-        Me.btn_BatchDelet.Size = New System.Drawing.Size(181, 23)
-        Me.btn_BatchDelet.TabIndex = 4
-        Me.btn_BatchDelet.Text = "Auftrag löschen"
-        Me.btn_BatchDelet.UseVisualStyleBackColor = True
-        '
         'Form_Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 16.0!)
@@ -3094,16 +3092,16 @@ Partial Class Form_Main
         CType(Me.num_RefXY_RY, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.num_RefXY_RX, System.ComponentModel.ISupportInitialize).EndInit()
         Me.P7_SearchTask.ResumeLayout(False)
+        Me.GroupBox25.ResumeLayout(False)
+        Me.GroupBox21.ResumeLayout(False)
+        Me.GroupBox21.PerformLayout()
+        CType(Me.num_Batch_ItemCount, System.ComponentModel.ISupportInitialize).EndInit()
         Me.P8_test.ResumeLayout(False)
         Me.GroupBox8.ResumeLayout(False)
         Me.GroupBox8.PerformLayout()
         Me.TC3_ObjLists.ResumeLayout(False)
         Me.P1_All.ResumeLayout(False)
         Me.P2_Found.ResumeLayout(False)
-        Me.GroupBox21.ResumeLayout(False)
-        Me.GroupBox21.PerformLayout()
-        CType(Me.num_Batch_ItemCount, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.GroupBox25.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub

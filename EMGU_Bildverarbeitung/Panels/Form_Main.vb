@@ -54,8 +54,12 @@ Public Class Form_Main
     'Strukts
     Private Structure Auftrag
         Dim obj As Int32
+        Dim Name As String
         Dim SollAnzahl As Int32
         Dim IstAnzahl As Int32
+        Public Overrides Function ToString() As String
+            Return ($"{Name,-40} | Gesucht:{SollAnzahl,3} | Gefunden:{IstAnzahl,3}")
+        End Function
     End Structure
 
     'Globale Variablen
@@ -220,7 +224,7 @@ Public Class Form_Main
             ib_new_Depth.Image = _DisDepth.ToImage(Of Bgr, Byte)
             TC2_Bilder.SelectedTab = P1_NewImg
 
-            TC2_Bilder.TabPages(5).Text = "Z16 Tiefenbild"
+            TC2_Bilder.TabPages(4).Text = "Z16 Tiefenbild"
             ib_depth_01.Image = _MatDepth
         End If
     End Sub
@@ -235,7 +239,7 @@ Public Class Form_Main
             ib_rev_Depth.Image = _DisRefD.ToImage(Of Bgr, Byte)
             TC2_Bilder.SelectedTab = P3_Rev
 
-            TC2_Bilder.TabPages(5).Text = "Z16 Tiefenbild"
+            TC2_Bilder.TabPages(4).Text = "Z16 Tiefenbild"
             ib_depth_01.Image = _MatDepth
         End If
     End Sub
@@ -466,6 +470,8 @@ Public Class Form_Main
         num_RefXY_FaktY.Value = CDec(refVals.YFactor)
         num_RefXY_OffsX.Value = CDec(refVals.XOffset)
         num_RefXY_OffsY.Value = CDec(refVals.YOffset)
+        num_RefXY_FaktPosX.Value = CDec(refVals.XPosFactor)
+        num_RefXY_FaktPosy.Value = CDec(refVals.YPosFactor)
     End Sub
 
     Private Sub num_RefXY_FaktX_ValueChanged(sender As Object, e As EventArgs) Handles num_RefXY_FaktX.ValueChanged
@@ -488,7 +494,39 @@ Public Class Form_Main
     End Sub
 
     'Aufträge (Batch)
+    Private Sub btn_Batch_ItemAdd_Click(sender As Object, e As EventArgs) Handles btn_Batch_ItemAdd.Click
+        If cb_Batch_Item.SelectedItem IsNot Nothing And num_Batch_ItemCount.Value > 0 Then
+            Dim BatchItem As Auftrag
+            BatchItem.Name = cb_Batch_Item.SelectedItem.ToString()
+            BatchItem.SollAnzahl = CInt(num_Batch_ItemCount.Value)
+            For Each obj In _MySearchObjekte
+                If obj.Name = cb_Batch_Item.SelectedItem.ToString() Then
+                    BatchItem.obj = obj.ID
+                End If
+            Next
+            _MyAuftrag.Add(BatchItem)
+            _RefreshListbox(lb_Batch, _MyAuftrag)
+        End If
+    End Sub
 
+    Private Sub btn_Batch_ItemDel_Click(sender As Object, e As EventArgs) Handles btn_Batch_ItemDel.Click
+        If lb_Batch.SelectedIndex >= 0 Then
+            _MyAuftrag.RemoveAt(lb_Batch.SelectedIndex)
+            _RefreshListbox(lb_Batch, _MyAuftrag)
+        End If
+    End Sub
+
+    Private Sub btn_BatchStart_Click(sender As Object, e As EventArgs) Handles btn_BatchStart.Click
+
+    End Sub
+
+    Private Sub btn_BatchStop_Click(sender As Object, e As EventArgs) Handles btn_BatchStop.Click
+
+    End Sub
+
+    Private Sub btn_BatchDelet_Click(sender As Object, e As EventArgs) Handles btn_BatchDelet.Click
+        _ClearList(_MyAuftrag, lb_Batch)
+    End Sub
 
     'Test
     Private Sub btn_TestVerschieben_Click(sender As Object, e As EventArgs) Handles btn_TestVerschieben.Click
@@ -573,6 +611,15 @@ Public Class Form_Main
         End If
     End Sub
 
+    'TabControler
+    Private Sub TC1_Menue_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TC1_Menue.Selecting
+        If TC1_Menue.SelectedTab Is P7_SearchTask Then
+            lb_Info.Items.Insert(0, "Data")
+            For Each obj In _MySearchObjekte
+                cb_Batch_Item.Items.Add(obj.Name)
+            Next
+        End If
+    End Sub
     '-----------------------------------------------------------------------------------------------------------------------
     'Einstelungen
     '-----------------------------------------------------------------------------------------------------------------------
@@ -1056,7 +1103,7 @@ Public Class Form_Main
                 End If
             Next
         Next
-        TC2_Bilder.TabPages(5).Text = "Maske"
+        TC2_Bilder.TabPages(4).Text = "Maske"
         ib_depth_01.Image = Maske
         CvInvoke.Multiply(resurce, Maske, Ergebnis)
         Return Ergebnis
@@ -2500,11 +2547,4 @@ Public Class Form_Main
         End If
     End Sub
 
-    Private Sub btn_Batch_ItemAdd_Click(sender As Object, e As EventArgs) Handles btn_Batch_ItemAdd.Click
-
-    End Sub
-
-    Private Sub btn_BatchStart_Click(sender As Object, e As EventArgs) Handles btn_BatchStart.Click
-
-    End Sub
 End Class 'Form1
