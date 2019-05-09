@@ -3,66 +3,72 @@
   <Profiles />
   <Settings>
     <Setting Name="Steur_Tolreanz" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">20</Value>
     </Setting>
     <Setting Name="Konf_MaskeH" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">120</Value>
     </Setting>
     <Setting Name="Konf_MaskeV" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">250</Value>
     </Setting>
     <Setting Name="Konf_KameraOffset" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">-40</Value>
     </Setting>
     <Setting Name="Konv_FaktorPixMilH" Type="System.Double" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">1.37462</Value>
     </Setting>
     <Setting Name="Konv_FaktorPixMilB" Type="System.Double" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">1.37462</Value>
     </Setting>
     <Setting Name="Konv_RoboOffsetX" Type="System.Double" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">0.95</Value>
     </Setting>
     <Setting Name="Konv_RoboOffsetY" Type="System.Double" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">1.05</Value>
     </Setting>
     <Setting Name="Ausw_TiefsteReg" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">710</Value>
     </Setting>
     <Setting Name="Ausw_HöchsteReg" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">300</Value>
     </Setting>
     <Setting Name="Ausw_MindestObjH" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="Ausw_MindestObjB" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="Ausw_MindestObjT" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">10</Value>
     </Setting>
     <Setting Name="TCP_Host" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">192.168.43.14</Value>
     </Setting>
     <Setting Name="TCP_Port" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">2019</Value>
     </Setting>
     <Setting Name="Konf_KameraColorOffset" Type="System.Int32" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="Rever_FaktorX" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">0.0011098</Value>
     </Setting>
     <Setting Name="Rever_FaktorY" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">-0.0010708</Value>
     </Setting>
     <Setting Name="Rever_OffsetX" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">-566.75</Value>
     </Setting>
     <Setting Name="Rever_OffsetY" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">688.25</Value>
     </Setting>
     <Setting Name="Rever_FaktorZ" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Rever_FaktorPosX" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Rever_FaktorPosY" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
   </Settings>

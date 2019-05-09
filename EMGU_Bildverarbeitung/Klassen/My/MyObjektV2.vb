@@ -323,7 +323,7 @@ Public Class MyObjektV2
     Public Function GetFläche() As Int32
         Return CInt(Math.Round(GetBreite() * GetHöhe()))
     End Function
-    Public Function GetFläche(pixToMM As Double) As Int32
+    Public Function GetFläche(pixToMM As Double) As Int64
         Return CInt(Math.Round(GetBreite(pixToMM) * GetHöhe(pixToMM)))
     End Function
     Public Function GetZentrumMyPoint() As MyPoint
@@ -443,7 +443,7 @@ Public Class MyObjektV2
                 tmpZ += _ReverenzenZ(i)
             End If
         Next
-
+        If cnt = 0 Then Return 0
         Return CInt(Math.Round(tmpZ / cnt, 0))
     End Function
 

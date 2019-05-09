@@ -1,7 +1,6 @@
 ﻿Public Class MyRefObjekt
     Public Property PunktRobo As PointF
     Public Property PunktCam As PointF
-    Public Property ZinMM As Int32
     Public Property ZinUnits As Int32
 
     'XY
@@ -15,17 +14,13 @@
         _ZinUnits = kameraZ
     End Sub
     'Z
-    Sub New(zinmm As Int32)
-        _ZinMM = zinmm
-    End Sub
-    Sub New(zinmm As Int32, zinunits As Int32)
-        _ZinMM = zinmm
+    Sub New(zinunits As Int32)
         _ZinUnits = zinunits
     End Sub
     'Xr = Mx*Xc+Bx
     'Yr = My*Yc+By
 
     Public Overrides Function ToString() As String
-        Return ($"R:({_PunktRobo.ToString(),5:n2}) | K:({_PunktCam.ToString(),5:n2})")
+        Return ($"R:({_PunktRobo.ToString(),5:n2}) | K:({_PunktCam.ToString(),5:n2} | KZ:{})")
     End Function
 End Class

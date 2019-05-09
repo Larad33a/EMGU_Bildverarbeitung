@@ -14,6 +14,15 @@ Imports System.IO
 'Infos:
 'Emgu.CV.CvInvoke. zugriff auf alle openCV befehle
 
+Public Structure RefValues
+    Public XFactor As Double
+    Public YFactor As Double
+    Public XPosFactor As Double
+    Public YPosFactor As Double
+    Public XOffset As Double
+    Public YOffset As Double
+End Structure
+
 Public Class Form_Main
 
     'Konstanten
@@ -33,7 +42,7 @@ Public Class Form_Main
     Const Versatz_Bild_Tiefe_X = 100
     Const Versatz_Bild_Tiefe_Y = 100
 
-    Const ZOffset As Int32 = 717
+    Const cZOffset As Int32 = 717
     Const Brennweite As Double = 1.88
 
     'Enums
@@ -42,12 +51,12 @@ Public Class Form_Main
         depth
     End Enum
 
+    'Strukts
     Private Structure Auftrag
         Dim obj As Int32
         Dim SollAnzahl As Int32
         Dim IstAnzahl As Int32
     End Structure
-
 
     'Globale Variablen
     Private _MyPipeline As New Pipeline
@@ -76,11 +85,7 @@ Public Class Form_Main
     Private _trys As Int32 = 0
 
     'Faktoren & Offsets
-    Private Refe_Faktor_X As Double
-    Private Refe_Faktor_Y As Double
-    Private Refe_Faktor_Z As Double
-    Private Refe_Offset_X As Double
-    Private Refe_Offset_Y As Double
+    Dim refVals As RefValues
 
     Private _DepthImgTaken As Boolean = False
     Private _DepthCImgTaken As Boolean = False
@@ -191,11 +196,12 @@ Public Class Form_Main
         My.Settings.TCP_Port = CInt(num_TCP_Port.Value)
 
         'Referenzierung
-        My.Settings.Rever_FaktorX = Refe_Faktor_X
-        My.Settings.Rever_FaktorY = Refe_Faktor_Y
-        My.Settings.Rever_OffsetX = Refe_Offset_X
-        My.Settings.Rever_OffsetY = Refe_Offset_Y
-        My.Settings.Rever_FaktorZ = Refe_Faktor_Z
+        My.Settings.Rever_FaktorX = refVals.XFactor
+        My.Settings.Rever_FaktorY = refVals.YFactor
+        My.Settings.Rever_OffsetX = refVals.XOffset
+        My.Settings.Rever_OffsetY = refVals.YOffset
+        My.Settings.Rever_FaktorPosX = refVals.XPosFactor
+        My.Settings.Rever_FaktorPosY = refVals.YPosFactor
 
 
         My.Settings.Save()
@@ -444,51 +450,34 @@ Public Class Form_Main
 
     Private Sub btn_RefXY_Calc_Click(sender As Object, e As EventArgs) Handles btn_RefXY_Calc.Click
 
-        If Not Referenzierung.RefCalcXY(_MyRefXY_List, Refe_Faktor_X, Refe_Offset_X, Refe_Faktor_Y, Refe_Offset_Y) Then
+        If _MyRefXY_List.Count <= 1 Then
             lb_Info.Items.Insert(0, "FEHLER :Fehker bei der Automatischen Referenzierung")
+        Else
+            refVals = RefCalcXY(_MyRefXY_List)
         End If
-        num_RefXY_FaktX.Value = CDec(Refe_Faktor_X)
-        num_RefXY_FaktY.Value = CDec(Refe_Faktor_Y)
-        num_RefXY_OffsX.Value = CDec(Refe_Offset_X)
-        num_RefXY_OffsY.Value = CDec(Refe_Offset_Y)
-    End Sub
-
-    Private Sub btn_RefZ_Add_Click(sender As Object, e As EventArgs) Handles btn_RefZ_Add.Click
-        If num_RefZ_OZ.Value > 0 Then
-            Dim tmp_Refobj As New MyRefObjekt(CInt(num_RefZ_OZ.Value))
-            _MyRefZ_List.Add(tmp_Refobj)
-            _RefreshListbox(lb_RefZ_Values, _MyRefZ_List)
-            lbl_RefZ_RefCount.Text = _MyRefZ_List.Count.ToString()
-        End If
-    End Sub
-
-    Private Sub btn_RefZ_Clear_Click(sender As Object, e As EventArgs) Handles btn_RefZ_Clear.Click
-        _ClearList(_MyRefZ_List, lb_RefZ_Values)
-        lbl_RefZ_RefCount.Text = _MyRefZ_List.Count.ToString()
-    End Sub
-
-    Private Sub btn_RefZ_Calc_Click(sender As Object, e As EventArgs) Handles btn_RefZ_Calc.Click
-        If _MyObjekte.Count <= 0 Then
-            ImgageAnalyse()
-        End If
-        Referenzierung.RefCalcZ(_MyObjekte, _MyRefZ_List, Refe_Faktor_Z)
-        num_RefZ_FaktZ.Value = CDec(Refe_Faktor_Z)
+        num_RefXY_FaktX.Value = CDec(refVals.XFactor)
+        num_RefXY_FaktY.Value = CDec(refVals.YFactor)
+        num_RefXY_OffsX.Value = CDec(refVals.XOffset)
+        num_RefXY_OffsY.Value = CDec(refVals.YOffset)
     End Sub
 
     Private Sub num_RefXY_FaktX_ValueChanged(sender As Object, e As EventArgs) Handles num_RefXY_FaktX.ValueChanged
-        Refe_Faktor_X = num_RefXY_FaktX.Value
+        refVals.XFactor = num_RefXY_FaktX.Value
     End Sub
     Private Sub num_RefXY_FaktY_ValueChanged(sender As Object, e As EventArgs) Handles num_RefXY_FaktY.ValueChanged
-        Refe_Faktor_Y = num_RefXY_FaktY.Value
+        refVals.YFactor = num_RefXY_FaktY.Value
     End Sub
     Private Sub num_RefXY_OffsX_ValueChanged(sender As Object, e As EventArgs) Handles num_RefXY_OffsX.ValueChanged
-        Refe_Offset_X = num_RefXY_OffsX.Value
+        refVals.XOffset = num_RefXY_OffsX.Value
     End Sub
     Private Sub num_RefXY_OffsY_ValueChanged(sender As Object, e As EventArgs) Handles num_RefXY_OffsY.ValueChanged
-        Refe_Offset_Y = num_RefXY_OffsY.Value
+        refVals.YOffset = num_RefXY_OffsY.Value
     End Sub
-    Private Sub num_RefZ_FaktZ_ValueChanged(sender As Object, e As EventArgs) Handles num_RefZ_FaktZ.ValueChanged
-        Refe_Faktor_Z = num_RefZ_FaktZ.Value
+    Private Sub num_RefXY_FaktPosX_ValueChanged(sender As Object, e As EventArgs) Handles num_RefXY_FaktPosX.ValueChanged
+        refVals.XPosFactor = num_RefXY_FaktPosX.Value
+    End Sub
+    Private Sub num_RefXY_FaktPosy_ValueChanged(sender As Object, e As EventArgs) Handles num_RefXY_FaktPosy.ValueChanged
+        refVals.YPosFactor = num_RefXY_FaktPosy.Value
     End Sub
 
     'Test
@@ -567,7 +556,7 @@ Public Class Form_Main
             num_RefXY_KX.Value = p.X
             num_RefXY_KY.Value = p.Y
             num_RefZ_OZ.Value = CInt(obj.GetDepthVal())
-            Dim dimensions() As Int32 = obj.GetDimension(Refe_Faktor_X, ZOffset)
+            Dim dimensions() As Int32 = obj.GetDimension(refVals.XFactor, cZOffset)
             num_newSearchObjB.Value = dimensions(0)
             num_newSearchObjH.Value = dimensions(1)
             num_newSearchObjT.Value = dimensions(2)
@@ -612,32 +601,37 @@ Public Class Form_Main
         tb_TCP_HOST.Text = My.Settings.TCP_Host
         num_TCP_Port.Value = My.Settings.TCP_Port
         'Referenzierung
-        Refe_Faktor_X = My.Settings.Rever_FaktorX
-        Refe_Faktor_Y = My.Settings.Rever_FaktorY
-        Refe_Offset_X = My.Settings.Rever_OffsetX
-        Refe_Offset_Y = My.Settings.Rever_OffsetY
-        Refe_Faktor_Z = My.Settings.Rever_FaktorZ
-        If Refe_Faktor_X > 9999 Or Refe_Faktor_X < -9999 Or [Double].IsNaN(Refe_Faktor_X) Then
-            Refe_Faktor_X = 0
-        End If
-        If Refe_Faktor_Y > 9999 Or Refe_Faktor_Y < -9999 Or [Double].IsNaN(Refe_Faktor_Y) Then
-            Refe_Faktor_Y = 0
-        End If
-        If Refe_Faktor_Z > 9999 Or Refe_Faktor_Z < -9999 Or [Double].IsNaN(Refe_Faktor_Z) Then
-            Refe_Faktor_Z = 0
-        End If
-        If Refe_Offset_X > 9999 Or Refe_Offset_X < -9999 Or [Double].IsNaN(Refe_Offset_X) Then
-            Refe_Offset_X = 0
-        End If
-        If Refe_Offset_Y > 9999 Or Refe_Offset_Y < -9999 Or [Double].IsNaN(Refe_Offset_Y) Then
-            Refe_Offset_Y = 0
-        End If
-        num_RefXY_FaktX.Value = CDec(Refe_Faktor_X)
-        num_RefXY_FaktY.Value = CDec(Refe_Faktor_Y)
-        num_RefZ_FaktZ.Value = CDec(Refe_Faktor_Z)
-        num_RefXY_OffsX.Value = CDec(Refe_Offset_X)
-        num_RefXY_OffsY.Value = CDec(Refe_Offset_Y)
+        refVals.XFactor = My.Settings.Rever_FaktorX
+        refVals.YFactor = My.Settings.Rever_FaktorY
+        refVals.XOffset = My.Settings.Rever_OffsetX
+        refVals.YOffset = My.Settings.Rever_OffsetY
+        refVals.XPosFactor = My.Settings.Rever_FaktorPosX
+        refVals.YPosFactor = My.Settings.Rever_FaktorPosY
 
+        If refVals.XFactor > 1 Or refVals.XFactor < -1 Or [Double].IsNaN(refVals.XFactor) Then
+            refVals.XFactor = 0.01
+        End If
+        If refVals.YFactor > 1 Or refVals.YFactor < -1 Or [Double].IsNaN(refVals.YFactor) Then
+            refVals.YFactor = -0.01
+        End If
+        If refVals.XOffset > 9999 Or refVals.XOffset < -9999 Or [Double].IsNaN(refVals.XOffset) Then
+            refVals.XOffset = 0
+        End If
+        If refVals.YOffset > 9999 Or refVals.YOffset < -9999 Or [Double].IsNaN(refVals.YOffset) Then
+            refVals.YOffset = 0
+        End If
+        If refVals.XPosFactor > 1 Or refVals.XPosFactor < -1 Or [Double].IsNaN(refVals.XPosFactor) Then
+            refVals.XPosFactor = 0.07
+        End If
+        If refVals.YPosFactor > 1 Or refVals.YPosFactor < -1 Or [Double].IsNaN(refVals.YPosFactor) Then
+            refVals.YPosFactor = -0.01
+        End If
+        num_RefXY_FaktX.Value = CDec(refVals.XFactor)
+        num_RefXY_FaktY.Value = CDec(refVals.YFactor)
+        num_RefXY_OffsX.Value = CDec(refVals.XOffset)
+        num_RefXY_OffsY.Value = CDec(refVals.YOffset)
+        num_RefXY_FaktPosX.Value = CDec(refVals.XPosFactor)
+        num_RefXY_FaktPosy.Value = CDec(refVals.YPosFactor)
     End Sub
 
     '-----------------------------------------------------------------------------------------------------------------------
@@ -921,11 +915,11 @@ Public Class Form_Main
     '-----------------------------------------------------------------------------------------------------------------------
 
     Private Function PixToMil(pixel As Int32, depth As Int32) As Int32
-        Return CInt(Math.Round(pixel * depth * Math.Abs(Refe_Faktor_X)))
+        Return CInt(Math.Round(pixel * depth * Math.Abs(refVals.XFactor)))
     End Function
 
     Private Function MilToPix(milimeter As Int32, depth As Int32) As Int32
-        Return CInt(Math.Round(milimeter / (depth * Math.Abs(Refe_Faktor_X))))
+        Return CInt(Math.Round(milimeter / (depth * Math.Abs(refVals.XFactor))))
     End Function
 
     Private Function TakePicture(ByRef color As Mat, ByRef depth As Mat, ByRef depthc As Mat) As Boolean
@@ -1530,7 +1524,7 @@ Public Class Form_Main
         lb_Info.Items.Insert(0, $"Gesuchtes Objekt: h:{AktSearch.Höhe,4} b:{AktSearch.Breite,4} t:{AktSearch.Tiefe,4}")
         For Each obj As MyObjektV2 In _MyObjekte
             Dim Übereinstimmung As Double
-            If obj.Passend(AktSearch.Höhe, AktSearch.Breite, AktSearch.Tiefe, Refe_Faktor_X, ZOffset, Übereinstimmung, CInt(Num_SearchToleranz.Value)) Then
+            If obj.Passend(AktSearch.Höhe, AktSearch.Breite, AktSearch.Tiefe, refVals.XFactor, cZOffset, Übereinstimmung, CInt(Num_SearchToleranz.Value)) Then
                 _MyMatchObjekts.Add(New MyMatchObj(Übereinstimmung, "undef", obj))
             End If
         Next
@@ -1548,7 +1542,7 @@ Public Class Form_Main
         _RefreshListbox(lb_Found, _MyMatchObjekts)
 
         lbl_FoundObj.Text = _MyMatchObjekts(0).Objekt.ToString
-        Dim mm As Int32 = CInt(_MyMatchObjekts(0).Objekt.Dist_Max() * Math.Abs(Refe_Faktor_X))
+        Dim mm As Int32 = CInt(_MyMatchObjekts(0).Objekt.Dist_Max() * Math.Abs(refVals.XFactor))
         lbl_FoundWidth.Text = $"{_MyMatchObjekts(0).Objekt.Dist_Max(),4} pixel = {mm,4} mm"
         lbl_FoundZent.Text = $"{_MyMatchObjekts(0).Objekt.GetZentrumPoint.ToString()}"
         lbl_Found_Rot.Text = $"{_MyMatchObjekts(0).Objekt.GetWinkel2.ToString()}"
@@ -1822,7 +1816,7 @@ Public Class Form_Main
             Dim entf As Int32 = 0
             Dim zulöschen As New List(Of MyObjektV2)
             For Each obj As MyObjektV2 In _MyObjekte
-                Dim tmpf As Int32 = obj.GetFläche(Refe_Faktor_X)
+                Dim tmpf As Int64 = obj.GetFläche(refVals.XFactor)
                 If tmpf < MinFlächeMM Then
                     zulöschen.Add(obj)
                     entf += 1
@@ -2122,7 +2116,7 @@ Public Class Form_Main
             Dim entf As Int32 = 0
             Dim zulöschen As New List(Of MyObjektV2)
             For Each obj As MyObjektV2 In _MyObjekte
-                Dim tmpf As Int32 = obj.GetFläche(Refe_Faktor_X)
+                Dim tmpf As Int64 = obj.GetFläche(refVals.XFactor)
                 If tmpf < MinFlächeMM Then
                     zulöschen.Add(obj)
                     entf += 1
@@ -2284,26 +2278,26 @@ Public Class Form_Main
         Dim Err As Boolean = False
         'Pos
         If _TcpVariablen.Exists("x") Then
-            _TcpVariablen.SetVariable("x", Point.Y * num_RefXY_FaktY.Value + num_RefXY_OffsY.Value)
+            _TcpVariablen.SetVariable("x", Point.Y * refVals.YPosFactor + refVals.YOffset)
         Else
             lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""x"" existiert nicht")
             Err = True
         End If
         If _TcpVariablen.Exists("y") Then
-            _TcpVariablen.SetVariable("y", Point.X * num_RefXY_FaktX.Value + num_RefXY_OffsX.Value)
+            _TcpVariablen.SetVariable("y", Point.X * refVals.XPosFactor + refVals.XOffset)
         Else
             lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""y"" existiert nicht")
             Err = True
         End If
         If _TcpVariablen.Exists("z") Then
-            _TcpVariablen.SetVariable("z", depth * num_RefZ_FaktZ.Value)
+            _TcpVariablen.SetVariable("z", cZOffset - depth)
         Else
             lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""z"" existiert nicht")
             Err = True
         End If
         'Höhe Tiefe
         If _TcpVariablen.Exists("greif") Then
-            _TcpVariablen.SetVariable("greif", obj.Objekt.GetHöhe)
+            _TcpVariablen.SetVariable("greif", obj.Objekt.GetHöhe(refVals.XFactor))
         Else
             lb_Info.Items.Insert(0, $"Fehler Kommunikation die TCPVariable ""greif"" existiert nicht")
             Err = True
@@ -2475,16 +2469,20 @@ Public Class Form_Main
     End Sub
 
     Private Sub btn_Info_Click(sender As Object, e As EventArgs) Handles btn_Info.Click
-        Dim obj As MyObjektV2 = _MyObjekte(LB_obj.SelectedIndex)
-        Dim Höhemm As Int32 = CInt(obj.GetHöhe(Refe_Faktor_X))
-        Dim breitemm As Int32 = CInt(obj.GetBreite(Refe_Faktor_X))
-        Dim Flächemm As Int32 = CInt(obj.GetFläche(Refe_Faktor_X))
-        lb_Info.Items.Insert(0, "--------------------------------------------")
-        lb_Info.Items.Insert(0, $"TifenwerteGlobal:{obj.GetDepthStr}")
-        lb_Info.Items.Insert(0, $"TifenwerteZenterum:{obj.GetDepthVal}")
-        lb_Info.Items.Insert(0, $"Zentum My[{obj.GetZentrumMyPoint.ToString}], Float{obj.GetZentrumPointF},Int{obj.GetZentrumPoint}")
-        lb_Info.Items.Insert(0, $"Zentum Höhe in mm:{Höhemm} | Breite in mm:{breitemm} | Fläche in mm:{Flächemm}")
-        lb_Info.Items.Insert(0, $"TifenwerteGlobal:{obj.ToString}")
-        lb_Info.Items.Insert(0, "Obj. Info------------------------------------")
+        If LB_obj.SelectedIndex >= 0 Then
+            Dim obj As MyObjektV2 = _MyObjekte(LB_obj.SelectedIndex)
+            Dim Höhemm As Int32 = CInt(obj.GetHöhe(refVals.XFactor))
+            Dim breitemm As Int32 = CInt(obj.GetBreite(refVals.XFactor))
+            Dim Flächemm As Int32 = CInt(obj.GetFläche(refVals.XFactor))
+            lb_Info.Items.Insert(0, "--------------------------------------------")
+            lb_Info.Items.Insert(0, $"TifenwerteGlobal:{obj.GetDepthStr}")
+            lb_Info.Items.Insert(0, $"TifenwerteZenterum:{obj.GetDepthVal}")
+            lb_Info.Items.Insert(0, $"Zentum My[{obj.GetZentrumMyPoint.ToString}], Float{obj.GetZentrumPointF},Int{obj.GetZentrumPoint}")
+            lb_Info.Items.Insert(0, $"Zentum Höhe in mm:{Höhemm} | Breite in mm:{breitemm} | Fläche in mm:{Flächemm}")
+            lb_Info.Items.Insert(0, $"TifenwerteGlobal:{obj.ToString}")
+            lb_Info.Items.Insert(0, "Obj. Info------------------------------------")
+        End If
     End Sub
+
+
 End Class 'Form1

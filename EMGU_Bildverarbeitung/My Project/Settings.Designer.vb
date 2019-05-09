@@ -55,7 +55,8 @@ Namespace My
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("20")>  _
         Public Property Steur_Tolreanz() As Integer
             Get
                 Return CType(Me("Steur_Tolreanz"),Integer)
@@ -66,7 +67,8 @@ Namespace My
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("120")>  _
         Public Property Konf_MaskeH() As Integer
             Get
                 Return CType(Me("Konf_MaskeH"),Integer)
@@ -77,7 +79,8 @@ Namespace My
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("250")>  _
         Public Property Konf_MaskeV() As Integer
             Get
                 Return CType(Me("Konf_MaskeV"),Integer)
@@ -88,7 +91,8 @@ Namespace My
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("-40")>  _
         Public Property Konf_KameraOffset() As Integer
             Get
                 Return CType(Me("Konf_KameraOffset"),Integer)
@@ -99,7 +103,8 @@ Namespace My
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("1.37462")>  _
         Public Property Konv_FaktorPixMilH() As Double
             Get
                 Return CType(Me("Konv_FaktorPixMilH"),Double)
@@ -110,7 +115,8 @@ Namespace My
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("1.37462")>  _
         Public Property Konv_FaktorPixMilB() As Double
             Get
                 Return CType(Me("Konv_FaktorPixMilB"),Double)
@@ -121,7 +127,8 @@ Namespace My
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0.95")>  _
         Public Property Konv_RoboOffsetX() As Double
             Get
                 Return CType(Me("Konv_RoboOffsetX"),Double)
@@ -132,7 +139,8 @@ Namespace My
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("1.05")>  _
         Public Property Konv_RoboOffsetY() As Double
             Get
                 Return CType(Me("Konv_RoboOffsetY"),Double)
@@ -143,7 +151,8 @@ Namespace My
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("710")>  _
         Public Property Ausw_TiefsteReg() As Integer
             Get
                 Return CType(Me("Ausw_TiefsteReg"),Integer)
@@ -154,7 +163,8 @@ Namespace My
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("300")>  _
         Public Property Ausw_HöchsteReg() As Integer
             Get
                 Return CType(Me("Ausw_HöchsteReg"),Integer)
@@ -165,7 +175,8 @@ Namespace My
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("10")>  _
         Public Property Ausw_MindestObjH() As Integer
             Get
                 Return CType(Me("Ausw_MindestObjH"),Integer)
@@ -176,7 +187,8 @@ Namespace My
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("10")>  _
         Public Property Ausw_MindestObjB() As Integer
             Get
                 Return CType(Me("Ausw_MindestObjB"),Integer)
@@ -187,7 +199,8 @@ Namespace My
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("10")>  _
         Public Property Ausw_MindestObjT() As Integer
             Get
                 Return CType(Me("Ausw_MindestObjT"),Integer)
@@ -199,7 +212,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("192.168.43.14")>  _
         Public Property TCP_Host() As String
             Get
                 Return CType(Me("TCP_Host"),String)
@@ -210,7 +223,8 @@ Namespace My
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute()>  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("2019")>  _
         Public Property TCP_Port() As Integer
             Get
                 Return CType(Me("TCP_Port"),Integer)
@@ -233,7 +247,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0.0011098")>  _
         Public Property Rever_FaktorX() As Double
             Get
                 Return CType(Me("Rever_FaktorX"),Double)
@@ -245,7 +259,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("-0.0010708")>  _
         Public Property Rever_FaktorY() As Double
             Get
                 Return CType(Me("Rever_FaktorY"),Double)
@@ -257,7 +271,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("-566.75")>  _
         Public Property Rever_OffsetX() As Double
             Get
                 Return CType(Me("Rever_OffsetX"),Double)
@@ -269,7 +283,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("688.25")>  _
         Public Property Rever_OffsetY() As Double
             Get
                 Return CType(Me("Rever_OffsetY"),Double)
@@ -288,6 +302,30 @@ Namespace My
             End Get
             Set
                 Me("Rever_FaktorZ") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property Rever_FaktorPosX() As Double
+            Get
+                Return CType(Me("Rever_FaktorPosX"),Double)
+            End Get
+            Set
+                Me("Rever_FaktorPosX") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property Rever_FaktorPosY() As Double
+            Get
+                Return CType(Me("Rever_FaktorPosY"),Double)
+            End Get
+            Set
+                Me("Rever_FaktorPosY") = value
             End Set
         End Property
     End Class
